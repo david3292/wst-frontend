@@ -1,0 +1,83 @@
+<router-outlet></router-outlet>
+<div class="container-fluid container mt-5" [hidden]="route.children.length !== 0">
+    <kendo-card [width]="'100%'">
+        <kendo-card-header class="k-hbox">
+            <h4 kendoCardTitle>Gestión Ventas</h4>
+            <div class="d-flex ml-auto nav">
+                <button class="buttons-header" kendoButton [primary]="true" [look]="'outline'" [icon]="'plus'"
+                    [routerLink]="'nuevo'">Nueva
+                    Cotización</button>
+                <button class="buttons-header" kendoButton [primary]="true" [look]="'outline'" [icon]="'reload'"
+                    (click)="recotizar()" [disabled]="hablitarBotonPorOpcion('recotizar')">Recotizar</button>
+                <button class="buttons-header" kendoButton [primary]="true" [look]="'outline'" [icon]="'shopping-cart'"
+                    (click)="cotizar()" [disabled]="hablitarBotonPorOpcion('cotizar')">Cotizar</button>
+                <button class="buttons-header" kendoButton [primary]="true" [look]="'outline'" [icon]="'select-box'"
+                    [disabled]="hablitarBotonPorOpcion('facturar')" (click)="facturar()">Facturar</button>
+                <button kendoButton [primary]="true" [look]="'outline'" [icon]="'paste'"
+                    [disabled]="hablitarBotonPorOpcion('reservar')" (click)="reservar()">Reservar</button>
+            </div>
+        </kendo-card-header>
+    </kendo-card>
+
+    <kendo-grid [data]="gridDocumentosView" [selectable]="selectableSettings" [navigable]="true" [height]="500"
+        [pageSize]="state.take" [skip]="state.skip" [pageable]="true" [kendoGridSelectBy]="eventoSeleccion"
+        [selectedKeys]="itemSeleccionado" [sortable]="true" [sort]="state.sort" [filter]="state.filter"
+        [filterable]="true" (dataStateChange)="dataStateChange($event)">
+        <kendo-grid-messages pagerPage="Página" pagerOf="de" pagerItems="ítems" pagerItemsPerPage="ítems por página"
+            noRecords="No existen registros.">
+        </kendo-grid-messages>
+        <kendo-grid-checkbox-column [width]="45"></kendo-grid-checkbox-column>
+        <kendo-grid-column field="numero" title="Número Doc." [width]="150"></kendo-grid-column>
+        <kendo-grid-column field="nombreCliente" title="Nombre Cliente"></kendo-grid-column>
+        <kendo-grid-column field="fechaEmision" title="Fecha Emisión" [width]="120">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                {{formatearFecha(dataItem.fechaEmision)}}
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="estado" title="Estado" [width]="120">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <app-state-badge [estado]="dataItem.estado"></app-state-badge>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="total" title="Total Venta" [width]="100" [filterable]="false" format="{0:c}">
+        </kendo-grid-column>
+        <kendo-grid-column [width]="90" [filterable]="false">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <button style="margin-right: 3px;" kendoButton [primary]="true" [look]="'outline'" [icon]="'file-pdf'"
+                    *ngIf="mostrarBotonDescargarDocuemto(dataItem.estado)"
+                    (click)="descargarDocuemnto(dataItem)"></button>
+                    <button kendoButton [primary]="true" [look]="'outline'" [icon]="'find-and-replace'" (click)="verDetalle(dataItem)"></button>
+            </ng-template>
+        </kendo-grid-column>
+    </kendo-grid>
+    <kendo-dialog title="Detalle" *ngIf="abrirDetalle" (close)="cerrarDetalle()" [minWidth]="400" [width]="'90%'">
+        <div class="row buttons-download">
+            <button style="margin-right: 3px;" kendoButton [primary]="true" [look]="'outline'" [icon]="'file-pdf'" [disabled]="permitirReporteCotizacion === false"
+            (click)="descargarCotizacion()">Cotización</button>
+            <button style="margin-right: 3px;" kendoButton [primary]="true" [look]="'outline'" [icon]="'file-pdf'" [disabled]="permitirReporteGuiaDespacho === false"
+            (click)="abrirDetalleReservas()">Reserva(s)</button>
+            <button style="margin-right: 3px;" kendoButton [primary]="true" [look]="'outline'" [icon]="'file-pdf'" [disabled]="permitirReporteGuiaDespacho === false"
+            (click)="abrirDetalleFacturas()">Factura(s)</button>
+            <button style="margin-right: 3px;" kendoButton [primary]="true" [look]="'outline'" [icon]="'file-pdf'" [disabled]="permitirReporteGuiaDespacho === false"
+            (click)="abrirDetalleGuiaDespacho()">Guía(s) Despacho</button>
+            <button style="margin-right: 3px;" kendoButton [primary]="true" [look]="'outline'" [icon]="'file-pdf'" [disabled]="permitirReporteGuiaDespacho === false"
+            (click)="abrirDetalleGuiaReision()">Guía(s) Remisión</button>
+            <button style="margin-right: 3px;" kendoButton [primary]="true" [look]="'outline'" [icon]="'file-pdf'" [disabled]="permitirReporteGuiaDespacho === false"
+            (click)="abrirDetalleTransferencia()">Transferencia(s)</button>
+            <button style="margin-right: 3px;" kendoButton [primary]="true" [look]="'outline'" [icon]="'file-pdf'" [disabled]="permitirReporteGuiaDespacho === false"
+            (click)="abrirDetalleNotaCredito()">Nota(s) Crédito</button>
+            <button *ngIf="mostrarBotonCompras" style="margin-right: 3px;" kendoButton [primary]="true" [look]="'outline'" [icon]="'file-pdf'"
+            (click)="abrirDetalleCompras()">Órdenes de Compra</button>
+            <button *ngIf="mostrarBotonCompras" style="margin-right: 3px;" kendoButton [primary]="true" [look]="'outline'" [icon]="'file-pdf'"
+            (click)="abrirDetalleRecepciones()">Recepciones de Compra</button>
+
+        </div>
+        <app-cabecera [documento]='visualizarCotizacion'></app-cabecera>
+        <app-detalle [documento]='visualizarCotizacion'></app-detalle>
+    </kendo-dialog>
+</div>
+<ng-container #containerConsultaFactura></ng-container>
+<ng-container #containerConsultaGuiaRemision></ng-container>
+<ng-container #containerConsultaTransferencia></ng-container>
+<ng-container #containerConsultaReserva></ng-container>
+<ng-container #containerConsultaGuiaDespacho></ng-container>

@@ -1,0 +1,120 @@
+<div class="container-fluid container mt-5">
+    <kendo-card [width]="'100%'">
+        <kendo-card-header class="k-hbox">
+            <h4 kendoCardTitle>Reposición</h4>
+        </kendo-card-header>
+    </kendo-card>
+
+    <div class="row">
+        <div class='col-12 col-lg-3'>
+            <kendo-label text="Fecha">
+                <input kendoTextBox disabled [(ngModel)]="fecha" />
+            </kendo-label>
+        </div>
+        <div class='col-12 col-lg-3'>
+            <kendo-label text="Estado">
+                <input kendoTextBox disabled [(ngModel)]="estado" />
+            </kendo-label>
+        </div>
+        <div class='col-12 col-lg-3'>
+            <kendo-label text="Número">
+                <input kendoTextBox disabled [(ngModel)]="reposicion? reposicion.numero : reposicion" />
+            </kendo-label>
+        </div>
+        <div class='col-12 col-lg-3'>
+            <kendo-label text="Peso Total">
+                <kendo-numerictextbox [spinners]="false" [value]="pesoTotal" [disabled]="true"></kendo-numerictextbox>
+            </kendo-label>
+        </div>
+    </div>
+    <form class="k-form" [formGroup]="editForm">
+
+        <div class="row">
+            <div class='col-12 col-lg-6'>
+                <kendo-formfield style="margin-top: 0px;">
+                    <kendo-label [for]="'ncs'" text="Bodega Origen"></kendo-label>
+                    <kendo-combobox [data]="bodegaOrigen" [textField]="'descripcion'" [valueField]="'codigo'"
+                        [valuePrimitive]="true" [placeholder]="'Seleccione'" formControlName="origen">
+                    </kendo-combobox>
+                    <kendo-formerror>Obligatorio</kendo-formerror>
+                </kendo-formfield>
+            </div>
+            <div class='col-12 col-lg-6'>
+                <kendo-formfield style="margin-top: 0px;">
+                    <kendo-label [for]="'ncs'" text="Bodega Destino"></kendo-label>
+                    <kendo-combobox [data]="bodegaDestino" [textField]="'descripcion'" [valueField]="'codigo'"
+                        [valuePrimitive]="true" [placeholder]="'Seleccione'" formControlName="destino">
+                    </kendo-combobox>
+                    <kendo-formerror>Obligatorio</kendo-formerror>
+                </kendo-formfield>
+            </div>
+        </div>
+    </form>
+
+    <div class="row">
+        <div class="col-12 col-lg-12 col-buttons">
+            <div kendoTooltip position="top">
+                <button class="buttons-accion" kendoButton primary="true" icon="preview" look="outline"
+                    title="Realiza una evaluación de los artículos en stock" (click)="sugerir()">Sugerir
+                    Reposición</button>
+            </div>
+            <div kendoTooltip position="top">
+                <button class="buttons-accion" kendoButton primary="true" icon="checkmark-circle"
+                    title="Inicia el proceso de transferencia de lo seleccionado" (click)="procesar()"
+                    [disabled]="desactivar()">Procesar
+                    Reposición</button>
+            </div>
+
+            <button kendoButton class="buttons-accion" primary="true" icon="delete" look="outline"
+                [disabled]="desactivarAnular()" (click)="anular()">Anular Reposición
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<div class="col-12 col-lg-12" style="margin-top: 15px;">
+    <kendo-grid [data]="gridReposicionView" [height]="500" [navigable]="true" [selectable]="true" [sortable]="true"
+        [sort]="state.sort" [pageSize]="state.take" [skip]="state.skip" [pageable]="true" [filter]="state.filter"
+        [filterable]="true" (dataStateChange)="dataStateChange($event)">
+        <kendo-grid-messages pagerPage="Página" pagerOf="de" pagerItems="ítems" pagerItemsPerPage="ítems por página"
+            noRecords="No existen registros.">
+        </kendo-grid-messages>
+        <kendo-grid-column field="codigoArticulo" title="Código Artículo" width="130"></kendo-grid-column>
+        <kendo-grid-column field="descripcionArticulo" title="Descripción Artículo" width="190"></kendo-grid-column>
+        <kendo-grid-column field="codigoAlternoArticulo" title="Código Alterno" width="100" class="text-center">
+        </kendo-grid-column>
+        <kendo-grid-column field="unidadMedida" title="U. Medida" width="100" class="text-center" [filterable]="false">
+        </kendo-grid-column>
+        <kendo-grid-column field="peso" title="Peso Unitario" width="100" [filterable]="false">
+        </kendo-grid-column>
+        <kendo-grid-column field="peso" title="Peso Total" width="100" [filterable]="false">
+            <ng-template kendoGridCellTemplate let-dataItem>
+                {{calcularPesoTotalLinea(dataItem) | number: '1.2-2'}}
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="compartimientoOrigen" title="Compar. Origen" width="100" [filterable]="false"
+            class="text-center">
+        </kendo-grid-column>
+        <kendo-grid-column field="cantidadReponer" title="Cant. a Reponer" width="100" [filterable]="false">
+            <ng-template kendoGridCellTemplate let-dataItem>
+                <kendo-numerictextbox [min]="1" [max]="dataItem.cantidadSugerida" [autoCorrect]="true"
+                    [format]="{maximumFractionDigits: 2}" [(ngModel)]="dataItem.cantidadReponer"
+                    (blur)="onBlurCantidad(dataItem)">
+                </kendo-numerictextbox>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column width="100" class="text-center" [filterable]="false">
+            <ng-template kendoGridCellTemplate let-dataItem>
+                <button style="margin-right: 5px;" kendoButton primary="true" icon="search" look="outline"
+                    (click)="abrirDetalle(dataItem)"></button>
+                <button kendoButton primary="true" icon="delete" look="outline"
+                    (click)="eliminarLinea(dataItem)"></button>
+            </ng-template>
+        </kendo-grid-column>
+
+    </kendo-grid>
+</div>
+
+<ng-container #reposicionDetalle></ng-container>
+<ng-container #reposicionConfirmacionDetalle></ng-container>

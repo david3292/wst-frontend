@@ -1,0 +1,69 @@
+<div class=" container-fluid container mt-5">
+    <div class="card titulo-configuracion">
+        <h5>Bodega</h5>
+    </div>
+
+    <kendo-grid [data]="bodegas" [sortable]="true" (edit)="editHandler($event)" (cancel)="cancelHandler($event)"
+        (save)="saveHandler($event)" (add)="addHandler($event)" [navigable]="true">
+        <ng-template kendoGridToolbarTemplate>
+            <button kendoGridAddCommand primary=true icon='plus'>Agregar</button>
+        </ng-template>
+
+        <kendo-grid-column field="codigo" editor="string" title="Nombre">
+            <ng-template kendoGridEditTemplate let-dataItem="dataItem" let-column="column" let-formGroup="formGroup"
+                let-isNew="isNew">
+                <kendo-dropdownlist #ddl="popupAnchor" popupAnchor [data]="bodegasGPCatalogo" textField="MASTERID"
+                    valueField="MASTERID" [valuePrimitive]="true" [formControl]="formGroup.get('codigo')"
+                    (valueChange)="changeValue($event)" [disabled]="isNew ? false : true">
+                </kendo-dropdownlist>
+                <kendo-popup [anchor]="ddl.element"
+                    *ngIf="formGroup.get('codigo').invalid && !(isNew && formGroup.get('codigo').untouched)"
+                    popupClass="k-widget k-tooltip k-tooltip-validation k-invalid-msg">
+                    <span class="k-icon k-i-warning"></span>
+                    campo requerido
+                </kendo-popup>
+            </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-column field="descripcion" editor="string" title="Descripción">
+            <ng-template kendoGridEditTemplate let-dataItem="dataItem" let-column="column" let-formGroup="formGroup"
+                let-isNew="isNew">
+                <input kendoTextBox [(ngModel)]="dataItem.descripcion" [disabled]="true" />
+            </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-column field="activo" editor="boolean" title="Activo" [width]='100'>
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <span class="badge badge-pill" [ngClass]="dataItem.activo? 'badge-success':'badge-danger'">
+                    {{dataItem.activo?'Si':'No'}}
+                </span>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="bod_cd" editor="boolean" title="BOD C.D" [width]='100'>
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <span *ngIf="dataItem.bod_cd" class="k-icon k-i-checkbox-checked k-icon-32"></span>
+                <span *ngIf="dataItem.bod_cd === false" class="k-icon k-i-checkbox k-icon-32"></span>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="bod_PV" editor="boolean" title="BOD P.V" [width]='100'>
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <span *ngIf="dataItem.bod_PV" class="k-icon k-i-checkbox-checked k-icon-32"></span>
+                <span *ngIf="dataItem.bod_PV === false" class="k-icon k-i-checkbox k-icon-32"></span>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="bod_repos_inv" editor="boolean" title="REPOS. INV" [width]='100'>
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <span *ngIf="dataItem.bod_repos_inv" class="k-icon k-i-checkbox-checked k-icon-32"></span>
+                <span *ngIf="dataItem.bod_repos_inv === false" class="k-icon k-i-checkbox k-icon-32"></span>
+            </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-command-column width="100">
+            <ng-template kendoGridCellTemplate let-isNew="isNew">
+                <button kendoGridEditCommand [primary]="true" [look]="'outline'" icon="edit"></button>
+                <button kendoGridSaveCommand [disabled]="formGroup?.invalid" [look]="'outline'" icon="check"></button>
+                <button kendoGridCancelCommand [look]="'outline'" icon="close"></button>
+            </ng-template>
+        </kendo-grid-command-column>
+    </kendo-grid>
+</div>

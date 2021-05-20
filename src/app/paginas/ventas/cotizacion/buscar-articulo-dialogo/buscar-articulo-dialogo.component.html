@@ -1,0 +1,43 @@
+<div class='row'>
+    <div class='col-12 col-lg-6'>
+        <div class="busqueda">
+            <label class="k-label" [for]="'female'">Criterio</label>
+            <!-- <input kendoTextBox placeholder="Código/Descripción" [(ngModel)]="criterioBusqueda" (valueChange)="onChangeBusqueda($event)" /> -->
+            <kendo-textbox placeholder="Código/Descripción" [(ngModel)]="criterioBusqueda" (valueChange)="onChangeBusqueda($event)"></kendo-textbox>
+            <button kendoButton primary=true icon='search' (click)="buscarArticuloPorCriterio()"
+                [disabled]="criterioBusqueda==null"></button>
+        </div>
+    </div>
+</div>
+<p></p>
+<span><strong> Artículos Encontrados: {{articulosEncontrados.length}}</strong> </span>
+
+<kendo-grid [data]="gridArticulosView" [style.height.%]="90"
+    [navigable]="true" [selectable]="true" [kendoGridSelectBy]="mySelectionKey" [selectedKeys]="mySelection"
+    [sortable]="true" [sort]="state.sort" [filter]="state.filter" [filterable]="true"
+    (dataStateChange)="dataStateChange($event)"
+    >
+    <kendo-grid-messages pagerPage="Página" pagerOf="de" pagerItems="ítems" pagerItemsPerPage="ítems por página" noRecords="No existen registros.">
+    </kendo-grid-messages>
+    <kendo-grid-checkbox-column showSelectAll="true" width="50"></kendo-grid-checkbox-column>
+    <kendo-grid-column field="ITEMNMBR" title="Código Artículo" width="130"></kendo-grid-column>
+    <kendo-grid-column field="ITEMDESC" title="Nombre Artículo"></kendo-grid-column>
+    <kendo-grid-column field="ITMSHNAM" title="Código Alterno" width="150" class="text-center"></kendo-grid-column>
+    <kendo-grid-column field="DISPONIBLE" title="Disponible" width="150" class="text-center">
+        <ng-template kendoGridHeaderTemplate let-column let-columnIndex="columnIndex">
+            {{bodegaPrincipal}}
+        </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column title="Stock" width="70" class="text-center">
+        <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+            <button kendoButton primary=true icon='search' (click)="consultarStock(dataItem)"></button>
+        </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="UOMPRICE" title="Precio" width="120" format="{0:c}" class="text-right"></kendo-grid-column>
+    <kendo-grid-column field="precioIva" title="P.V.P Tot. IVA" width="110" format="{0:c}" [filterable]="false" class="text-right">
+    </kendo-grid-column>
+    <kendo-grid-column field="ITEMSHWT" title="Peso(Kg)" width="90" [filterable]="false" class="text-right">
+    </kendo-grid-column>
+
+</kendo-grid>
+<div kendoDialogContainer></div>

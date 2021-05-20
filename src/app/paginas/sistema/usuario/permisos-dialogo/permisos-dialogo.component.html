@@ -1,0 +1,48 @@
+<div class="row">
+    <div class="col-12 col-lg-12">
+        <p>Asigne los permisos que va a tener el Usuario: <strong>
+                {{configInfo.usuarioPerfil.usuario.nombreCompleto}}</strong> con el Perfil:
+            <strong>{{configInfo.usuarioPerfil.perfil.nombre}}</strong></p>
+    </div>
+</div>
+<div [formGroup]="form">
+    <div class="wrap">
+        <input type="checkbox" id="terms" formControlName="editarDescuentoAdicional" kendoCheckBox />
+        <label class="k-checkbox-label" for="terms">Editar Descuento Adicional</label>
+
+    </div>
+    <div class="wrap">
+        <input type="checkbox" id="terms2" formControlName="editarCondicionPago" kendoCheckBox />
+        <label class="k-checkbox-label" for="terms2">Editar Condición de Pago</label>
+    </div>
+    <div class="wrap">
+        <input type="checkbox" id="terms2" formControlName="editarPorcentajeAnticipo" kendoCheckBox />
+        <label class="k-checkbox-label" for="terms2">Editar % de Anticipo</label>
+    </div>
+    <div class="wrap">
+        <input type="checkbox" id="terms2" formControlName="editarDescripcionArticulo" kendoCheckBox />
+        <label class="k-checkbox-label" for="terms2">Editar Descripcion Artículo</label>
+    </div>
+    <div class="wrap">
+        <input type="checkbox" id="terms2" formControlName="editarPrecioArticulo" kendoCheckBox />
+        <label class="k-checkbox-label" for="terms2">Editar Precio Artículo</label>
+    </div>
+    <div class="wrap">
+        <input type="checkbox" id="terms2" formControlName="editarDescuentoFijo" kendoCheckBox />
+        <label class="k-checkbox-label" for="terms2">Editar Descuento Fijo</label>
+    </div>
+</div>
+
+<div class="row footer-button ">
+    <div class="col-12 col-lg-12">
+        <button class="buttons" kendoButton [primary]="true" [look]="'outline'" [icon]="'save'"
+            (click)="guardarPermisos()">
+            Aceptar
+        </button>
+        <button class="buttons" kendoButton [primary]="true" [look]="'outline'" [icon]="'close'"
+            (click)="cerrarDialogo()">
+            Cancelar
+        </button>
+    </div>
+
+</div>

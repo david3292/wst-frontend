@@ -1,0 +1,64 @@
+
+<div class=" container-fluid container mt-5">
+    <div class="card titulo-configuracion">
+        <h5>Formas de Pago</h5>
+    </div>
+
+    <kendo-grid
+        [kendoGridBinding]="formasPago"
+        (add)="addHandler($event)"
+        (save)="saveHandler($event)"
+        (edit)="editHandler($event)"
+        (cancel)="cancelHandler($event)"
+        [navigable]="true">
+        <ng-template kendoGridToolbarTemplate>
+            <button kendoGridAddCommand primary=true icon='plus'>Agregar</button>
+        </ng-template>
+        <kendo-grid-column field="nombre" title="Nombre" width="350">
+            <ng-template kendoGridEditTemplate let-dataItem="dataItem" let-column="column" let-formGroup="formGroup"
+                let-isNew="isNew">
+                <kendo-dropdownlist #ddl="popupAnchor" popupAnchor [data]="catalogoFPago" textField="texto"
+                    valueField="valor" [valuePrimitive]="true" [formControl]="formGroup.get('nombre')"
+                    [disabled]="isNew ? false : true">
+                </kendo-dropdownlist>
+                <kendo-popup [anchor]="ddl.element"
+                    *ngIf="formGroup.get('nombre').invalid && !(isNew && formGroup.get('nombre').untouched)"
+                    popupClass="k-widget k-tooltip k-tooltip-validation k-invalid-msg">
+                    <span class="k-icon k-i-warning"></span>
+                    campo requerido
+                </kendo-popup>
+            </ng-template>
+
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                {{obtenerNombre(dataItem.nombre)}}
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="integracionCobro" title="Integración Cobro" width="120" editor="boolean">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <span *ngIf="dataItem.integracionCobro" class="k-icon k-i-checkbox-checked k-icon-32"></span>
+                <span *ngIf="dataItem.integracionCobro === false" class="k-icon k-i-checkbox k-icon-32"></span>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="chequePosFechado" title="Cheque Posfechado" width="120" editor="boolean">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <span *ngIf="dataItem.chequePosFechado" class="k-icon k-i-checkbox-checked k-icon-32"></span>
+                <span *ngIf="dataItem.chequePosFechado === false" class="k-icon k-i-checkbox k-icon-32"></span>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="activo" title="Activo" width="120" editor="boolean">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <span class="badge badge-pill" [ngClass]="dataItem.activo? 'badge-success':'badge-danger'">
+                    {{dataItem.activo?'Si':'No'}}
+                </span>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-command-column  width="100">
+            <ng-template kendoGridCellTemplate let-isNew="isNew">
+                <button kendoGridEditCommand [primary]="true" [look]="'outline'" icon="edit"></button>
+                <button kendoGridSaveCommand [disabled]="formGroup?.invalid" [look]="'outline'" icon="check"></button>
+                <button kendoGridCancelCommand [look]="'outline'" icon="close"></button>
+            </ng-template>
+        </kendo-grid-command-column>
+    </kendo-grid>
+
+</div>

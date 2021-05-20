@@ -1,0 +1,47 @@
+<p>Cobro procesado. Se han generado los siguientes documentos:</p>
+
+<div class="row">
+    <div class="col-12 col-lg-5">
+        <kendo-label text="Número Cobro WST">
+            <input kendoTextBox [(ngModel)]="resultado.numero" disabled />
+        </kendo-label>
+    </div>
+    <div class="col-12 col-lg-7">
+        <kendo-listview [data]="resultado.cobroFormaPagos" [containerClass]="'k-d-flex k-flex-col k-flex-nowrap'">
+            <ng-template kendoListViewHeaderTemplate>
+                <div class="header">
+                    Número Cobro GP
+                </div>
+            </ng-template>
+            <ng-template kendoListViewItemTemplate let-dataItem="dataItem" let-index="index" let-isFirst="isFirst"
+                let-isLast="isLast">
+                <div class="product" [class.border-bottom]="!isLast">
+                    <span class="product-name">{{ dataItem.numero }}</span>
+                    <span class="item-position">({{ dataItem.estado }})</span>
+                </div>
+            </ng-template>
+        </kendo-listview>
+    </div>
+</div>
+
+
+<div class="row" style="margin-top: 10px;" *ngIf="resultado.guiaDespachoIds.length>0">
+    <div class="col-12 col-lg-6">
+        <span>Guía(s) de Despacho</span>
+    </div>
+    <div class="col-12  col-lg-4">
+        <button kendoButton icon='download' primary="true" (click)="descargarDocumento()">Descargar</button>
+    </div>
+</div>
+
+<div class="row separator-filas">
+    <div class="col-12 col-lg-6">
+        <span>Reporte Cobro</span>
+    </div>
+    <div class="col-12 col-lg-4">
+        <button kendoButton icon='download' primary="true" (click)="descargarReporte()">Descargar</button>
+    </div>
+</div>
+
+<div class="alert alert-danger" style="margin-top: 5px;" *ngIf="resultado.estado === 'PENDIENTE'">Se generó un error en el
+    cobro o aplicaciones.</div>

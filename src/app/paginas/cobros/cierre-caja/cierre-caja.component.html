@@ -1,0 +1,59 @@
+<div class=" container-fluid container mt-5">
+    <div class="card titulo-configuracion">
+        <h5>CIERRE DE CAJA</h5>
+    </div>
+
+    <div class="row info">
+        <div class="col-12 col-lg-6">
+            <kendo-label text="Punto de Venta">
+                <input kendoTextBox disabled [(ngModel)]="puntoVentaNombre" />
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-6">
+            <kendo-label text="Fecha">
+                <input kendoTextBox disabled [(ngModel)]="fecha" />
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-6">
+            <kendo-label text="Usuario">
+                <input kendoTextBox disabled [(ngModel)]="usuario" />
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-6">
+            <kendo-label text="Último Cierre">
+                <input kendoTextBox disabled [(ngModel)]="ultimoCierre" />
+            </kendo-label>
+        </div>
+    </div>
+
+    <kendo-grid class="detalle" [data]="view | async" [height]="330" (dataStateChange)="onStateChange($event)"
+        (cellClick)="cellClickHandler($event)" (cellClose)="cellCloseHandler($event)" [navigable]="true">
+        <kendo-grid-messages noRecords="No existen cobros registrados.">
+        </kendo-grid-messages>
+        <kendo-grid-column field="formaPago" title="Forma de Pago">
+            <ng-template kendoGridFooterTemplate>
+                <div class="footer-detalle">Total</div>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="valorCobrado" title="Valor Cobrado" format="{0:c}">
+            <ng-template kendoGridFooterTemplate>
+                <div class="footer-detalle">$ {{financial(totalCobrado)}}</div>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="valorContado" title="Valor Cerrado" editor="numeric" format="{0:c}">
+            <ng-template kendoGridFooterTemplate>
+                <div class="footer-detalle">$ {{financial(totalContado)}}</div>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="diferencia" title="Faltante/Sobrante" format="{0:c}">
+            <ng-template kendoGridFooterTemplate>
+                <div class="footer-detalle">$ {{financial(totalDiferencia)}}</div>
+            </ng-template>
+        </kendo-grid-column>
+    </kendo-grid>
+
+    <button kendoButton icon='check' primary="true" (click)="mostrarConfirmacion()" [disabled]="hablititarCerrarCaja">CERRAR
+        CAJA</button>
+    <br />
+</div>
+<ng-container #containerConfirmacion></ng-container>

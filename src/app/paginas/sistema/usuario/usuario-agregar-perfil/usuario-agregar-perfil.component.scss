@@ -1,0 +1,21 @@
+.row {
+    padding-top: 10px;
+}
+
+.k-listview {
+    font-family: sans-serif;
+    height: auto;
+    width: 100%;
+}
+.product {
+    padding: 4px;
+    width: 100%;
+}
+.product-name {
+    margin: 0 20px;
+}
+
+.product.border-bottom {
+    border-bottom-width: 1px;
+    border-bottom-color: lightgrey;
+}

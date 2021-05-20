@@ -1,0 +1,332 @@
+<div class=" container-fluid container mt-5">
+    <kendo-card [width]="'100%'">
+        <kendo-card-header class="k-hbox">
+            <h5 *ngIf="edicion == false" kendoCardTitle>Nuevo Cliente</h5>
+            <h5 *ngIf="edicion" kendoCardTitle>Edición Cliente</h5>
+        </kendo-card-header>
+    </kendo-card>
+
+    <form [formGroup]="formCliente">
+        <fieldset class="k-form-fieldset">
+            <kendo-panelbar class="panel-info" [expandMode]="expandMode">
+                <kendo-panelbar-item [title]="'Información Principal'" [expanded]="true">
+                    <ng-template kendoPanelBarContent>
+                        <div class='row informacion'>
+                            <div class='col-12 col-lg-4'>
+                                <kendo-formfield>
+                                    <kendo-label text="Tipo de Identificación">
+                                        <kendo-combobox [data]="catalogoTipoIdentificacion" [placeholder]="'Seleccione'"
+                                            required formControlName="TIPO" [disabled]="edicion"
+                                            (valueChange)="changeValueTipoIdentificacion($event)">
+                                        </kendo-combobox>
+                                    </kendo-label>
+                                    <kendo-formerror>Tipo identificación es requerido</kendo-formerror>
+                                </kendo-formfield>
+                            </div>
+                            <div class='col-12 col-lg-4'>
+                                <kendo-formfield>
+                                    <kendo-label text="Identificación">
+                                        <kendo-textbox required formControlName="CUSTNMBR" [disabled]='edicion' (valueChange)="mayus($event, 'CUSTNMBR')">
+                                        </kendo-textbox>
+                                    </kendo-label>
+                                    <kendo-formerror>Identificación inválida</kendo-formerror>
+                                </kendo-formfield>
+                            </div>
+                            <div class='col-12 col-lg-4'>
+                                <kendo-formfield>
+                                    <kendo-label text="Clase">
+                                        <kendo-combobox [data]="catalogoClase" [placeholder]="'Seleccione'" required
+                                            formControlName="CUSTCLAS" [disabled]="edicion">
+                                        </kendo-combobox>
+                                    </kendo-label>
+                                    <kendo-formerror>Clase es requerido</kendo-formerror>
+                                </kendo-formfield>
+                            </div>
+                            <div class='col-12 col-lg-8'>
+                                <kendo-formfield>
+                                    <kendo-label text="Nombre Completo">
+                                        <kendo-textbox required formControlName="CUSTNAME" [disabled]='edicion'
+                                            placeholder="Apellidos y Nombres" (valueChange)="mayus($event, 'CUSTNAME')"></kendo-textbox>
+                                    </kendo-label>
+                                    <kendo-formerror>Nombres inválidos</kendo-formerror>
+                                </kendo-formfield>
+                            </div>
+                            <div class='col-12 col-lg-4'>
+                                <kendo-formfield>
+                                    <kendo-label text="Tipo Contribuyente">
+                                        <kendo-combobox [data]="catalogoTipoContribuyente" [placeholder]="'Seleccione'"
+                                            required formControlName="IDTipoCli" [disabled]="edicion">
+                                        </kendo-combobox>
+                                    </kendo-label>
+                                    <kendo-formerror>Tipo contribuyente es requerido</kendo-formerror>
+                                </kendo-formfield>
+                            </div>
+                            <div class='col-12 col-lg-8'>
+                                <kendo-formfield>
+                                    <kendo-label text="Dirección">
+                                        <input kendoTextBox required formControlName="ADDRESS1" />
+                                    </kendo-label>
+                                    <kendo-formerror>Dirección inválida</kendo-formerror>
+                                </kendo-formfield>
+                            </div>
+
+                            <div class='col-12 col-lg-4'>
+                                <kendo-formfield>
+                                    <kendo-label text="Teléfono">
+                                        <input kendoTextBox required formControlName="PHONE1" />
+                                    </kendo-label>
+                                    <kendo-formerror>Teléfono inválido</kendo-formerror>
+                                </kendo-formfield>
+                            </div>
+                            <div class='col-12 col-lg-8'>
+                                <kendo-formfield>
+                                    <kendo-label>
+                                        <input kendoTextBox formControlName="ADDRESS2" />
+                                    </kendo-label>
+                                    <kendo-formerror>Dirección inválida</kendo-formerror>
+                                </kendo-formfield>
+                            </div>
+
+                            <div class='col-12 col-lg-4'>
+                                <kendo-formfield>
+                                    <kendo-label>
+                                        <input kendoTextBox formControlName="PHONE2" />
+                                    </kendo-label>
+                                    <kendo-formerror>Teléfono inválido</kendo-formerror>
+                                </kendo-formfield>
+                            </div>
+                            <div class='col-12 col-lg-8'>
+                                <kendo-formfield>
+                                    <kendo-label>
+                                        <input kendoTextBox formControlName="ADDRESS3" />
+                                    </kendo-label>
+                                    <kendo-formerror>Dirección inválida</kendo-formerror>
+                                </kendo-formfield>
+                            </div>
+
+                            <div class='col-12 col-lg-4'>
+                                <kendo-formfield>
+                                    <kendo-label>
+                                        <input kendoTextBox formControlName="PHONE3" />
+                                    </kendo-label>
+                                    <kendo-formerror>Teléfono inválido</kendo-formerror>
+                                </kendo-formfield>
+                            </div>
+                        </div>
+                        <div class="row infoAdd">
+                            <div class='col-12 col-lg-4'>
+                                <input id="activo" type="checkbox" kendoCheckBox formControlName="infoAdicional"
+                                    (change)="eventCheckInfoAdicional($event.target)" />
+                                <kendo-label class="infoAdd-etiqueta" text="Información Adicional"></kendo-label>
+                            </div>
+                        </div>
+                        <div class="informacion">
+                            <kendo-tabstrip *ngIf="infoAdicional">
+                                <kendo-tabstrip-tab [title]="'Información'" [selected]="true">
+                                    <ng-template kendoTabContent>
+                                        <div class="row informacion-panel">
+                                            <div class='col-12 col-lg-4'>
+                                                <kendo-formfield>
+                                                    <kendo-label text="País">
+                                                        <kendo-combobox [data]="catalogoPais"
+                                                            [placeholder]="'Seleccione'" [textField]="'CCODEDESC'"
+                                                            [valuePrimitive]='true' [valueField]="'CCODE'" required formControlName="CCode">
+                                                        </kendo-combobox>
+                                                    </kendo-label>
+                                                    <kendo-formerror>País es requerido</kendo-formerror>
+                                                </kendo-formfield>
+                                            </div>
+                                            <div class='col-12 col-lg-4'>
+                                                <kendo-formfield>
+                                                    <kendo-label text="Cantón">
+                                                        <input kendoTextBox required formControlName="CANTON" />
+                                                    </kendo-label>
+                                                    <kendo-formerror>Cantón inválido</kendo-formerror>
+                                                </kendo-formfield>
+                                            </div>
+                                            <div class='col-12 col-lg-4'>
+                                                <kendo-formfield>
+                                                    <kendo-label text="Correo Electrónico">
+                                                        <input class="correo-input" kendoTextBox required formControlName="EMAIL" />
+                                                    </kendo-label>
+                                                    <kendo-formerror>Correo electrónico inválido</kendo-formerror>
+                                                </kendo-formfield>
+                                            </div>
+                                            <div class='col-12 col-lg-4'>
+                                                <kendo-formfield>
+                                                    <kendo-label text="Provincia">
+                                                        <input kendoTextBox required formControlName="STATE" />
+                                                    </kendo-label>
+                                                    <kendo-formerror>Provincia inválido</kendo-formerror>
+                                                </kendo-formfield>
+                                            </div>
+                                            <div class='col-12 col-lg-4'>
+                                                <kendo-formfield>
+                                                    <kendo-label text="Parroquia">
+                                                        <input kendoTextBox required formControlName="PARROQUIA" />
+                                                    </kendo-label>
+                                                    <kendo-formerror>Parroquia inválido</kendo-formerror>
+                                                </kendo-formfield>
+                                            </div>
+
+                                            <div class='col-12 col-lg-4'>
+                                                <kendo-formfield>
+                                                    <kendo-label text="Correo Electrónico Adicional 1">
+                                                        <input class="correo-input" kendoTextBox formControlName="EMAIL1" />
+                                                    </kendo-label>
+                                                    <kendo-formerror>Correo electrónico inválido</kendo-formerror>
+                                                </kendo-formfield>
+                                            </div>
+
+                                            <div class='col-12 col-lg-4'>
+                                                <kendo-formfield>
+                                                    <kendo-label text="Estado Civil">
+                                                        <kendo-combobox [data]="catalogoEstadoCivil"
+                                                            [placeholder]="'Seleccione'" formControlName="ESTADOCIVIL"
+                                                            [disabled]="edicion">
+                                                        </kendo-combobox>
+                                                    </kendo-label>
+                                                    <kendo-formerror>Estado civil es requerido</kendo-formerror>
+                                                </kendo-formfield>
+                                            </div>
+                                            <div class='col-12 col-lg-4'>
+                                                <kendo-formfield>
+                                                    <kendo-label text="Sexo">
+                                                        <kendo-combobox [data]="catalogoSexo"
+                                                            [placeholder]="'Seleccione'" formControlName="SEXO"
+                                                            [disabled]="edicion">
+                                                        </kendo-combobox>
+                                                    </kendo-label>
+                                                    <kendo-formerror>Sexo es requerido</kendo-formerror>
+                                                </kendo-formfield>
+                                            </div>
+
+                                            <div class='col-12 col-lg-4'>
+                                                <kendo-formfield>
+                                                    <kendo-label text="Correo Electrónico Adicional 2">
+                                                        <input class="correo-input" kendoTextBox formControlName="EMAIL2" />
+                                                    </kendo-label>
+                                                    <kendo-formerror>Correo electrónico inválido</kendo-formerror>
+                                                </kendo-formfield>
+                                            </div>
+
+                                            <div class='col-12 col-lg-4'>
+                                                <kendo-formfield>
+                                                    <kendo-label text="Origen de Ingresos">
+                                                        <kendo-combobox [data]="catalogoOrigenIngresos"
+                                                            [placeholder]="'Seleccione'" [textField]="'DESCRIPCION'"
+                                                            [valuePrimitive]='true' [valueField]="'CODIGO'" formControlName="OrigenIngresos">
+                                                        </kendo-combobox>
+                                                    </kendo-label>
+                                                    <kendo-formerror>Origen de Ingresos es requerido</kendo-formerror>
+                                                </kendo-formfield>
+                                            </div>
+                                        </div>
+                                    </ng-template>
+                                </kendo-tabstrip-tab>
+                                <kendo-tabstrip-tab [title]="'Información Económica'" [disabled]="edicion == false">
+                                    <ng-template kendoTabContent>
+                                        <div class="row informacion-panel">
+                                            <div class='col-12 col-lg-4'>
+                                                <kendo-formfield>
+                                                    <kendo-label text="Crédito Cerrado">
+                                                        <input id="activo" type="checkbox" kendoCheckBox disabled='true'
+                                                            formControlName="SHIPCOMPLETE" />
+                                                    </kendo-label>
+                                                </kendo-formfield>
+                                            </div>
+                                            <div class='col-12 col-lg-4'>
+                                                <kendo-formfield>
+                                                    <kendo-label text="Condición de Pago">
+                                                        <input kendoTextBox formControlName="PYMTDMID"
+                                                            disabled='true' />
+                                                    </kendo-label>
+                                                </kendo-formfield>
+                                            </div>
+                                            <div class='col-12 col-lg-4'>
+                                                <kendo-formfield>
+                                                    <kendo-label text="Límite de Crédito">
+                                                        <input kendoTextBox formControlName="CRLMTAMT"
+                                                            disabled='true' />
+                                                    </kendo-label>
+                                                </kendo-formfield>
+                                            </div>
+                                            <div class='col-12 col-lg-4'>
+                                                <kendo-formfield>
+                                                    <kendo-label text="Periodo Gracia Vencimiento">
+                                                        <input kendoTextBox formControlName="COMMENT2"
+                                                            disabled='true' />
+                                                    </kendo-label>
+                                                </kendo-formfield>
+                                            </div>
+                                            <div class='col-12 col-lg-4'>
+                                                <kendo-formfield>
+                                                    <kendo-label text="Periodo Gracia Doc. Soporte">
+                                                        <input kendoTextBox formControlName="COMMENT1"
+                                                            disabled='true' />
+                                                    </kendo-label>
+                                                </kendo-formfield>
+                                            </div>
+                                            <div class='col-12 col-lg-4'>
+                                                <kendo-formfield>
+                                                    <kendo-label text="Grupo Económico">
+                                                        <input kendoTextBox formControlName="USERDEF1"
+                                                            disabled='true' />
+                                                    </kendo-label>
+                                                </kendo-formfield>
+                                            </div>
+                                            <div class='col-12 col-lg-4'>
+                                                <kendo-formfield>
+                                                    <kendo-label text="Fecha Máxima Facturación">
+                                                        <input kendoTextBox formControlName="USERDEF2"
+                                                            disabled='true' />
+                                                    </kendo-label>
+                                                </kendo-formfield>
+                                            </div>
+
+
+                                        </div>
+                                    </ng-template>
+                                </kendo-tabstrip-tab>
+                            </kendo-tabstrip>
+                        </div>
+                    </ng-template>
+                </kendo-panelbar-item>
+                <kendo-panelbar-item [title]="'Direcciones'">
+                    <ng-template kendoPanelBarContent>
+                        <kendo-grid [data]="view | async" style="height: 300px; width: 100%;" (add)="addHandler()"
+                            (edit)="editHandler($event)">
+                            <ng-template kendoGridToolbarTemplate>
+                                <button kendoGridAddCommand icon='plus' [primary]="true"></button>
+                            </ng-template>
+                            <kendo-grid-messages noRecords="Direcciones no encontradas.">
+                            </kendo-grid-messages>
+                            <kendo-grid-column field="ADRSCODE" title="Código Dirección" width="180">
+                            </kendo-grid-column>
+                            <kendo-grid-column field="ADDRESS1" title="Descripción Dirección">
+                            </kendo-grid-column>
+                            <kendo-grid-column width="60">
+                                <ng-template kendoGridCellTemplate let-isNew="isNew">
+                                    <button kendoGridEditCommand [look]="'outline'" primary="true" icon="edit"></button>
+                                </ng-template>
+                            </kendo-grid-column>
+                        </kendo-grid>
+                    </ng-template>
+                </kendo-panelbar-item>
+
+            </kendo-panelbar>
+            <div class="row buttons">
+                <div class='col-12 col-lg-12'>
+                    <div class="k-form-buttons">
+                        <button kendoButton [primary]="true" [icon]="'save'" (click)="mostrarConfirmacionGuardar()"
+                            [disabled]=''>Guardar</button>
+                        <button kendoButton [icon]="'close'" (click)="cancelar()">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+
+        </fieldset>
+    </form>
+</div>
+<ng-container #containerRegistroDireccion></ng-container>
+<ng-container #containerConfirmacionCliente></ng-container>

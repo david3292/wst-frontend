@@ -1,0 +1,84 @@
+<div class=" container-fluid container mt-5">
+    <div class="card titulo-configuracion col-12">
+        <div>
+            <h5 style="display: inline;">Aplicación Cobro</h5>
+            <h5 style="float: right;">{{cobro?cobro.numero:''}}</h5>
+        </div>
+    </div>
+    <div class="row" style="margin-bottom: 5px;">
+        <div class="col-lg col-lg-8">
+            <div class="row">
+                <div class="col-12 col-lg-4">
+                    <kendo-label text="Código Cliente">
+                        <input kendoTextBox disabled [(ngModel)]="cobro?cobro.codigoCliente:cobro" />
+                    </kendo-label>
+                </div>
+                <div class="col-12 col-lg-8">
+                    <kendo-label text="Nombre Cliente">
+                        <input kendoTextBox disabled [(ngModel)]="nombreCliente" />
+                    </kendo-label>
+                </div>
+                <div class="col-12 col-lg-4">
+                    <kendo-label text="Forma de Pago">
+                        <input kendoTextBox disabled
+                            [(ngModel)]="cobroFormaPago?cobroFormaPago.formaPago:cobroFormaPago" />
+                    </kendo-label>
+                </div>
+                <div class="col-12 col-lg-4">
+                    <kendo-label text="Número Documento">
+                        <input kendoTextBox disabled
+                            [(ngModel)]="cobroFormaPago?cobroFormaPago.numeroDocumento:cobroFormaPago" />
+                    </kendo-label>
+                </div>
+                <div class="col-12 col-lg-4">
+                    <kendo-label text="Banco">
+                        <input kendoTextBox disabled [(ngModel)]="cobroFormaPago?cobroFormaPago.banco:cobroFormaPago" />
+                    </kendo-label>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg col-lg-2">
+            <kendo-card class="k-text-center" [width]="'100%'" style="margin-top:23px;">
+                <kendo-card-header>
+                    <h2 kendoCardTitle>${{_finanzasService.financial(cobroFormaPago?cobroFormaPago.valor:0)}}</h2>
+                    <h6 kendoCardSubtitle>VALOR</h6>
+                </kendo-card-header>
+            </kendo-card>
+        </div>
+        <div class="col-lg col-lg-2">
+            <kendo-card class="k-text-center" [width]="'100%'" style="margin-top:23px;">
+                <kendo-card-header>
+                    <h2 kendoCardTitle>${{_finanzasService.financial(cobroFormaPago?cobroFormaPago.saldo:0)}}</h2>
+                    <h6 kendoCardSubtitle>SALDO</h6>
+                </kendo-card-header>
+            </kendo-card>
+        </div>
+
+    </div>
+
+    <kendo-grid [data]="view | async" style="height: 350px; width: 100%;" (add)="addHandler()">
+        <ng-template kendoGridToolbarTemplate>
+            <button kendoGridAddCommand icon='plus' [primary]="true"></button>
+        </ng-template>
+        <kendo-grid-messages noRecords="Aplicaciones no registradas.">
+        </kendo-grid-messages>
+        <kendo-grid-column field="numeroFactura" title="Factura" width="180">
+        </kendo-grid-column>
+        <kendo-grid-column field="cuotaFactura.numeroCuota" title="Cuota" width="250">
+        </kendo-grid-column>
+        <kendo-grid-column field="cuotaFactura.estado" title="Estado" width="250">
+        </kendo-grid-column>
+        <kendo-grid-column field="valor" title="Valor" format="{0:c}" width="150">
+        </kendo-grid-column>
+        <kendo-grid-column field="cobroFormaPagoId" title="Forma de Pago">
+            <ng-template kendoGridCellTemplate let-dataItem>
+                {{obtenerFormaPago(dataItem.cobroFormaPagoId)}}
+            </ng-template>
+        </kendo-grid-column>
+    </kendo-grid>
+
+    <div class="finalizar" style="margin-top:10px; margin-bottom: 10px;">
+        <button kendoButton icon='undo' primary="true" (click)="redireccionarCobro()">FINALIZAR APLICACIÓN</button>
+    </div>
+</div>
+<ng-container #containerRegistroAplicacion></ng-container>

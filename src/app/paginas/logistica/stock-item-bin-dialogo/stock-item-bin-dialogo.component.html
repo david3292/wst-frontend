@@ -1,0 +1,195 @@
+<div class="card articulo-header">
+    <div class="row">
+        <div class="col-12 col-lg-6">
+            <kendo-label text="Artículo">
+                <div class="row articulo-item">
+                    <strong>{{documentoDetalle.codigoArticulo}}</strong>
+                </div>
+                <div class="row articulo-item">
+                    {{documentoDetalle.descripcionArticulo}}
+                </div>
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-2">
+            <kendo-label text="Peso Unitario">
+                <input kendoTextBox [disabled]="true" [(ngModel)]="documentoDetalleSeleccionado.pesoArticulo"/>
+            </kendo-label>
+        </div>
+        <div *ngIf="tipoTransferencia!=='despacho'" class="col-12 col-lg-2">
+            <kendo-label text="Saldo">
+                <input kendoTextBox [(ngModel)]="saldo" [disabled]="true" />
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-2">
+            <kendo-label text="Cantidad">
+                <input kendoTextBox [disabled]="true" [(ngModel)]="totalEnviar"/>
+            </kendo-label>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="tipoTransferencia==='salida'">
+    <kendo-listview height="400" [data]="detalleCompartimientos" [containerClass]="'k-d-flex k-flex-col k-flex-nowrap'">
+        <ng-template kendoListViewHeaderTemplate>
+            <div class="header">
+                <div class="row">
+                    <div class="col-12 col-lg-3">
+                        Compartimiento
+                    </div>
+                    <div class="col-12 col-lg-2">
+                        Existente
+                    </div>
+                    <div class="col-12 col-lg-2">
+                        Reserva
+                    </div>
+                    <div class="col-12 col-lg-2">
+                        Disponible
+                    </div>
+                    <!-- <div class="col-12 col-lg-3">
+                        Transferencia
+                    </div> -->
+                </div>
+            </div>
+        </ng-template>
+        <ng-template kendoListViewItemTemplate let-dataItem="dataItem" let-isLast="isLast">
+            <div class="detail" [class.border-bottom]="!isLast">
+                <div class=" col-12 col-lg-12">
+                    <div class="row">
+                        <div class="col-12 col-lg-3">
+                            {{dataItem.compartimiento}}
+                        </div>
+                        <div class="col-12 col-lg-2">
+                            {{dataItem.cantidadTotal}}
+                        </div>
+                        <div class="col-12 col-lg-2">
+                            {{dataItem.cantidadReservada}}
+                        </div>
+                        <div class="col-12 col-lg-2">
+                            {{dataItem.cantidadDisponible}}
+                        </div>
+                        <!-- <div class="col-12 col-lg-3">
+                            <kendo-numerictextbox [format]="'n2'" [min]="0" [value]="dataItem.cantidadTransferencia"
+                                (valueChange)="onChange($event, dataItem)" (blur)="onBlur()" [autoCorrect]="true">
+                            </kendo-numerictextbox>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+    </kendo-listview>
+</div>
+
+<div *ngIf="tipoTransferencia==='entrada'">
+    <div class="row">
+        <div class="col-12 col-lg-11">
+            <kendo-combobox [data]="articuloCompartimientosData" [textField]="'compartimiento'"
+            [valueField]="'compartimiento'" [(ngModel)]="compartimientoSeleccionado"
+            [placeholder]="'Seleccione un compartimiento'"
+            [filterable]="true" (filterChange)="handleFilter($event)"></kendo-combobox>
+        </div>
+        <div class="col-12 col-lg-1">
+            <button class="buttons" kendoButton [primary]="true" [look]="'outline'" [icon]="'plus'"
+                (click)="agregarBin()">
+                Agregar
+            </button>
+        </div>
+    </div>
+
+    <kendo-listview height="350" [data]="view" [containerClass]="'k-d-flex k-flex-col k-flex-nowrap'">
+        <ng-template kendoListViewHeaderTemplate>
+            <div class="header">
+                <div class="row">
+                    <div class="col-12 col-lg-4">
+                        Compartimiento
+                    </div>
+                    <div class="col-12 col-lg-4">
+                        Existente
+                    </div>
+                    <div class="col-12 col-lg-3">
+                        Transferencia
+                    </div>
+                    <div class="col-12 col-lg-1">
+                        Eliminar
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+        <ng-template kendoListViewItemTemplate let-dataItem="dataItem" let-isLast="isLast">
+            <div class="detail" [class.border-bottom]="!isLast">
+                <div class=" col-12 col-lg-12">
+                    <div class="row">
+                        <div class="col-12 col-lg-4">
+                            {{dataItem.compartimiento}}
+                        </div>
+                        <div class="col-12 col-lg-4">
+                            {{dataItem.cantidadTotal}}
+                        </div>
+                        <div class="col-12 col-lg-3">
+                            <kendo-numerictextbox [format]="'n2'" [min]="0" [value]="dataItem.cantidadTransferencia"
+                                (valueChange)="onChange($event, dataItem)" (blur)="onBlur()">
+                            </kendo-numerictextbox>
+                        </div>
+                        <div class="col-12 col-lg-1">
+                            <button kendoButton [look]="'outline'" primary="true" icon="delete" (click)="removerCompartimiento(dataItem)"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+    </kendo-listview>
+</div>
+
+<div *ngIf="tipoTransferencia==='despacho'">
+    <kendo-listview height="400" [data]="detalleCompartimientos" [containerClass]="'k-d-flex k-flex-col k-flex-nowrap'">
+        <ng-template kendoListViewHeaderTemplate>
+            <div class="header">
+                <div class="row">
+                    <div class="col-12 col-lg-6">
+                        Compartimiento
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        Despacho
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+        <ng-template kendoListViewItemTemplate let-dataItem="dataItem" let-isLast="isLast">
+            <div class="detail" [class.border-bottom]="!isLast">
+                <div class=" col-12 col-lg-12">
+                    <div class="row">
+                        <div class="col-12 col-lg-6">
+                            {{dataItem.compartimiento}}
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            {{dataItem.cantidadTransferencia}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+    </kendo-listview>
+</div>
+
+<div class="alert alert-danger" *ngIf="mensajeError !== undefined">{{mensajeError}}</div>
+
+<!-- <div *ngIf="tipoTransferencia!=='despacho'" class="row footer-button ">
+    <div class="col-12 col-lg-12">
+        <button class="buttons" kendoButton [primary]="true" [look]="'outline'" [icon]="'save'"
+            [disabled]="activarAceptar === false" (click)="guardarInformacion()">
+            Aceptar
+        </button>
+        <button class="buttons" kendoButton [primary]="true" [look]="'outline'" [icon]="'close'"
+            (click)="cerrarDialogo()">
+            Cancelar
+        </button>
+    </div>
+</div> -->
+
+<div class="row footer-button ">
+    <div class="col-12 col-lg-12">
+        <button class="buttons" kendoButton [primary]="true" [look]="'outline'" [icon]="'close'"
+            (click)="cerrarDialogo()">
+            Cerrar
+        </button>
+    </div>
+</div>

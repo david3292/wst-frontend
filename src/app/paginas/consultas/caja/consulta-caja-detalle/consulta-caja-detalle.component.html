@@ -1,0 +1,17 @@
+<kendo-grid [kendoGridBinding]="detalle"
+    [navigable]="true"
+    [height]="200"
+    kendoGridFocusable>
+    <kendo-grid-column field="numeroCobroGP" title="Cobro GP" width="150">
+    </kendo-grid-column>
+    <kendo-grid-column field="numeroDocumento" title="N. Documento" width="150" *ngIf="mostrarColumna('numeroDocumento')">
+    </kendo-grid-column>
+    <kendo-grid-column field="banco" title="Banco" width="160" *ngIf="mostrarColumna('banco')">
+    </kendo-grid-column>
+    <kendo-grid-column field="codigoCliente" title="Cód. Cliente" width="150">
+    </kendo-grid-column>
+    <kendo-grid-column field="nombreCliente" title="Nombre Cliente">
+    </kendo-grid-column>
+    <kendo-grid-column field="valor" title="Valor" class="text-right" format="{0:c}" width="150">
+    </kendo-grid-column>
+</kendo-grid>

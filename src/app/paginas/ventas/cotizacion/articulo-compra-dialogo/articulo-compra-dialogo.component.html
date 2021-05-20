@@ -1,0 +1,95 @@
+<div class="card articulo-header">
+    <div class="row">
+        <div class="col-12 col-lg-12">
+            <kendo-label text="Artículo">
+                <div class="row articulo-item">
+                    <strong>{{cotizacionDetalle.codigoArticulo}}</strong>
+                </div>
+                <div class="row articulo-item">
+                    {{cotizacionDetalle.descripcionArticulo}}
+                </div>
+            </kendo-label>
+        </div>
+    </div>
+</div>
+<form [formGroup]="formularioArticuloCompra">
+    <div class="col-12 col-lg-12">
+            <kendo-formfield>
+                <kendo-label text="Proveedor">
+                    <kendo-combobox style="width: 91%;" [data]="listaProveedores" required formControlName="proveedor"
+                    [textField]="'VENDNAME'" [valueField]="'VENDORID'" (selectionChange)="selectionProveedorChange($event)">
+                    </kendo-combobox>
+                    <button kendoButton icon='search' primary="true" (click)="abrirDialogoBusquedaProveedor()"></button>
+                </kendo-label>
+                <kendo-formerror *ngIf="formularioArticuloCompra.controls.proveedor.errors?.required"> Requerido
+                </kendo-formerror>
+            </kendo-formfield>
+    </div>
+    <div class="col-12 col-lg-12">
+        <kendo-formfield>
+            <kendo-label text="Condición de Pago">
+                <kendo-combobox style="width: 100%;" [data]="listaCondicionesPago" required formControlName="condicionPago"
+                [allowCustom]="true">
+                </kendo-combobox>
+            </kendo-label>
+            <kendo-formerror *ngIf="formularioArticuloCompra.controls.condicionPago.errors?.required"> Requerido
+            </kendo-formerror>
+        </kendo-formfield>
+    </div>
+    <div class="col-12 col-lg-12">
+        <kendo-formfield>
+            <kendo-label text="Bodega entrega">
+                <input kendoTextBox required formControlName="bodegaEntrega" readonly/>
+            </kendo-label>
+            <kendo-formerror *ngIf="formularioArticuloCompra.controls.bodegaEntrega.errors?.required">Requerido
+            </kendo-formerror>
+        </kendo-formfield>
+    </div>
+    <div class="col-12 col-lg-12">
+        <kendo-formfield>
+            <kendo-label text="Cantidad">
+                <kendo-numerictextbox
+                    formControlName="cantidad" [min]="0">
+                </kendo-numerictextbox>
+            </kendo-label>
+            <kendo-formerror *ngIf="formularioArticuloCompra.controls.cantidad.errors?.required">Requerido</kendo-formerror>
+            <kendo-formerror *ngIf="formularioArticuloCompra.controls.cantidad.errors?.min">Se Requiere valor mayor a 0</kendo-formerror>
+            <kendo-formerror *ngIf="formularioArticuloCompra.controls.cantidad.errors?.max">Se Requiere valor menor o igual a {{cotizacionDetalle.cantidad}}</kendo-formerror>
+        </kendo-formfield>
+    </div>
+    <div class="col-12 col-lg-12">
+        <kendo-formfield>
+            <kendo-label text="Margen Utilidad %">
+                <kendo-numerictextbox (valueChange)="onChange($event)" [format]="'n2'" [step]="0.1" name="color-read" orangeColorBack
+                    formControlName="margenUtilidad" [min]="0" [max]="100">
+                </kendo-numerictextbox>
+            </kendo-label>
+            <kendo-formerror *ngIf="formularioArticuloCompra.controls.margenUtilidad.errors?.required">Requerido</kendo-formerror>
+            <kendo-formerror *ngIf="formularioArticuloCompra.controls.margenUtilidad.errors?.min">Se Requiere valor mayor a 0</kendo-formerror>
+            <kendo-formerror *ngIf="formularioArticuloCompra.controls.margenUtilidad.errors?.max">Se Requiere valor menor a 100</kendo-formerror>
+        </kendo-formfield>
+    </div>
+    <div class="col-12 col-lg-12">
+        <kendo-formfield>
+            <kendo-label text="Costo unitario de compra">
+                <kendo-numerictextbox (valueChange)="onChange($event)"
+                    formControlName="costoCompra" [min]="0">
+                </kendo-numerictextbox>
+            </kendo-label>
+            <kendo-formerror *ngIf="formularioArticuloCompra.controls.costoCompra.errors?.required">Requerido</kendo-formerror>
+            <kendo-formerror *ngIf="formularioArticuloCompra.controls.costoCompra.errors?.min">Se Requiere valor mayor a 0</kendo-formerror>
+        </kendo-formfield>
+    </div>
+    <div class="col-12 col-lg-12">
+        <kendo-formfield>
+            <kendo-label text="Precio de venta sin IVA">
+                <kendo-numerictextbox (valueChange)="onChange($event)" [readonly]="true" orangeColorBack
+                    formControlName="precioVentaSinIva" [min]="0" >
+                </kendo-numerictextbox>
+            </kendo-label>
+            <kendo-formerror *ngIf="formularioArticuloCompra.controls.precioVentaSinIva.errors?.required">Requerido</kendo-formerror>
+            <kendo-formerror *ngIf="formularioArticuloCompra.controls.precioVentaSinIva.errors?.min">Se Requiere valor mayor a 0</kendo-formerror>
+        </kendo-formfield>
+    </div>
+</form>
+<ng-container #conatinerProveedoresRef></ng-container>

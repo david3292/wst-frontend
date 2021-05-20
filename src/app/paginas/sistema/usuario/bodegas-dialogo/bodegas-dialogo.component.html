@@ -1,0 +1,28 @@
+<div class="row">
+    <div class="col-12 col-lg-12">
+        <p>Asigne los accesos a bodegas que va a tener el Usuario: <strong>
+                {{configInfo.usuarioPerfil.usuario.nombreCompleto}}</strong> con el Perfil:
+            <strong>{{configInfo.usuarioPerfil.perfil.nombre}}</strong> al punto de venta:
+            <strong>{{configInfo.puntoVenta.nombre}}</strong></p>
+    </div>
+</div>
+
+<div *ngFor="let item of accesosBodega.controls;">
+    <ng-container [formGroup]="item">
+        <input type="checkbox" id="terms2" kendoCheckBox formControlName="acceso" />
+        <label class="k-checkbox-label" for="terms2">{{imprimirLabel(item)}}</label>
+    </ng-container>
+</div>
+
+<div class="row footer-button ">
+    <div class="col-12 col-lg-12">
+        <button class="buttons" kendoButton [primary]="true" [look]="'outline'" [icon]="'save'" (click)="guardar()">
+            Aceptar
+        </button>
+        <button class="buttons" kendoButton [primary]="true" [look]="'outline'" [icon]="'close'"
+            (click)="cerrarDialogo()">
+            Cancelar
+        </button>
+    </div>
+
+</div>

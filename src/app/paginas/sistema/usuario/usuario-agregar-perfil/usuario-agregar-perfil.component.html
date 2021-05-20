@@ -1,0 +1,56 @@
+<div class='col-12 col-lg-12'>
+    <div class="row">
+        <div class='col-12 col-lg-1'>
+            <label [for]="'perfil'">Perfiles: </label>
+        </div>
+        <div class='col-12 col-lg-4'>
+            <kendo-combobox [data]="perfiles" [textField]="'nombre'" [valueField]="'id'" [placeholder]="'Seleccione'"
+                [(ngModel)]="selectedValuePerfil" (valueChange)="changeValuePerfil($event)" >
+            </kendo-combobox>
+        </div>
+        <div class='col-12 col-lg-1' *ngIf="mostrarSeleccionCodigoVendedor">
+            <label [for]="'perfil'">Código Vendedor: </label>
+        </div>
+        <div class='col-12 col-lg-3' *ngIf="mostrarSeleccionCodigoVendedor">
+            <kendo-combobox [data]="codigosVendedorCatalogo" [textField]="'SLPRSNFN'" [valueField]="'SLPRSNID'" [placeholder]="'Seleccione'"
+                [(ngModel)]="codigoVendedorSeleccionado" [valuePrimitive]="true" >
+            </kendo-combobox>
+        </div>
+        <div class='col-12 col-lg-3'>
+            <button kendoButton [primary]="true" [icon]="'track-changes-accept-all'" (click)='preAsignarPerfil()'
+                [disabled]="habilitarAsignar()">
+                Asignar
+            </button>
+        </div>
+    </div>
+    <!-- LISTA DE PERFILES ASIGNADOS -->
+    <div class="row">
+        <div class='col-12 col-lg-6'>
+            <label>Perfiles Asignados</label>
+            <kendo-listview [data]="perfilesAsignados" [containerClass]="'k-d-flex k-flex-col k-flex-nowrap'">
+                <ng-template kendoListViewItemTemplate let-dataItem="dataItem" let-index="index" let-isFirst="isFirst"
+                    let-isLast="isLast">
+                    <div class="product" [class.border-bottom]="!isLast">
+                        <div class='col-12 col-lg-12'>
+                            <div class="row">
+                                <div class='col-12 col-lg-8'>
+                                    <strong>[{{ index+1 }}]</strong>
+                                    <span class="product-name">{{ dataItem.perfil.nombre }}</span>
+                                    <span class="product-name">{{ dataItem.codigoVendedor }}</span>
+                                </div>
+                                <div class='col-12 col-lg-4'>
+                                    <div kendoTooltip>
+                                        <button kendoButton [primary]='true' [look]="'outline'"
+                                            [icon]="'track-changes-reject'" title="Quitar Perfil"
+                                            (click)='preQuitarPerfil(dataItem)'>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </kendo-listview>
+        </div>
+    </div>
+    <div kendoDialogContainer></div>

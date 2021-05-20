@@ -1,0 +1,121 @@
+<br />
+<div class="col-12 col-lg-12">
+    <kendo-card [width]="'100%'">
+        <kendo-card-header class="k-hbox">
+            <h4 kendoCardTitle>Registrar Devoluci&#243;n</h4>
+        </kendo-card-header>
+    </kendo-card>
+
+    <div class="alert alert-danger" *ngIf="mensajeErrorRefactura !== undefined">{{mensajeErrorRefactura}}</div>
+
+    <div class="row mt-5">
+        <div class="col-12 col-lg-4 form-group">
+            <kendo-label text="Tipo Devoluci&#243;n">
+                <kendo-combobox [data]="tiposDevolucion" [valuePrimitive]="true"
+                    (valueChange)="changeValueTipoDevolucion($event)" [(ngModel)]="tipoSeleccionado"></kendo-combobox>
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-4 form-group">
+            <kendo-label text="N° Factura">
+                <input kendoTextBox disabled [(ngModel)]="factura?factura.numero:factura" />
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-4 form-group">
+            <kendo-label text="Valor Factura">
+                <input kendoTextBox disabled value="{{formatearValor(factura?factura.total:factura)}}" />
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-4 form-group">
+            <kendo-label text="Motivo">
+                <kendo-combobox [data]="motivosFiltrados" [textField]="'motivo'" [valueField]="'id'" [disabled]= 'deshabilitiarFinalizar'
+                    (valueChange)="changeValueMotivo($event)" [(ngModel)]="motivoSeleccionado"></kendo-combobox>
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-4 form-group">
+            <kendo-label text="Código Cliente">
+                <input kendoTextBox disabled [(ngModel)]="factura?factura.codigoCliente:factura" />
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-4 form-group">
+            <kendo-label text="Nombre Cliente">
+                <input kendoTextBox disabled [(ngModel)]="factura?factura.nombreCliente:factura" />
+            </kendo-label>
+        </div>
+    </div>
+    <kendo-panelbar *ngIf="mostrarDatosNuevos">
+        <kendo-panelbar-item [title]="'Datos Nuevos'" expanded="true">
+            <ng-template kendoPanelBarContent>
+                <div class="col-12 col-lg-12">
+                    <div class="row" style="padding-top: 10px; padding-bottom: 10px;">
+                        <div class="col-12 col-lg-2">
+                            <button kendoButton style="bottom: 0px; position: absolute;" [icon]="'search'"
+                                [look]="'outline'" [primary]="true" (click)="abrirBuscarClienteDialogo()">Buscar Cliente
+                            </button>
+                        </div>
+                        <div class="col-12 col-lg-3">
+                            <kendo-label text="Código Cliente">
+                                <input kendoTextBox disabled [(ngModel)]="nuevoClienteCodigo" disabled='true'
+                                    required />
+                            </kendo-label>
+                        </div>
+                        <div class="col-12 col-lg-4">
+                            <kendo-label text="Nombre Cliente">
+                                <input kendoTextBox disabled [(ngModel)]="nuevoClienteNombre" disabled='true'
+                                    required />
+                            </kendo-label>
+                        </div>
+                        <div class="col-12 col-lg-12 errorMensaje">
+                            {{mensajeErrorDatosNuevos}}
+                        </div>
+
+                    </div>
+                </div>
+            </ng-template>
+        </kendo-panelbar-item>
+    </kendo-panelbar>
+    <div clas="row">
+        <div class="form-group">
+            <kendo-grid [data]="gridDetallesView" [selectable]="selectableSettings">
+                <kendo-grid-column field="cotizacionDetalle.codigoArticulo" title="Código Artículo" [width]="150">
+                </kendo-grid-column>
+                <kendo-grid-column field="cotizacionDetalle.codigoArticuloAlterno" title="Código Alterno" [width]="150">
+                </kendo-grid-column>
+                <kendo-grid-column field="cotizacionDetalle.descripcionArticulo" title="Descripción Artículo">
+                </kendo-grid-column>
+                <kendo-grid-column field="cantidad" title="Cant. Facturada" [width]="130" class="text-center">
+                </kendo-grid-column>
+                <kendo-grid-column field="saldo" title="Saldo Devolver" [width]="130" class="text-center">
+                </kendo-grid-column>
+                <kendo-grid-column field="cotizacionDetalle.subTotal" title="Precio Venta" format="{0:c}" [width]="120"
+                    class="text-right">
+                    <ng-template kendoGridFooterTemplate let-column="column">Total
+                    </ng-template>
+                </kendo-grid-column>
+                <kendo-grid-column title="Cant. a Devolver" [width]="130">
+                    <ng-template kendoGridCellTemplate let-dataItem>
+                        <input kendoTextBox type="number" [min]="0" [max]="dataItem.cotizacionDetalle.cantidad"
+                            [(ngModel)]="dataItem.cantidadDevolver" [disabled]="dataItem.saldo === 0 || deshabilitarCantidad"
+                            (change)="actualizarCantidad(dataItem)" />
+                    </ng-template>
+                    <ng-template kendoGridFooterTemplate let-column="column">{{totalCantidadNC}}</ng-template>
+                </kendo-grid-column>
+                <ng-template kendoGridNoRecordsTemplate>
+                    No se han encontrado resultados.
+                </ng-template>
+            </kendo-grid>
+        </div>
+
+        <div class="form-group">
+            <div class="btn-container">
+                <button kendoButton [icon]="'close-outline'" [look]="'outline'" [primary]="true"
+                    (click)="limpiar()">LIMPIAR
+                </button>
+                <button style="margin-left: 10px" kendoButton [primary]="true" [icon]="'save'" [disabled] = 'deshabilitiarFinalizar'
+                    (click)="validarDatos()">FINALIZAR
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<ng-container #containerConfirmacion></ng-container>
+<ng-container #containerCliente></ng-container>

@@ -1,0 +1,23 @@
+<p>¿Está seguro de procesar los siguientes cheques?</p>
+<span>Seleccionados: <strong>{{chequesAprocesar.length}}</strong></span>
+<kendo-grid [data]="chequesAprocesar" [height]="250">
+    <kendo-grid-column field="numeroCheque" title="Número Cheque" [width]="150">
+    </kendo-grid-column>
+    <kendo-grid-column field="banco" title="Banco">
+    </kendo-grid-column>
+    <kendo-grid-column field="revision" title="Revisión" [width]="100" class="text-center">
+        <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+            <span class="badge badge-pill" [ngClass]="dataItem.revision?'badge-danger':'badge-success'">
+                {{dataItem.revision ? 'Si' : 'No'}}
+            </span>
+        </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="codigoCliente" title="Cód. Cliente" [width]="130">
+    </kendo-grid-column>
+    <kendo-grid-column field="nombreCliente" title="Cliente">
+    </kendo-grid-column>
+</kendo-grid>
+<div class="alert alert-danger" *ngIf="mostrarMensajeRevision" style="margin-top: 5px;">Los cheques que necesitan revisión deben ser autorizados por el
+    jefe de tesorería.
+    ¿Desea continuar con la revisión?
+</div>

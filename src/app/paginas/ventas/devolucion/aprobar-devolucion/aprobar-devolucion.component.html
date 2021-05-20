@@ -1,0 +1,169 @@
+<div class="col-12 col-lg-12 mt-5">
+    <kendo-card [width]="'100%'">
+        <kendo-card-header class="k-hbox">
+            <h4 kendoCardTitle>{{titulo}}</h4>
+        </kendo-card-header>
+    </kendo-card>
+
+    <kendo-grid [data]="gridDataDevoluciones" [navigable]="true" [pageSize]="state.take" [skip]="state.skip"
+        [sort]="state.sort" [filter]="state.filter" [sortable]="true" [pageable]="true" [filterable]="true"
+        (dataStateChange)="dataStateChange($event)">
+        <ng-template kendoGridToolbarTemplate>
+            <div kendoTooltip position="right">
+                <button kendoButton icon='refresh' [primary]="true" title="Actualizar registros"
+                    (click)="cargarDatos()"></button>
+            </div>
+        </ng-template>
+        <kendo-grid-messages pagerPage="Página" pagerOf="de" pagerItems="ítems" pagerItemsPerPage="ítems por página"
+            noRecords="No existen solicitudes pendientes.">
+        </kendo-grid-messages>
+        <kendo-grid-column field="codigoCliente" title="Cód. Cliente" [width]="130">
+        </kendo-grid-column>
+        <kendo-grid-column field="nombreCliente" title="Nombre Cliente" [width]="190">
+        </kendo-grid-column>
+        <kendo-grid-column field="puntoVentaNombre" title="Punto de Venta" [width]="170"></kendo-grid-column>
+        <kendo-grid-column field="numeroFactura" title="Número Factura" [width]="170"></kendo-grid-column>
+        <kendo-grid-column field="facturaFechaEmision" title="Fecha Factura" [width]="150"></kendo-grid-column>
+        <kendo-grid-column field="tipoDevolucion" title="Tipo" [width]="100"></kendo-grid-column>
+        <kendo-grid-column field="nombreUsuarioVendedor" title="Vendedor" [width]="150"></kendo-grid-column>
+        <kendo-grid-column [width]="70">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <button kendoButton [primary]="true" [look]="'outline'" [icon]="'hyperlink-open'"
+                    (click)="abrirSolicitudDetalle(dataItem)"></button>
+            </ng-template>
+        </kendo-grid-column>
+    </kendo-grid>
+</div>
+<kendo-dialog title="Detalle Devolución" *ngIf="abrirSolicitud" (close)="cerrarSolicitud()" [minWidth]="400"
+    [width]="'80%'">
+
+    <div class="row" style="margin-bottom: 5px;">
+        <div class="col-12 col-lg-3">
+            <kendo-label text="Tipo Devoluci&#243;n">
+                <input kendoTextBox disabled [(ngModel)]="solicitudSeleccionada.tipoDevolucion" />
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-3">
+            <kendo-label text="N° Factura">
+                <input kendoTextBox disabled [(ngModel)]="solicitudSeleccionada.numeroFactura" />
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-3">
+            <kendo-label text="Fecha Factura">
+                <input kendoTextBox disabled [(ngModel)]="solicitudSeleccionada.facturaFechaEmision" />
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-3">
+            <kendo-label text="Código Cliente">
+                <input kendoTextBox disabled [(ngModel)]="solicitudSeleccionada.codigoCliente" />
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-3">
+            <kendo-label text="Nombre Cliente">
+                <input kendoTextBox disabled [(ngModel)]="solicitudSeleccionada.nombreCliente" />
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-6">
+            <kendo-label text="Motivo">
+                <input kendoTextBox disabled [(ngModel)]="solicitudSeleccionada.motivo" />
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-3">
+            <kendo-label text="Revisión Técnica">
+                <input kendoTextBox disabled [(ngModel)]="solicitudSeleccionada.revisionTecnica" />
+            </kendo-label>
+        </div>
+    </div>
+
+    <div class="alert alert-info" style="margin-bottom: 5px;"
+        *ngIf="solicitudSeleccionada.tipoDevolucion === 'REFACTURACION'">
+        <span class="k-icon k-i-information k-i-info" style="margin-right: 5px;"></span>
+        <span *ngIf="notaCredito.motivoNotaCredito.cambioRazonSocial === false">
+            <strong>Nueva Fecha Factura:</strong> {{fechaNueva}}
+        </span>
+        <span *ngIf="notaCredito.motivoNotaCredito.cambioRazonSocial"><strong>Nueva Razón Social:
+            </strong> {{solicitudSeleccionada.codigoClienteNuevo}} - {{solicitudSeleccionada.nombreClienteNuevo}}</span>
+    </div>
+    <kendo-grid [data]="notaCredito.detalle" [height]="200">
+        <kendo-grid-messages pagerPage="Página" pagerOf="de" pagerItems="ítems" pagerItemsPerPage="ítems por página"
+            noRecords="No existen registros.">
+        </kendo-grid-messages>
+        <kendo-grid-column field="cotizacionDetalle.codigoArticulo" title="Código Artículo" [width]="130">
+        </kendo-grid-column>
+        <kendo-grid-column field="cotizacionDetalle.codigoArticuloAlterno" title="Código Alterno" [width]="130">
+        </kendo-grid-column>
+        <kendo-grid-column field="cotizacionDetalle.descripcionArticulo" title="Descripción Artículo">
+        </kendo-grid-column>
+        <kendo-grid-column field="cantidad" title="Cant. a Devolver" [width]="170">
+            <ng-template kendoGridCellTemplate let-dataItem>
+                <kendo-numerictextbox [(ngModel)]="dataItem.cantidad" #valor required
+                    [disabled]="desactivarEdicionValor()" [min]="1" [max]="dataItem.saldo" [autoCorrect]="true"
+                    (blur)="actualizarCantidad(dataItem)">
+                </kendo-numerictextbox>
+            </ng-template>
+        </kendo-grid-column>
+    </kendo-grid>
+    <div class="total-documento" *ngIf="tipo_flujo_aprobacion === 'COMERCIAL'">
+        <div class="row">
+            <div class="col-12 col-lg-10 total-text"><strong>Total</strong></div>
+            <div class="col-12 col-lg-2 total-valor">{{notaCredito.totalCalculado | currency: 'USD'}}</div>
+        </div>
+    </div>
+    <div class="alert alert-danger" *ngIf="mensajeError !== undefined">{{mensajeError}}</div>
+    <form [formGroup]="formRespuesta">
+        <fieldset class="k-form-fieldset">
+            <div class="col-12 card">
+                <h5>Aprobación</h5>
+                <div class='row row-aprobar'>
+                    <div class="col-12 col-lg-4">
+                        <kendo-formfield [orientation]="'horizontal'">
+                            <!-- <span>Opción</span>
+                            <kendo-combobox [data]="catalogo" [textField]="'texto'" [valueField]="'valor'" required
+                                formControlName="estado" (valueChange)="changeValueAprobar($event)">
+                            </kendo-combobox> -->
+                            <ul class="k-radio-list k-list-horizontal" style="margin-top: 20px;">
+
+                                <li class="k-radio-item" style="margin-right: 40px;">
+                                    <input type="radio" name="estado" value="APROBAR" #male formControlName="estado"
+                                        kendoRadioButton (change)="changeValueAprobar($event.target)" />
+                                    <kendo-label class="k-radio-label" [for]="male" text="APROBAR"></kendo-label>
+                                </li>
+
+                                <li class="k-radio-item">
+                                    <input type="radio" name="estado" value="RECHAZAR" #female formControlName="estado"
+                                        kendoRadioButton (change)="changeValueAprobar($event.target)" />
+                                    <kendo-label class="k-radio-label" [for]="female" text="RECHAZAR"></kendo-label>
+                                </li>
+                            </ul>
+
+                            <kendo-formerror>Seleccione una Opción</kendo-formerror>
+                        </kendo-formfield>
+
+                    </div>
+                    <div class="col-12 col-lg-8">
+                        <kendo-formfield>
+                            <kendo-label text="Observaciones">
+                                <textarea class="comments" kendoTextArea rows="3" [autoSize]="true"
+                                    [required]="observacionesRequerido" formControlName="observaciones"></textarea>
+                            </kendo-label>
+                        </kendo-formfield>
+                    </div>
+
+                </div>
+            </div>
+
+            <br>
+            <div class="text-right">
+                <button kendoButton style="margin-right: 5px;" [primary]="true" [look]="'outline'" [icon]="'check'"
+                    [disabled]="mensajeError !== undefined || formRespuesta?.invalid" (click)="enviarRespuesta()">
+                    Aceptar
+                </button>
+                <button kendoButton [primary]="true" [look]="'outline'" [icon]="'cancel'"
+                    (click)="cerrarSolicitud()">Cancelar
+                </button>
+            </div>
+        </fieldset>
+    </form>
+
+</kendo-dialog>
+<ng-container #containerConfirmacion></ng-container>

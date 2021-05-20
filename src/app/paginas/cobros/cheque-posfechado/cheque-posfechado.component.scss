@@ -1,0 +1,27 @@
+.k-grid .no-padding {
+    padding: 0;
+}
+.whole-cell {
+    display: block;
+    padding: 8px 12px; /* depends on theme */
+}
+.colores {
+    margin-right: 5px;
+}
+
+.label {
+    //display: block;
+    font-weight: bold;
+    text-indent: 8px;
+    color: #656565;
+    margin-left: 10px;
+    margin-right: 3px;
+}
+
+.filtro-fecha{
+    margin-top: 3px;
+}
+
+.color-fecha{
+    margin-top: 8px;
+}

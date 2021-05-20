@@ -1,0 +1,50 @@
+<router-outlet></router-outlet>
+<div class="col-12 col-lg-12 mt-5">
+    <kendo-card [width]="'100%'">
+        <kendo-card-header class="k-hbox">
+            <h4 kendoCardTitle>{{titulo}}</h4>
+        </kendo-card-header>
+    </kendo-card>
+
+    <kendo-grid [data]="gridDataTransferencias" [pageSize]="state.take" [skip]="state.skip" [pageable]="true"
+        [filter]="state.filter" [filterable]="true" (dataStateChange)="dataStateChange($event)">
+        <kendo-grid-messages pagerPage="Página" pagerOf="de" pagerItems="ítems" pagerItemsPerPage="ítems por página"
+            noRecords="No existen registros.">
+        </kendo-grid-messages>
+        <kendo-grid-column [style]="{'text-align':'center'}" width="50">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <app-io-badge [ioType]="dataItem.tipo"></app-io-badge>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="numero" title="Transferencia" width="150"></kendo-grid-column>
+        <kendo-grid-column field="cotizacionNumero" title="Cotización" width="150"></kendo-grid-column>
+        <kendo-grid-column field="fechaEmision" title="Fecha emisión" width="150"></kendo-grid-column>
+        <kendo-grid-column field="nombreusuarioVendedor" title="Vendedor" width="200"></kendo-grid-column>
+        <kendo-grid-column field="bodegaOrigen" title="Origen" width="120"></kendo-grid-column>
+        <kendo-grid-column field="bodegaDestino" title="Destino" width="120"></kendo-grid-column>
+        <kendo-grid-column field="pesoTransferencia" title="Peso" [format]="'n2'" width="100"></kendo-grid-column>
+        <kendo-grid-column field="estado" title="Estado" width="110">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <app-state-badge [estado]="dataItem.estado"></app-state-badge>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="tipoTransferencia" title="Tipo" width="110" class="text-center">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <app-tipo-transferencia-badge [tipo]="dataItem.tipoTransferencia"></app-tipo-transferencia-badge>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column [style]="{'text-align':'center'}" width="90">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <button kendoButton [primary]="true" [look]="'outline'" icon="edit"
+                    (click)="cargarTransferencia(dataItem)"></button>
+                <button *ngIf="dataItem.tipo === 'TRANSFERENCIA'" style="margin-left: 2px;" kendoButton [primary]="true"
+                    [look]="'outline'" icon="file-pdf" (click)="generarReporteTransferencia(dataItem)"></button>
+            </ng-template>
+        </kendo-grid-column>
+    </kendo-grid>
+    <kendo-dialog title="Transferencias detalle" *ngIf="abrirDetalle" (close)="cerrarDetalle()" [minWidth]="400"
+        [width]="'70%'">
+        <app-transferencias-detalle-dialogo [transferenciasSalida]="transferenciaDetalles">
+        </app-transferencias-detalle-dialogo>
+    </kendo-dialog>
+</div>

@@ -1,0 +1,76 @@
+<div class="container-fluid container mt-5">
+    <kendo-card [width]="'100%'">
+        <kendo-card-header class="k-hbox">
+            <h4 kendoCardTitle>APROBACIÓN CHEQUES POSFECHADOS</h4>
+        </kendo-card-header>
+    </kendo-card>
+</div>
+
+<div class="col-12 col-lg-12" style="margin-top: 3px;">
+    <kendo-card [width]="'100%'">
+        <kendo-card-header class="k-hbox">
+            <button kendoButton primary="true" [icon]="'check'" style="margin-right: 5px;"
+                (click)="abrirAprobacionRespuestaDialogo('AUTORIZAR')">AUTORIZAR</button>
+            <button kendoButton primary="true" look="outline" [icon]="'close'"
+                (click)="abrirAprobacionRespuestaDialogo('RECHAZAR')">RECHAZAR</button>
+        </kendo-card-header>
+    </kendo-card>
+    <kendo-grid [data]="gridChequesView" style="height: 500px; width: 100%;" [navigable]="true" [selectable]="true"
+        [kendoGridSelectBy]="mySelectionKey" [selectedKeys]="mySelection" [sortable]="true" [sort]="state.sort"
+        [pageSize]="state.take" [skip]="state.skip" [pageable]="true" [filter]="state.filter" [filterable]="true"
+        (dataStateChange)="dataStateChange($event)">
+        <kendo-grid-messages pagerPage="Página" pagerOf="de" pagerItems="ítems" pagerItemsPerPage="ítems por página"
+            noRecords="No existen registros.">
+        </kendo-grid-messages>
+        <kendo-grid-checkbox-column showSelectAll="true" width="50" class="text-center"></kendo-grid-checkbox-column>
+        <kendo-grid-column field="codigoCliente" title="Cód. Cliente" width="130"></kendo-grid-column>
+        <kendo-grid-column field="nombreCliente" title="Nombre Cliente" width="130"></kendo-grid-column>
+        <kendo-grid-column field="cobroFecha" title="Fecha Cobro" width="110" class="text-center"></kendo-grid-column>
+        <kendo-grid-column field="numeroCheque" title="Número Cheque" width="130"></kendo-grid-column>
+        <kendo-grid-column field="banco" title="Banco" width="130"></kendo-grid-column>
+        <kendo-grid-column field="monto" title="Monto" width="130" format="{0:c}" class="text-right">
+        </kendo-grid-column>
+        <kendo-grid-column field="fechaCheque" title="Fecha Cheque" width="130" class="text-center">
+        </kendo-grid-column>
+        <kendo-grid-column field="documentosAplicados" title="Documento Aplicado" width="150">
+            <ng-template kendoGridCellTemplate let-dataItem>
+                <div *ngIf="dataItem.documentosAplicados.length > 1">
+                    {{ dataItem.documentosAplicados[0] }} <button kendoButton
+                        (click)="verAplicaciones(dataItem.documentosAplicados)" icon="search" primary="true"></button>
+                </div>
+                <div *ngIf="dataItem.documentosAplicados.length === 1">
+                    {{ dataItem.documentosAplicados }}
+                </div>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="fechaDiferente" title="Fecha Diferente" width="100" [filterable]="false"
+            class="text-center">
+            <ng-template kendoGridCellTemplate let-dataItem>
+                <span class="badge badge-pill"
+                    [ngClass]="dataItem.fechaDiferente != null ? dataItem.fechaDiferente? 'badge-success':'badge-danger' : ''">
+                    {{dataItem.fechaDiferente != null ? dataItem.fechaDiferente ? 'Si' : 'No' : ''}}
+                </span>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="canje" title="Canje" width="100" [filterable]="false" class="text-center">
+            <ng-template kendoGridCellTemplate let-dataItem>
+                <span class="badge badge-pill"
+                    [ngClass]="dataItem.canje != null ? dataItem.canje? 'badge-success':'badge-danger' : ''">
+                    {{dataItem.canje != null ? dataItem.canje ? 'Si' : 'No' : ''}}
+                </span>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="diasProrroga" title="Días Prórroga" width="100" [filterable]="false"
+            class="text-center">
+            <ng-template kendoGridCellTemplate let-dataItem>
+                {{dataItem.diasProrroga === 0? '' : dataItem.diasProrroga}}
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="nuevaFecha" title="Nueva Fecha" width="130" [filterable]="false">
+        </kendo-grid-column>
+
+    </kendo-grid>
+</div>
+<ng-container #containerAprobarRechazar></ng-container>
+<ng-container #containerResultadoA></ng-container>
+<ng-container #containerAplicacionesA></ng-container>

@@ -1,0 +1,93 @@
+@import '../../../../variables.scss';
+
+h4 {
+    padding-top: 10px;
+    color: #e66a15;
+    text-align: right;
+    align-items: center;
+}
+
+.k-textbox {
+    width: 100%;
+}
+
+.k-textarea {
+    width: 50%;
+}
+
+.buscar-cliente {
+    margin-top: 15px;
+    margin-bottom: 0px;
+    display: flex;
+    justify-content: space-between;
+}
+
+label {
+    margin-right: 5px;
+}
+
+.row {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.header {
+    background: #535353;
+    //height: 60px;
+    //line-height: 50px;
+    margin-top: 10px;
+    font-size: 30px;
+    padding-left: 10px;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0px;
+    //opacity: 86%;
+    z-index: 1;
+}
+
+.k-icon-32 {
+    font-size: 20px; /* Sets icon size to 32px */
+}
+
+.containerButtons {
+    display: flex;
+    flex-direction: initial;
+}
+
+.button-rapid {
+    margin-left: 5px;
+}
+
+.forma-pago {
+    display: flex;
+    justify-content: space-between;
+}
+
+.footer-detalle {
+    padding: 0px 0px;
+    font-size: 11px;
+    text-align: right;
+}
+
+.footer-detalle-valor {
+    padding: 0px 0px;
+    font-size: 11px;
+    text-align: right;
+}
+
+
+.label-condicionPago{
+    width: 50%;
+}
+
+.button-action-footer{
+    display: flex;
+    justify-content: space-between;
+    padding-left: 20%;
+    padding-right: 20%;
+}
+
+.compra{
+    font-weight: bold;
+    color: $accent ;
+}

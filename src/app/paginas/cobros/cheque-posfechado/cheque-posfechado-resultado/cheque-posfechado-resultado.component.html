@@ -1,0 +1,23 @@
+<p>Cheques procesados.</p>
+<kendo-grid [data]="chequesProcesados" [height]="250" *ngIf="chequesProcesados.length >0">
+    <kendo-grid-column field="numeroCobro" title="Número Cobro" [width]="150">
+    </kendo-grid-column>
+    <kendo-grid-column field="numeroCobroFormaPagoGP" title="Número Cobro GP">
+    </kendo-grid-column>
+    <kendo-grid-column field="numeroCheque" title="Cheque" [width]="100" class="text-center">
+    </kendo-grid-column>
+    <kendo-grid-column field="estado" title="Estado" [width]="100" class="text-center">
+    </kendo-grid-column>
+</kendo-grid>
+
+<kendo-grid [data]="chequesProcesadosAprobacion" [height]="250" *ngIf="chequesProcesadosAprobacion.length >0">
+    <kendo-grid-column field="dto.banco" title="Banco">
+    </kendo-grid-column>
+    <kendo-grid-column field="dto.numeroCheque" title="Cheque" [width]="150">
+    </kendo-grid-column>
+    <kendo-grid-column field="tipo" title="Tipo" [width]="100" class="text-center">
+    </kendo-grid-column>
+    <kendo-grid-column field="estado" title="Estado" [width]="100" class="text-center">
+    </kendo-grid-column>
+</kendo-grid>
+<button class="text-center reporte" kendoButton icon='download' primary="true" (click)="descargarReporte()">Descargar Reporte</button>

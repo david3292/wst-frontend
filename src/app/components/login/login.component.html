@@ -1,0 +1,54 @@
+<div class="container-fluid fondo-login">
+    <div class='row my-4'>
+        <div class='col-12 col-lg-12 '>
+            <div class="row example-wrapper">
+                <kendo-card class="center-login">
+                    <kendo-card-header class="k-vbox">
+                        <img [src]="logo" />
+                    </kendo-card-header>
+                    <hr kendoCardSeparator>
+                    <kendo-card-body class="k-vbox">
+                        <div *ngIf="loginService.estaLogueadoMas1Perfil()==false">
+                            <h2 kendoCardTitle>Ingrese con sus credenciales corporativas </h2>
+
+                            <kendo-label text="Usuario">
+                                <input kendoTextBox [(ngModel)]="usuario" />
+                            </kendo-label>
+
+                            <kendo-label text="Contraseña">
+                                <input kendoTextBox type="password" [(ngModel)]="contrasena" (keyup.enter)="iniciarSesion()" />
+                            </kendo-label>
+
+
+                        </div>
+
+
+                        <div *ngIf="loginService.estaLogueadoMas1Perfil()">
+                            <h2 kendoCardTitle>Seleccione Perfil y Punto de Venta</h2>
+                            <label class="label-custom" [for]="'perfil'">Perfil</label>
+                            <kendo-combobox [data]="perfiles" [textField]="'nombre'" [valueField]="'id'"
+                                [placeholder]="'Seleccione'" (valueChange)="changeValuePerfil($event)"
+                                [(ngModel)]="perfilSeleccionado">
+                            </kendo-combobox>
+
+                            <label class="label-custom" [for]="'perfil'">Punto Venta</label>
+                            <kendo-combobox [data]="puntosVenta" [textField]="'nombre'" [valueField]="'id'"
+                                [placeholder]="'Seleccione'" [(ngModel)]="pvtaSeleccionado">
+                            </kendo-combobox>
+                        </div>
+
+
+
+                    </kendo-card-body>
+                    <kendo-card-footer class="footer-login">
+                        <button kendoButton icon='login' primary="true" (click)="iniciarSesion()"
+                            *ngIf="loginService.estaLogueadoMas1Perfil()==false">Iniciar
+                            Sesión</button>
+                        <button #aceptar kendoButton icon='check' primary="true" (click)="seleccionarPerfilyPuntoVenta()"
+                            *ngIf="loginService.estaLogueadoMas1Perfil()" (keyup.enter)="seleccionarPerfilyPuntoVenta()">Aceptar</button>
+                    </kendo-card-footer>
+                </kendo-card>
+            </div>
+        </div>
+    </div>
+</div>

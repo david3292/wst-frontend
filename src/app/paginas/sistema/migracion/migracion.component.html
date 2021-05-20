@@ -1,0 +1,9 @@
+<div class=" container-fluid container mt-5">
+    <div class="card titulo-configuracion">
+        <h5>Importar Datos</h5>
+    </div>
+
+    <span>Saldo Incial</span>
+    <kendo-fileselect [(ngModel)]="myFiles" ></kendo-fileselect>
+    <button kendoButton primary="true" [icon]="'upload'" (click)="subirArchivo()">Importar</button>
+</div>

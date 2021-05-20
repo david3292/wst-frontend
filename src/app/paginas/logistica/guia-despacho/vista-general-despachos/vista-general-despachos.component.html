@@ -1,0 +1,38 @@
+<router-outlet></router-outlet>
+<div class="col-12 col-lg-12 mt-5">
+    <kendo-card [width]="'100%'">
+        <kendo-card-header class="k-hbox">
+            <h4>Gestión de Despachos</h4>
+        </kendo-card-header>
+    </kendo-card>
+
+    <kendo-grid [data]="gridDataDespachos" [pageSize]="state.take" [skip]="state.skip" [pageable]="true"
+                [filter]="state.filter" [filterable]="true"
+                (dataStateChange)="dataStateChange($event)">
+            <kendo-grid-messages pagerPage="Página" pagerOf="de" pagerItems="ítems" pagerItemsPerPage="ítems por página"
+                noRecords="No existen registros.">
+            </kendo-grid-messages>
+        <kendo-grid-column field="identificacionCliente" title="Identificación" width="150"></kendo-grid-column>
+        <kendo-grid-column field="nombreCliente" title="Cliente" width="160"></kendo-grid-column>
+        <kendo-grid-column field="entrega" title="Tipo Entrega" width="100"></kendo-grid-column>
+        <kendo-grid-column field="numeroFactura" title="Factura" width="150"></kendo-grid-column>
+        <kendo-grid-column field="fechaFactura" title="Fecha Factura" width="150"></kendo-grid-column>
+        <kendo-grid-column field="numeroGuiaDespacho" title="Guía de Despacho" width="150"></kendo-grid-column>
+        <kendo-grid-column field="fechaGuiaDespacho" title="Fecha Guía de despacho" width="150"></kendo-grid-column>
+        <kendo-grid-column field="pesoGuiaDespacho" [format]="'n2'" title="Peso" width="100"></kendo-grid-column>
+        <kendo-grid-column field="estadoGuiaRemision" title="Estado" width="100">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <app-state-badge [estado]="dataItem.estadoGuiaRemision"></app-state-badge>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column [style]="{'text-align':'center'}" width="90">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <button kendoButton [primary]="true" [look]="'outline'" icon="edit" (click)="cargarDetalleDespachos(dataItem)"></button>
+                <button style="margin-left: 2px;" kendoButton [primary]="true" [look]="'outline'" icon="file-pdf" (click)="descargarReporte(dataItem)"></button>
+            </ng-template>
+        </kendo-grid-column>
+    </kendo-grid>
+    <kendo-dialog title="Despachos Detalle" *ngIf="abrirDetalle" (close)="cerrarDetalle()" [minWidth]="200" [width]="'40%'">
+        <app-guia-despacho-detalles-dialogo [guiasRemision]="guiasRemision" [guiaDespacho]="despachoDto"></app-guia-despacho-detalles-dialogo>
+    </kendo-dialog>
+</div>

@@ -1,0 +1,95 @@
+<div class=" container-fluid container mt-5">
+    <div class="row">
+        <div class="card titulo-configuracion col-12">
+            <div>
+                <h5 style="display: inline;">Consultas Despachos</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <h5>Parámetros de consulta</h5>
+    </div>
+    <div class="row">
+        <div class="col-12 col-lg-4">
+            <kendo-label text="Número de Despacho">
+                <input kendoTextBox [(ngModel)]="consulta.numeroDocumento"/>
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-4">
+            <kendo-label text="Fecha de emisión inicio">
+                <kendo-datepicker [format]="'dd/MM/yyyy'" [(ngModel)]="fechaInicio"></kendo-datepicker>
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-4">
+            <kendo-label text="Fecha de emisión fin">
+                <kendo-datepicker [format]="'dd/MM/yyyy'" [(ngModel)]="fechaFin" [disabledDates]="deshabilitarFechasFinTraslado"></kendo-datepicker>
+            </kendo-label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-lg-6">
+            <kendo-label text="Entrega Mercadería">
+                <kendo-combobox [data]="tiposEntrega" [valuePrimitive]="true"
+                [(ngModel)]="consulta.tipoEntrega"></kendo-combobox>
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-6">
+            <kendo-label text="Estado">
+                <kendo-combobox [data]="listaEstados" [valuePrimitive]="true" [(ngModel)]="consulta.estado">
+                    <ng-template kendoComboBoxItemTemplate let-dataItem>
+                        <app-state-badge [estado]="dataItem"></app-state-badge>
+                    </ng-template>
+                </kendo-combobox>
+            </kendo-label>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-lg-12" style="text-align: center;">
+            <button style="margin-top: 10px;" kendoButton [icon]="'close-outline'" [look]="'outline'" [primary]="true"
+            (click)="limpiar()">LIMPIAR CONSULTA</button>
+
+            <button style="margin-top: 10px;margin-left: 10px;" kendoButton [primary]="true" [icon]="'search'"
+                (click)="consultar()">CONSULTAR</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <h5>Despachos</h5>
+    </div>
+</div>
+
+<div class="col-12 col-lg-12">
+    <kendo-grid [data]="gridView" style="height: 600px;" [pageSize]="pageSize"
+            [skip]="skip"
+            [pageable]="true"
+            (pageChange)="pageChange($event)">
+        <kendo-grid-column field="identificacionCliente" title="Identificación" width="150"></kendo-grid-column>
+        <kendo-grid-column field="nombreCliente" title="Cliente" width="200"></kendo-grid-column>
+        <kendo-grid-column field="entrega" title="Tipo Entrega" width="100"></kendo-grid-column>
+        <kendo-grid-column field="numeroFactura" title="Factura" width="150"></kendo-grid-column>
+        <kendo-grid-column field="fechaFactura" title="Fecha Factura" width="150"></kendo-grid-column>
+        <kendo-grid-column field="numeroGuiaDespacho" title="Guía de Despacho" width="150"></kendo-grid-column>
+        <kendo-grid-column field="fechaGuiaDespacho" title="Fecha Guía de despacho" width="150"></kendo-grid-column>
+        <kendo-grid-column field="estadoGuiaRemision" title="Estado" width="110">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <app-state-badge [estado]="dataItem.estadoGuiaRemision"></app-state-badge>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column [style]="{'text-align':'center'}" width="110">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <div kendoTooltip style="text-align: center; padding-top: 10px;">
+                    <button style="margin-left: 5px;" kendoButton [primary]="true" [look]="'outline'" icon="file-pdf"
+                    (click)="descargarReporteOrenCompraCliente(dataItem)" title="Orden Despacho"></button>
+                    <button style="margin-left: 5px;" kendoButton [primary]="true" [look]="'outline'" [icon]="'find-and-replace'"
+                    (click)="cargarDetalleDespachos(dataItem)" title="Guías de Remisión"></button>
+                </div>
+            </ng-template>
+        </kendo-grid-column>
+    </kendo-grid>
+    <kendo-dialog title="Despachos Detalle" *ngIf="abrirDetalle" (close)="cerrarDetalle()" [minWidth]="200" [width]="'40%'">
+        <app-guia-despacho-detalles-dialogo [guiasRemision]="guiasRemision" [guiaDespacho]="guiaSeleccionada" [origen]="'consulta'"></app-guia-despacho-detalles-dialogo>
+    </kendo-dialog>
+</div>
+

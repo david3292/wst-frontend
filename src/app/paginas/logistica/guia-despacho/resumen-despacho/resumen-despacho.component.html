@@ -1,0 +1,18 @@
+<div *ngIf="respuestaConGuiaRemision">
+    <div *ngIf="dataResumen.mensajeCodigo === 'ERROR'">
+        <p>Guía de Remisión No. <b>ERROR</b></p>
+        <p class="mensaje-error">{{dataResumen.mensaje}}</p>
+    </div>
+    <div *ngIf="dataResumen.mensajeCodigo !== 'ERROR'">
+        <p>Guía de Remisión No. <b>{{dataResumen.guiaRemision.numero}}</b></p>
+    </div>
+</div>
+
+<div *ngIf="!respuestaConGuiaRemision">
+    <p>Despacho realizado con <b>éxito</b></p>
+    <div class="col-12">
+        <button kendoButton icon='download' primary="true" (click)="descargarDocumento()">Descargar Guía de Despacho</button>
+    </div>
+</div>
+
+

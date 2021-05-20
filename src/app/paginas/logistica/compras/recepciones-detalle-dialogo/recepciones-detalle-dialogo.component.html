@@ -1,0 +1,33 @@
+<kendo-card>
+    <kendo-card-header class="khbox">
+        <div class="d-flex ml-auto nav">
+            <button class="buttons-header" kendoButton [primary]="true" [look]="'outline'"
+            [icon]="'plus'" (click)="crearNuevaRecepcion()">
+                Nueva Recepción
+            </button>
+        </div>
+    </kendo-card-header>
+</kendo-card>
+<kendo-grid [data]="recepcionesCompra">
+    <kendo-grid-column field="numeroRecepcion" title="Número"></kendo-grid-column>
+    <kendo-grid-column field="ordenCompra.numero" title="Referencia"></kendo-grid-column>
+    <kendo-grid-column field="fechaRecepcion" title="Fecha Recepción"></kendo-grid-column>
+    <kendo-grid-column field="estado" title="Estado">
+        <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+            <app-state-badge [estado]="dataItem.estado"></app-state-badge>
+        </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column [style]="{'text-align':'center'}">
+        <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+            <button *ngIf="dataItem.estado==='NUEVO'" kendoButton [primary]="true" [look]="'outline'" icon="edit"
+                (click)="cargarRecepcionCompra(dataItem)">
+            </button>
+            <button *ngIf="dataItem.estado!=='NUEVO'" kendoButton [primary]="true" [look]="'outline'" [icon]="'find-and-replace'"
+                (click)="cargarRecepcionCompra(dataItem)">
+            </button>
+            <button style="margin-left: 3px;" *ngIf="dataItem.estado==='COMPLETADO'" kendoButton [primary]="true" [look]="'outline'" [icon]="'file-pdf'"
+                (click)="generarRecepcionCompraPdf(dataItem)">
+            </button>
+        </ng-template>
+    </kendo-grid-column>
+</kendo-grid>

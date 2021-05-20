@@ -1,0 +1,9 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<div class="content">
+    <app-header *ngIf="loginService.estaLogueado()"></app-header>
+    <router-outlet></router-outlet>
+</div>
+<!-- <div class="footer" *ngIf="loginService.estaLogueado()">
+    <app-footer></app-footer>
+</div> -->
+<ngx-spinner [fullScreen]="true" type="ball-fussion" size="medium"></ngx-spinner>

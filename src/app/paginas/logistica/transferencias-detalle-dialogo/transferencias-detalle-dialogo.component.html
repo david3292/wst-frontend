@@ -1,0 +1,33 @@
+<kendo-card>
+    <kendo-card-header class="khbox">
+        <div class="d-flex ml-auto nav">
+            <button class="buttons-header" kendoButton [primary]="true" [look]="'outline'"
+            [icon]="'plus'" [disabled]="deshabilitar" (click)="crearNuevaTransferenciaSalida()">
+                Nueva transferencia
+            </button>
+        </div>
+    </kendo-card-header>
+</kendo-card>
+<kendo-grid [data]="transferenciasSalida">
+    <kendo-grid-column field="numero" title="Número"></kendo-grid-column>
+    <kendo-grid-column field="referencia" title="Referencia"></kendo-grid-column>
+    <kendo-grid-column field="fechaEmision" title="Fecha Emisión"></kendo-grid-column>
+    <kendo-grid-column field="estado" title="Estado">
+        <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+            <app-state-badge [estado]="dataItem.estado"></app-state-badge>
+        </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column [style]="{'text-align':'center'}">
+        <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+            <button *ngIf="dataItem.estado==='NUEVO'" kendoButton [primary]="true" [look]="'outline'" icon="edit"
+                (click)="cargarTransferencia(dataItem)">
+            </button>
+            <button *ngIf="dataItem.estado!=='NUEVO'" kendoButton [primary]="true" [look]="'outline'" [icon]="'find-and-replace'"
+                (click)="cargarTransferencia(dataItem)">
+            </button>
+            <button style="margin-left: 3px;" *ngIf="dataItem.estado==='EMITIDO'" kendoButton [primary]="true" [look]="'outline'" [icon]="'file-pdf'"
+                (click)="generarGuiaTransferenciaPdf(dataItem)">
+            </button>
+        </ng-template>
+    </kendo-grid-column>
+</kendo-grid>

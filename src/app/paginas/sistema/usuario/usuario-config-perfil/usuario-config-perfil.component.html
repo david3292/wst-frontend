@@ -1,0 +1,75 @@
+<div class="col-12 col-lg-12">
+    <div class="row">
+        <div class='col-12 col-lg-2'>
+            <label [for]="'perfil'">Perfil a Configurar: </label>
+        </div>
+        <div class='col-12 col-lg-4'>
+            <kendo-combobox [data]="perfilesAsignados" [textField]="'nombrePerfil'" [valueField]="'idUsuarioPerfil'"
+                [placeholder]="'Seleccione'" (valueChange)="changeValuePerfil($event)" [(ngModel)]="perfilSeleccionado">
+            </kendo-combobox>
+        </div>
+    </div>
+
+    <div class="row seccionPermisos">
+        <div class='col-12 col-lg-2'>
+            <label [for]="'perfil'">Punto Venta: </label>
+        </div>
+        <div class='col-12 col-lg-4'>
+            <kendo-combobox [data]="puntosVenta" [textField]="'nombre'" [valueField]="'id'" [placeholder]="'Seleccione'"
+                [(ngModel)]="puntoVentaSeleccionado" [disabled]="perfilSeleccionado == null ">
+            </kendo-combobox>
+        </div>
+        <div class='col-12 col-lg-3'>
+            <button kendoButton [primary]="true" [icon]="'track-changes-accept-all'" (click)='preAsignarPuntoVenta()'
+                [disabled]="puntoVentaSeleccionado == null || perfilSeleccionado == null ">
+                Asignar
+            </button>
+        </div>
+    </div>
+
+    <!-- LISTA DE PUNTOS DE VENTAS ASIGNADOS -->
+    <div class="row seccionPvtaAsignados">
+        <div class='col-12 col-lg-8'>
+            <label>Puntos de Venta Asignados</label>
+            <kendo-listview [data]="configuracionesUsuarioPerfil"
+                [containerClass]="'k-d-flex k-flex-col k-flex-nowrap'">
+                <ng-template kendoListViewItemTemplate let-dataItem="dataItem" let-index="index" let-isFirst="isFirst"
+                    let-isLast="isLast">
+                    <div class="configuracion" [class.border-bottom]="!isLast">
+                        <div class='col-12 col-lg-12'>
+                            <div class="row">
+                                <div class='col-12 col-lg-7'>
+                                    <strong>[{{ index+1 }}]</strong>
+                                    <span class="configuracion-name">{{ dataItem.puntoVenta.nombre }}</span>
+                                </div>
+                                <div class='col-12 col-lg-2'>
+                                    <button kendoButton [primary]='true' [look]="'outline'" [icon]="'page-properties'"
+                                        (click)="abrirPermisosDialogo(dataItem)" *ngIf="determinarBotonesVisualizar()">
+                                        Permisos
+                                    </button>
+                                    <div kendoDialogContainer></div>
+                                </div>
+                                <div class='col-12 col-lg-2'>
+                                    <button kendoButton [primary]='true' [look]="'outline'" [icon]="'parameters'"
+                                        (click)="abrirBodegasDialogo(dataItem)" *ngIf="determinarBotonesVisualizar()">
+                                        Bodegas
+                                    </button>
+                                </div>
+                                <div class='col-12 col-lg-1'>
+                                    <div kendoTooltip>
+                                        <button kendoButton [primary]='true' [look]="'outline'"
+                                            [icon]="'track-changes-reject'" title="Quitar Punto Venta"
+                                            (click)="preQuitarPuntoVenta(dataItem)">
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </kendo-listview>
+        </div>
+    </div>
+</div>
+<div kendoDialogContainer></div>

@@ -1,0 +1,10 @@
+<kendo-grid [data]="aplicaciones" scrollable="none" [navigable]="true" kendoGridFocusable style="width:50%;">
+    <kendo-grid-messages noRecords="Aplicaciones no registradas.">
+    </kendo-grid-messages>
+    <kendo-grid-column field="numeroFactura" title="Número Factura">
+    </kendo-grid-column>
+    <kendo-grid-column field="valor" title="Valor" format="{0:c}">
+    </kendo-grid-column>
+    <kendo-grid-column field="cuotaFactura.numeroCuota" title="Cuota">
+    </kendo-grid-column>
+</kendo-grid>

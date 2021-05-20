@@ -1,0 +1,49 @@
+<kendo-grid [kendoGridBinding]="detalle" [height]="200" [navigable]="true">
+    <kendo-grid-column title="Stock" width="70">
+        <ng-template kendoGridCellTemplate let-dataItem>
+            <button kendoButton primary=true icon='search' (click)="consultarStock(dataItem)"></button>
+        </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="codigoArticulo" title="Cód. Artículo" width="120"></kendo-grid-column>
+    <kendo-grid-column field="descripcionArticulo" title="Descripción Artículo">
+        <ng-template kendoGridCellTemplate let-dataItem>
+            {{dataItem.descripcionArticulo}}
+            <span class="transfer" *ngIf="dataItem.generaCompra">C</span>
+            <span class="transfer" *ngIf="dataItem.transferencia">T</span>
+            <span class="transfer" *ngIf="dataItem.mostrarDescripcion">| {{dataItem.descripcionArticuloGP}}</span>
+        </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="cantidad" title="Cantidad" width="100"></kendo-grid-column>
+    <kendo-grid-column field="precio" title="Precio" width="110" format="{0:c}">
+        <ng-template kendoGridCellTemplate let-dataItem>
+            ${{financial(dataItem.precio)}}<span class="transfer" *ngIf="dataItem.mostrarPrecio"> | ${{financial(dataItem.precioGP)}}</span>
+        </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="descuentoFijo" title="Desct. Fijo" width="110">
+        <ng-template kendoGridCellTemplate let-dataItem>
+            {{dataItem.descuentoFijo}}% <span class="transfer" *ngIf="dataItem.mostrarDescuentoFijo">| {{dataItem.descuentoFijoGP}}%</span>
+        </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="subTotal" title="Subtotal" width="110" format="{0:c}"></kendo-grid-column>
+    <kendo-grid-column field="total" title="Total" width="110" format="{0:c}"></kendo-grid-column>
+</kendo-grid>
+
+<div class="text-right total-documento">
+    <div class="row">
+        <div class="col-12 col-lg-11"><strong>Subtotal 0%</strong></div>
+        <div class="col-12 col-lg-1">${{financial(subTotal0)}}</div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-lg-11"><strong>Subtotal 12%</strong></div>
+        <div class="col-12 col-lg-1">${{financial(subTotal12)}}</div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-lg-11"><strong>IVA 12%</strong></div>
+        <div class="col-12 col-lg-1">${{financial(iva)}}</div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-lg-11"><strong>Total</strong></div>
+        <div class="col-12 col-lg-1">${{financial(total)}}</div>
+    </div>
+</div>
+<div kendoDialogContainer></div>

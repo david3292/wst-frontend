@@ -1,0 +1,26 @@
+
+<kendo-grid [data]="cobrosError" [navigable]="true" *ngIf="cobrosError.length > 0">
+    <ng-template kendoGridToolbarTemplate>
+        <strong>Error Cobros</strong>
+    </ng-template>
+    <kendo-grid-column field="numeroCobroGP" title="Número" [width]='150'></kendo-grid-column>
+    <kendo-grid-column field="formaPago" title="F. Pago" [width]='150'></kendo-grid-column>
+    <kendo-grid-column field="numeroDocumento" title="N. Documento" [width]='150'></kendo-grid-column>
+    <kendo-grid-column field="mensajeError" title="Causa">
+        <ng-template kendoGridCellTemplate let-dataItem>
+            <span style="font-size: 12px;">{{dataItem.mensajeError}}</span>
+        </ng-template>
+    </kendo-grid-column>
+</kendo-grid>
+
+<kendo-grid [data]="aplicacionesError" [navigable]="true" *ngIf="aplicacionesError.length > 0">
+    <ng-template kendoGridToolbarTemplate>
+        <strong>Error Aplicaciones</strong>
+    </ng-template>
+    <kendo-grid-column field="numeroFactura" title="Número Factura" [width]='150'></kendo-grid-column>
+    <kendo-grid-column field="mensajeError" title="Causa">
+        <ng-template kendoGridCellTemplate let-dataItem>
+            <span style="font-size: 12px;">{{dataItem.mensajeError}}</span>
+        </ng-template>
+    </kendo-grid-column>
+</kendo-grid>

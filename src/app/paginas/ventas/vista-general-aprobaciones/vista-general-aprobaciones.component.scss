@@ -1,0 +1,31 @@
+@import '../../../../variables.scss';
+
+.comments{
+    width: 100%;
+}
+
+.label{
+    margin-bottom: 0;
+}
+
+.row-aprobar{
+    margin-bottom: 10px;
+}
+
+.comments-seller{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+::ng-deep .k-dialog-wrapper{
+    z-index: 30001 !important;
+}
+
+.resaltar-naranja{
+    font-weight: bold;
+    color: $accent ;
+}
+
+.k-list-horizontal .k-radio-item {
+    margin: 0 10px 0 0;
+}

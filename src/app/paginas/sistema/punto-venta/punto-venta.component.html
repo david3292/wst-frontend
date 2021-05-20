@@ -1,0 +1,38 @@
+<div class=" container-fluid container mt-5">
+    <div class="card titulo-configuracion">
+        <h5>Puntos de Venta</h5>
+    </div>
+
+    <kendo-grid [data]="puntosVenta" [sortable]="true" (edit)="editHandler($event)" (cancel)="cancelHandler($event)"
+        (save)="saveHandler($event)" (add)="addHandler($event)" [navigable]="true">
+        <ng-template kendoGridToolbarTemplate>
+            <button kendoGridAddCommand primary=true icon='plus'>Agregar</button>
+        </ng-template>
+
+        <kendo-grid-column field="nombre" editor="string" title="Nombre"></kendo-grid-column>
+
+        <kendo-grid-column field="puntoEmision" editor="string" title="Punto de Emisión"></kendo-grid-column>
+
+        <kendo-grid-column field="direccion" editor="string" title="Dirección"></kendo-grid-column>
+
+        <kendo-grid-column field="ubicacion" editor="numstringric" title="Ubicación"></kendo-grid-column>
+
+        <kendo-grid-column field="activo" editor="boolean" title="Activo" width="80">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <app-active-badge [active]="dataItem.activo"></app-active-badge>
+            </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-command-column width="300">
+            <ng-template kendoGridCellTemplate let-dataItem  let-isNew="isNew">
+                <button kendoGridEditCommand [primary]="true" [look]="'outline'" icon="edit"></button>
+                <button kendoGridSaveCommand [disabled]="formGroup?.invalid" [look]="'outline'" icon="check"></button>
+                <button kendoGridCancelCommand [look]="'outline'" icon="close"></button>
+                <button kendoButton *ngIf="editedRowIndex === undefined" [primary]="true" [look]="'outline'" icon="track-changes-accept" (click)="abrirAsignarBodegaDialogo(dataItem)">Bodegas</button>
+                <button kendoButton *ngIf="editedRowIndex === undefined" [primary]="true" [look]="'outline'" icon="track-changes-accept" (click)="abrirAsignarFormaPagoDialogo(dataItem)">Formas de Pago</button>
+            </ng-template>
+        </kendo-grid-command-column>
+    </kendo-grid>
+</div>
+<ng-container #containerAsignacionBodega></ng-container>
+<ng-container #containerAsignacionFormaPago></ng-container>

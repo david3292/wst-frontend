@@ -1,0 +1,35 @@
+@import "../../../../../variables.scss";
+
+.seccion-precio {
+    margin-top: 25px;
+    text-align: center;
+}
+
+.currency-card {
+    color: $accent;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.buttons {
+    align-self: flex-end;
+}
+
+.signo {
+    align-self: flex-end;
+    margin-bottom: 5px;
+    color: $accent;
+}
+
+.articulo-item{
+    padding-left: 15px;
+}
+
+.articulo-header{
+    padding: 10px 10px;
+    margin-bottom: 10px;
+}
+
+[orangeColorBack] ::ng-deep span input{
+    color: #fd7e14;
+}

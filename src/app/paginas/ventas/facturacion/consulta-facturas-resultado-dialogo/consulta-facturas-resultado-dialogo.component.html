@@ -1,0 +1,7 @@
+<div *ngFor="let item of facturas">
+    <span>{{visualizarNumero(item)}} - {{item.estado}}</span>
+    <button style="margin-left: 5px;" kendoButton [primary]="true" [look]="'flat'" [icon]="'download'"
+        (click)="descargar(item)"></button>
+</div>
+<div class="alert alert-danger mensaje" *ngIf="mensaje !== undefined">{{mensaje}}</div>
+

@@ -1,0 +1,60 @@
+.header {
+    background: #535353;
+    //height: 60px;
+    //line-height: 50px;
+    margin-top: 10px;
+    font-size: 30px;
+    padding-left: 10px;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0px;
+    opacity: 85%;
+    z-index: 1;
+}
+
+h4 {
+    padding-top: 10px;
+    color: #e66a15;
+    text-align: right;
+    align-items: center;
+}
+
+.containerButtons {
+    display: flex;
+    flex-direction: initial;
+}
+
+.button-rapid {
+    margin-left: 5px;
+}
+
+.button-action-footer {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 30%;
+    padding-right: 30%;
+}
+
+.k-dateinput {
+    width: 100% !important;
+}
+
+.k-maskedtextbox{
+    width: 100% !important;
+}
+
+.fotmat-cell-number{
+    text-align: right;
+}
+
+.k-datepicker {
+    width: 100% !important;
+}
+
+.k-dropdown {
+    width: 100% !important;
+}
+
+.mensaje-error{
+    color: red;
+}

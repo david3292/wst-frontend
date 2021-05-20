@@ -1,0 +1,153 @@
+<div class=" container-fluid container mt-5">
+    <div class="card titulo-configuracion col-12">
+        <div>
+            <h5 style="display: inline;">RESERVA-FACTURA</h5>
+            <span style="float: right;" *ngIf="reservaRecuperada">Reserva : {{reservaRecuperada?
+                reservaRecuperada.numero:''}}</span>
+        </div>
+    </div>
+    <div class="row header">
+        <div class="col-12 col-lg-12">
+            <div class="alert alert-warning" style="margin-bottom: 10px;" *ngIf="mostrarMensaje()">
+                {{mensajeAdvertencia}}</div>
+
+            <div class="alert alert-info" style="margin-bottom: 10px;" *ngIf="reservasEmitidasNumeros">
+                <span class="k-icon k-i-information k-i-info"></span>
+                Reservas Emitidas: {{reservasEmitidasNumeros}}. La(s) factura(s) se emitirán cuando se complete el/los
+                proceso(s) de transferencia.
+            </div>
+            <div class="alert alert-danger" style="margin-bottom: 10px;" *ngIf="mensajeError">
+                {{mensajeError}}</div>
+        </div>
+        <div class="col-12 col-lg-9" *ngIf="cotizacion !== undefined">
+            <app-cabecera [documento]="cotizacion" [ventanaPadre]="'facturaciones'"></app-cabecera>
+        </div>
+        <div class="col-12 col-lg-3">
+            <kendo-label text="Punto de Venta">
+                <input kendoTextBox [disabled]="true" [(ngModel)]="puntoVenta" />
+            </kendo-label>
+            <kendo-label text="Abono Porcentaje">
+                <kendo-numerictextbox [format]="{maximumFractionDigits: 0}" [max]="100" [autoCorrect]="true"
+                    [disabled]="true">
+                </kendo-numerictextbox>
+            </kendo-label>
+            <kendo-label text="Fecha Máxima Reserva">
+                <input kendoTextBox [disabled]="true" />
+            </kendo-label>
+            <kendo-label text="Tiempo Máximo Abono">
+                <input kendoTextBox [disabled]="true" />
+            </kendo-label>
+        </div>
+    </div>
+    <form class="k-form" [formGroup]="editForm">
+        <div class="row address">
+            <div class="col-12 col-lg-4">
+                <kendo-formfield>
+                    <kendo-label text="Entrega"></kendo-label>
+                    <kendo-combobox [data]="catalogoEntregas" formControlName="entregaSeleccionado"
+                        (valueChange)="entregaChange($event)" [placeholder]="'Seleccione'" [valuePrimitive]="true">
+                    </kendo-combobox>
+                    <kendo-formerror>Seleccione el tipo de entrega</kendo-formerror>
+                </kendo-formfield>
+            </div>
+            <div class="col-12 col-lg-8" *ngIf="direccionClienteVisible">
+                <kendo-formfield>
+                    <kendo-label text="Dirección Entrega"></kendo-label>
+                    <kendo-combobox [data]="catalogoDireccionCliente" [textField]="'ADDRESS1'" [valueField]="'ADRSCODE'"
+                        formControlName="direccionSeleccionadaDespacho" [placeholder]="'Seleccione'">
+                    </kendo-combobox>
+                    <kendo-formerror>Seleccione la dirección de entrega</kendo-formerror>
+                </kendo-formfield>
+            </div>
+            <div [className]="direccionClienteVisible ? 'col-12 col-lg-12': 'col-12 col-lg-8'">
+                <kendo-formfield>
+                    <kendo-label text="Cliente Retira"></kendo-label>
+                    <input kendoTextBox formControlName="clienteRetira" />
+                    <kendo-formerror>Digite el cliente que retira</kendo-formerror>
+                </kendo-formfield>
+            </div>
+        </div>
+    </form>
+</div>
+<div class='col-12 col-lg-12 detail'>
+    <kendo-grid [data]="detalle">
+        <kendo-grid-column field="cotizacionDetalle.codigoArticulo" title="Código" [width]="150">
+            <ng-template kendoGridCellTemplate let-dataItem>
+                <span class="whole-cell" [style.backgroundColor]="colorCode(dataItem.cotizacionDetalle.id)">
+                    {{ dataItem.cotizacionDetalle.codigoArticulo }}
+                </span>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="cotizacionDetalle.descripcionArticulo" title="Descripción">
+            <ng-template kendoGridCellTemplate let-dataItem>
+                <span class="whole-cell" [style.backgroundColor]="colorCode(dataItem.cotizacionDetalle.id)">
+                    {{ dataItem.cotizacionDetalle.descripcionArticulo }}
+                </span>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="cotizacionDetalle.cantidad" title="Cant. Cotizada" [width]="105">
+            <ng-template kendoGridHeaderTemplate let-column let-columnIndex="columnIndex">
+                <div kendoTooltip position="top">
+                    <div title="Cantidad Cotizada">Cant. Cotizada</div>
+                </div>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="cotizacionDetalle.saldo" title="Pend. Facturar" [width]="105">
+            <ng-template kendoGridHeaderTemplate let-column let-columnIndex="columnIndex">
+                <div kendoTooltip position="top">
+                    <div title="Pendiente por Facturar">Pend. Facturar</div>
+                </div>
+            </ng-template>
+            <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+                <div class="footer-detalle">Subtotal 0%</div>
+                <div class="footer-detalle">Subtotal 12%</div>
+                <div class="footer-detalle">IVA 12%</div>
+                <div class="footer-detalle">Total</div>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="cotizacionDetalle.total" title="Total" width="100" format="{0:c}">
+            <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+                <div class="footer-detalle-valor">${{financial(subTotal0)}}</div>
+                <div class="footer-detalle-valor">${{financial(subTotal12)}}</div>
+                <div class="footer-detalle-valor">${{financial(iva12)}}</div>
+                <div class="footer-detalle-valor">${{financial(total)}}</div>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="cantidadReservada" title="Total Facturar" [width]="100">
+            <ng-template kendoGridHeaderTemplate let-column let-columnIndex="columnIndex">
+                <div kendoTooltip position="top">
+                    <div title="Total Reservado">Total Facturar</div>
+                </div>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column [width]="120" title="Seleccionar">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <button kendoButton [primary]="true" [look]="'outline'" [icon]="'hyperlink-open'"
+                    [disabled]="puedeHacerDeshacerPicking(dataItem) === false " (click)="abrirPickingDialogo(dataItem)"
+                    *ngIf="dataItem.cotizacionDetalle.saldo !== 0 "></button>
+                <app-state-badge [estado]="'SELECCIONADO'" *ngIf="dataItem.cotizacionDetalle.saldo === 0">
+                </app-state-badge>
+                <button kendoButton [primary]="true" [look]="'outline'" [icon]="'reset'"
+                    [disabled]="puedeHacerDeshacerPicking(dataItem) === false"
+                    (click)="restablecerValores(dataItem)"></button>
+            </ng-template>
+        </kendo-grid-column>
+    </kendo-grid>
+</div>
+<div class=" container-fluid container mt-5">
+    <div class="row">
+        <div class="col-12 col-lg-12">
+            <button style="margin-right: 10px;" kendoButton primary="true" [icon]="'undo'"
+                (click)='redireccionarVentas()'>REGRESAR</button>
+            <button style="margin-right: 10px;" kendoButton primary="true" [icon]="'redo'" (click)="facturar()"
+                [disabled]="puedeFacturarOAnular() === false">FACTURAR</button>
+            <button kendoButton primary="true" [icon]="'close'" (click)="mostrarConfirmacionCerrar()"
+                [disabled]="puedeCerrar() === false">CERRAR</button>
+        </div>
+    </div>
+</div>
+
+<ng-container #containerPickingFactura></ng-container>
+<ng-container #containerFacturaResumen></ng-container>
+<ng-container #containerConfirmacionCerrar></ng-container>
+<br>

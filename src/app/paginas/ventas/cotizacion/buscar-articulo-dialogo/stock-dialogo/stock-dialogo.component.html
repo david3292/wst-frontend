@@ -1,0 +1,12 @@
+<div>
+    <p> <strong>TOTAL DISPONIBLE:</strong> {{financial(stock.total)}}</p>
+    <span><strong>{{stock.puntoVenta}}</strong></span>
+
+    <kendo-grid [data]="stock.stockDetalle" [navigable]="true">
+        <kendo-grid-column field="bodega.codigo" title="Bodega"></kendo-grid-column>
+        <kendo-grid-column field="cantidadExistente" title="Extistencia"></kendo-grid-column>
+        <kendo-grid-column field="cantidadReservada" title="Reserva"></kendo-grid-column>
+        <kendo-grid-column field="cantidadTotal" title="Total"></kendo-grid-column>
+    </kendo-grid>
+
+</div>

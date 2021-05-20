@@ -1,0 +1,35 @@
+<kendo-card *ngIf="habilitarControles">
+    <kendo-card-header class="khbox">
+        <div class="d-flex ml-auto nav">
+            <button class="buttons-header" kendoButton [primary]="true" [look]="'outline'"
+            [icon]="'plus'" (click)="crearNuevoDespacho()">
+                Nuevo Despacho
+            </button>
+        </div>
+    </kendo-card-header>
+</kendo-card>
+<kendo-grid [data]="guiasRemision">
+    <kendo-grid-messages noRecords="No existen registros.">
+    </kendo-grid-messages>
+
+    <kendo-grid-column field="numero" title="Número" width="50%"></kendo-grid-column>
+    <kendo-grid-column field="estado" title="Estado" width="30%">
+        <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+            <app-state-badge [estado]="dataItem.estado"></app-state-badge>
+        </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column *ngIf="habilitarControles" [style]="{'text-align':'center'}" width="20%">
+        <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+            <button kendoButton [primary]="true" [look]="'outline'" [icon]="'find-and-replace'"
+                (click)="cargar(dataItem)">
+            </button>
+        </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column *ngIf="!habilitarControles" [style]="{'text-align':'center'}" width="20%">
+        <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+            <button kendoButton [primary]="true" [look]="'outline'" icon="file-pdf"
+                (click)="generarReporteGuiaRemision(dataItem)">
+            </button>
+        </ng-template>
+    </kendo-grid-column>
+</kendo-grid>

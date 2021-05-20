@@ -1,0 +1,43 @@
+<router-outlet></router-outlet>
+<div class=" container-fluid container mt-5" [hidden]="route.children.length !== 0">
+    <div class="card titulo-configuracion">
+        <h5>Condiciones de Pago</h5>
+    </div>
+
+    <kendo-grid [data]="condiciones" [sortable]="true" [navigable]="true">
+        <ng-template kendoGridToolbarTemplate>
+            <button kendoGridAddCommand primary=true icon='plus' routerLink="nuevo">Agregar</button>
+        </ng-template>
+
+        <kendo-grid-column field="termino" editor="string" title="Términos"></kendo-grid-column>
+
+        <kendo-grid-column field="cuotas" editor="string" title="Cuotas"></kendo-grid-column>
+
+        <kendo-grid-column field="totalDias" editor="string" title="Total días"></kendo-grid-column>
+
+        <kendo-grid-column field="documentoSoporte" editor="numstringric" title="Documento Soporte">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <span
+                    [ngClass]="dataItem.documentoSoporte?'k-icon k-i-checkbox-checked k-icon-32':'k-icon k-i-checkbox k-icon-32' "></span>
+            </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-column field="activo" editor="boolean" title="Activo" width="80">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <span class="badge badge-pill" [ngClass]="dataItem.activo? 'badge-success':'badge-danger'">
+                    {{dataItem.activo?'Si':'No'}}
+                </span>
+            </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-column width="100" [style]="{'text-align':'center'}">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <button kendoButton [primary]="true" [look]="'outline'" icon="edit"
+                    [routerLink]="[ 'edicion', dataItem.id]"></button>
+            </ng-template>
+        </kendo-grid-column>
+        <div *kendoGridDetailTemplate="let dataItem">
+            <app-condicion-pago-detalle [condicion]="dataItem"></app-condicion-pago-detalle>
+        </div>
+    </kendo-grid>
+</div>

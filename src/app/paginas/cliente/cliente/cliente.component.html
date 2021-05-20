@@ -1,0 +1,39 @@
+<router-outlet></router-outlet>
+<div class=" container-fluid container mt-5" [hidden]="route.children.length !== 0">
+    <div class="card titulo-configuracion">
+        <h5>CLIENTES</h5>
+    </div>
+
+    <div class="row seccion-buscar">
+        <div class="col-12 col-lg-1">
+            <label [for]="'codigo'">Criterio </label>
+        </div>
+        <div class="col-12 col-lg-8  wraper-col">
+            <kendo-textbox class="buscar-texbox" id="codigo" placeholder="Nombre, Cédula, Ruc, Pasaporte "
+                [(ngModel)]="codigoBuscar" ></kendo-textbox>
+            <button kendoButton [icon]="'search'" [primary]="true" [look]="'outline'"
+                (click)="buscarClientePorCriterio()"> Buscar
+            </button>
+        </div>
+    </div>
+
+    <kendo-grid [data]="gridClientesView" [navigable]="true" [height]="500"
+        [pageSize]="state.take" [skip]="state.skip" [pageable]="true" [sortable]="true" [sort]="state.sort"
+        [filter]="state.filter" [filterable]="true" (dataStateChange)="dataStateChange($event)">
+        <ng-template kendoGridToolbarTemplate>
+            <button kendoGridAddCommand icon='plus' [primary]="true" routerLink="nuevo"></button>
+        </ng-template>
+        <kendo-grid-messages pagerPage="Página" pagerOf="de" pagerItems="ítems" pagerItemsPerPage="ítems por página"
+            noRecords="No existen registros.">
+        </kendo-grid-messages>
+        <kendo-grid-column field="CUSTNMBR" title="Código Cliente" [width]="200"></kendo-grid-column>
+        <kendo-grid-column field="CUSTNAME" title="Nombre Cliente"></kendo-grid-column>
+        <kendo-grid-column width="60">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <button kendoButton [primary]="true" [look]="'outline'" icon="edit"
+                    [routerLink]="[ 'edicion', dataItem.CUSTNMBR]"></button>
+            </ng-template>
+        </kendo-grid-column>
+    </kendo-grid>
+
+</div>

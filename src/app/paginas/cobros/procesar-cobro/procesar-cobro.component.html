@@ -1,0 +1,201 @@
+<div class=" container-fluid container mt-5">
+    <div class="card titulo-configuracion">
+        <h5>COBROS</h5>
+    </div>
+    <br />
+    <div class="card header-search">
+        <div class="row">
+            <div class="col-lg col-lg-8">
+                <div class="row">
+                    <div class="col-lg col-lg-3">
+                        <kendo-label text="Código Cliente"></kendo-label>
+                    </div>
+                    <div class="col-lg col-lg-9">
+                        <div class="wraper-col">
+                            <input kendoTextBox placeholder="Nombre, Cédula, Ruc, Pasaporte"
+                                [(ngModel)]="codigoCliente" />
+                            <button kendoButton icon='search' primary="true" (click)="buscarCliente()"
+                                [disabled]='realizandoPago'>Buscar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row name-client">
+                    <div class="col-lg col-lg-3">
+                        <kendo-label text="Nombre Cliente"></kendo-label>
+                    </div>
+                    <div class="col-lg col-lg-9">
+                        <input kendoTextBox [(ngModel)]="nombreCliente" [disabled]='true' />
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg col-lg-2">
+                <kendo-card class="k-text-center" [width]="'100%'">
+                    <kendo-card-header>
+                        <h2 kendoCardTitle>${{financial(deudaTotalGeneral)}}</h2>
+                        <h6 kendoCardSubtitle>Deuda Total Cliente</h6>
+                    </kendo-card-header>
+                </kendo-card>
+            </div>
+            <div class="col-lg col-lg-2">
+                <kendo-card class="k-text-center" [width]="'100%'">
+                    <kendo-card-header>
+                        <h2 kendoCardTitle>${{cobro ? financial(cobro.valor) : financial(0.00)}}</h2>
+                        <h6 kendoCardSubtitle>Cobro Total Cliente</h6>
+                    </kendo-card-header>
+                </kendo-card>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="card header-document">
+        <div class="row">
+            <div class="col-lg col-lg-2">
+                <kendo-label text="Documento Aplica"></kendo-label>
+            </div>
+            <div class="col-lg col-lg-6">
+                <div class="wraper-col">
+                    <kendo-combobox class="input-search" [data]="documentosCatalogo" [itemDisabled]="itemDisabled"
+                        [textField]="'valorDescripcion'" [disabled]='desactivarSeleccionDocumento'
+                        [valueField]="'idDocumento'" [placeholder]="'Seleccione'" [(ngModel)]="documentoSeleccionado">
+                    </kendo-combobox>
+                    <button kendoButton icon='search' primary="true" [disabled]='desactivarSeleccionDocumento'
+                        (click)="seleccionarDocumentoAPagar()">Seleccionar</button>
+                </div>
+            </div>
+            <div class="col-lg col-lg-2">
+                <kendo-card class="k-text-center" [width]="'100%'">
+                    <kendo-card-header>
+                        <h2 kendoCardTitle>${{financial(deudaTotal)}}</h2>
+                        <h6 kendoCardSubtitle>Deuda Total</h6>
+                    </kendo-card-header>
+                </kendo-card>
+            </div>
+            <div class="col-lg col-lg-2">
+                <kendo-card class="k-text-center" [width]="'100%'">
+                    <kendo-card-header>
+                        <h2 kendoCardTitle>${{financial(totalAPagar)}}</h2>
+                        <h6 kendoCardSubtitle>Total a Pagar</h6>
+                    </kendo-card-header>
+                </kendo-card>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row" *ngIf="realizandoPago">
+        <div class="col-12 col-lg-8">
+            <kendo-listview [data]="detalleCobro? detalleCobro.cuotas:[]"
+                [containerClass]="'k-d-flex k-flex-col k-flex-nowrap'">
+                <ng-template kendoListViewHeaderTemplate>
+                    <div class="header">
+                        <div class="row">
+                            <div class="col-12 col-lg-1">
+                                Cuota
+                            </div>
+                            <div class="col-12 col-lg-2">
+                                Estado
+                            </div>
+                            <div class="col-12 col-lg-2">
+                                Saldo
+                            </div>
+                            <div class="col-12 col-lg-3">
+                                Valor
+                            </div>
+                            <div class="col-12 col-lg-2">
+                                Fecha Pago
+                            </div>
+                            <div class="col-12 col-lg-2">
+                                Seleccionado
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+                <ng-template kendoListViewItemTemplate let-dataItem="dataItem" let-isLast="isLast">
+                    <div class="detail" [class.border-bottom]="!isLast">
+                        <div class="col-12 col-lg-12">
+                            <div class="row">
+                                <div class="col-12 col-lg-1">
+                                    {{dataItem.numero}}
+                                </div>
+                                <div class="col-12 col-lg-2">
+                                    {{dataItem.estado}}
+                                </div>
+                                <div class="col-12 col-lg-2">
+                                    $ {{financial(dataItem.saldo)}}
+                                </div>
+                                <div class="col-12 col-lg-3">
+                                    <kendo-numerictextbox [(ngModel)]="dataItem.valor" #valor required [disabled]="desactivarEdicionValor(dataItem)"
+                                        [format]="{ style: 'currency',currency: 'USD',maximumFractionDigits: 2}"
+                                        [min]="0.01" [max]="dataItem.saldo" [autoCorrect]="true" (valueChange)="onChangeSaldo($event)">
+                                    </kendo-numerictextbox>
+                                </div>
+                                <div class="col-12 col-lg-2">
+                                    {{dataItem.fechaPago}}
+                                </div>
+                                <div class="col-12 col-lg-2">
+                                    <input type="checkbox" id="terms" kendoCheckBox [checked]="dataItem.seleccionado"
+                                        (change)="eventCheck($event.target, dataItem)"
+                                        [disabled]="desactivarSeleccionCuota(dataItem)" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </kendo-listview>
+        </div>
+        <div class="col-12 col-lg-4" *ngIf="detalleCobro">
+            <kendo-label text="Tipo Crédito">
+                <input kendoTextBox disabled [(ngModel)]="detalleCobro.tipoCredito" />
+            </kendo-label>
+            <kendo-label text="Condición de Pago">
+                <input kendoTextBox disabled [(ngModel)]="detalleCobro.condicionPago" />
+            </kendo-label>
+        </div>
+    </div>
+    <br>
+    <div class="alert alert-primary info-cobro" *ngIf="cobro">COBRO ASIGNADO <span
+            class="info-cobro-numero">{{cobro.numero}}</span></div>
+
+    <kendo-grid [data]="view | async" style="height: 300px; width: 100%;" (add)="addHandler()"
+        (remove)="removeHandler($event)" *ngIf="realizandoPago">
+        <ng-template kendoGridToolbarTemplate>
+            <button kendoGridAddCommand icon='plus' [primary]="true" [disabled]="validarTotalAPagar() == true"></button>
+        </ng-template>
+        <kendo-grid-messages noRecords="Formas de Pago no encontradas.">
+        </kendo-grid-messages>
+        <kendo-grid-column width="60" [locked]="true">
+            <ng-template kendoGridCellTemplate let-isNew="isNew">
+                <button kendoGridRemoveCommand [look]="'outline'" primary="true" icon="delete"></button>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="formaPago" title="Forma de Pago" width="180" [locked]="true">
+        </kendo-grid-column>
+        <kendo-grid-column field="valor" title="Valor" format="{0:c}" width="150" [locked]="true">
+        </kendo-grid-column>
+        <kendo-grid-column field="numeroDocumento" title="No. Documento" width="250">
+        </kendo-grid-column>
+        <kendo-grid-column field="banco" title="Banco" width="250">
+        </kendo-grid-column>
+        <kendo-grid-column field="chequera" title="Chequera" width="250">
+        </kendo-grid-column>
+        <kendo-grid-column field="numeroAutorizacion" title="No. Autorización" width="250">
+        </kendo-grid-column>
+        <kendo-grid-column field="numeroFactura" title="Doc. Aplica" width="180" [locked]="true">
+        </kendo-grid-column>
+        <kendo-grid-column field="fechaEfectivizacion" title="Fecha Efectivización" width="180">
+        </kendo-grid-column>
+    </kendo-grid>
+    <div class="finalizar">
+        <button kendoButton icon='check' primary="true" *ngIf="realizandoPago"
+            (click)="mostrarConfirmacion()">FINALIZAR</button>
+        <button class="buton-limpiar" kendoButton icon='rotate' primary="true" *ngIf="realizandoPago"
+            (click)="blanquearDatos()">LIMPIAR</button>
+        <button class="buton-limpiar" kendoButton icon='calculator' primary="true" *ngIf="existeFormaPagoEfectivo()"
+            (click)="mostrarCalculadora()">CALCULADORA</button>
+    </div>
+
+    <ng-container #containerRegistro></ng-container>
+    <ng-container #cobroResultado></ng-container>
+    <ng-container #containerBuscarCliente></ng-container>
+    <ng-container #containerConfirmacion></ng-container>
+    <ng-container #containerCalculadora></ng-container>
+</div>

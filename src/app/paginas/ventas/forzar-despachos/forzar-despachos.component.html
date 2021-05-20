@@ -1,0 +1,25 @@
+<div class=" col-12 col-lg-12 mt-5">
+    <div class="card titulo-configuracion">
+        <h5>GENERAR ÓRDENES DESPACHO</h5>
+    </div>
+    <kendo-grid [data]="gridData" [sortable]="true" [navigable]="true" style="height: 530px; width: 100%;" [filter]="state.filter" [filterable]="true" (dataStateChange)="dataStateChange($event)">
+        <kendo-grid-column field="cotizacion.codigoCliente" title="Cód. Cliente" width="150"></kendo-grid-column>
+        <kendo-grid-column field="cotizacion.nombreCliente" title="Cliente" width="150"></kendo-grid-column>
+        <kendo-grid-column field="cotizacion.puntoVenta.nombre" title="Punto Venta" width="150"></kendo-grid-column>
+        <kendo-grid-column field="fechaEmision" title="Fecha Fact." width="150"></kendo-grid-column>
+        <kendo-grid-column field="numero" title="Factura" width="150"></kendo-grid-column>
+        <kendo-grid-column field="cotizacion.numero" title="Cotización" width="150"></kendo-grid-column>
+        <kendo-grid-column field="cotizacion.formaPago" title="F. Pago" width="150"></kendo-grid-column>
+        <kendo-grid-column field="cotizacion.condicionPago" title="Condi. Pago" width="150"></kendo-grid-column>
+        <kendo-grid-column field="periodoGracia" title="P. Gracia" [width]="90"></kendo-grid-column>
+        <kendo-grid-column field="total" title="Valor" format="{0:c}" width="150"></kendo-grid-column>
+        <kendo-grid-column [width]="60" [locked]="true">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <button class="button-opciones" kendoButton primary="true" [look]="'outline'" icon="file-add"
+                    (click)="mostrarConfirmacionGenerarGuia(dataItem)"></button>
+            </ng-template>
+        </kendo-grid-column>
+    </kendo-grid>
+</div>
+<ng-container #containerConfirmacionGenerarGuia></ng-container>
+<ng-container #containerResultadoGenerarGuia></ng-container>

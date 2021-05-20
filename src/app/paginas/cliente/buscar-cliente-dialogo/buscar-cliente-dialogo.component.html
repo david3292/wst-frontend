@@ -1,0 +1,37 @@
+<div class="row">
+    <div class="col-12 col-lg-9 wraper-col">
+        <label [for]="'codigo'">Criterio </label>
+        <kendo-textbox class="buscar-texbox" id="codigo" placeholder="Nombre, Cédula, Ruc, Pasaporte "
+            [(ngModel)]="codigoBuscar" (valueChange)="onChangeBusqueda($event)"></kendo-textbox>
+        <button kendoButton [icon]="'search'" [primary]="true" [look]="'outline'" (click)="buscarClientePorCriterio()"
+            [disabled]="activarBuscar()">
+        </button>
+    </div>
+    <div class="col-12 col-lg-3">
+        <div class="row  buttons-actions ">
+            <div kendoTooltip position="bottom">
+                <button class="element-wraper" kendoButton [primary]="true" [icon]="'plus'" [look]="'outline'"
+                    title="Agregar" (click)="nuevo()">
+                </button>
+            </div>
+            <div kendoTooltip position="bottom">
+                <button kendoButton [primary]="true" [icon]="'edit'" [look]="'outline'" title="Modificar" (click)="editar()"
+                    [disabled]="activarEditar()">
+                </button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<kendo-grid [data]="gridClientesView" [selectable]="selectableSettings" [navigable]="true" [height]="300"
+    [pageSize]="state.take" [skip]="state.skip" [pageable]="true" [kendoGridSelectBy]="eventoSeleccion"
+    [selectedKeys]="clienteSeleccionado" [sortable]="true" [sort]="state.sort" [filter]="state.filter" [filterable]="true"
+    (dataStateChange)="dataStateChange($event)">
+    <kendo-grid-messages pagerPage="Página" pagerOf="de" pagerItems="ítems" pagerItemsPerPage="ítems por página"
+        noRecords="No existen registros.">
+    </kendo-grid-messages>
+    <kendo-grid-checkbox-column [width]="45"></kendo-grid-checkbox-column>
+    <kendo-grid-column field="CUSTNMBR" title="Código Cliente" [width]="150"></kendo-grid-column>
+    <kendo-grid-column field="CUSTNAME" title="Nombre Cliente"></kendo-grid-column>
+</kendo-grid>

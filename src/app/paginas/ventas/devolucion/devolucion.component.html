@@ -1,0 +1,159 @@
+<br />
+<div class="col-12 col-lg-12">
+    <kendo-card [width]="'100%'">
+        <kendo-card-header class="k-hbox">
+            <h4 kendoCardTitle>Gestión Devoluciones</h4>
+        </kendo-card-header>
+    </kendo-card>
+
+    <kendo-grid [data]="gridDocumentosView" [selectable]="selectableSettings" [navigable]="true" [height]="500"
+        [pageSize]="state.take" [skip]="state.skip" [pageable]="true" [kendoGridSelectBy]="eventoSeleccion"
+        [selectedKeys]="itemSeleccionado" [sortable]="true" [sort]="state.sort" [filter]="state.filter"
+        [filterable]="true" (dataStateChange)="dataStateChange($event)">
+        <kendo-grid-messages pagerPage="P&#225;gina" pagerOf="de" pagerItems="ítems"
+            pagerItemsPerPage="ítems por p&#225;gina" noRecords="No se han encontrado resultados."
+            filterBooleanAll="Todos" filterIsFalse="No" filterIsTrue="Si">
+        </kendo-grid-messages>
+        <kendo-grid-column field="numero" title="N&#250;mero Doc." [width]="170"></kendo-grid-column>
+        <kendo-grid-column field="fechaEmision" title="Fecha Emisi&#243;n" [width]="120" class="text-center">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                {{formatearFecha(dataItem.fechaEmision)}}
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="codigoCliente" title="Id. Cliente" [width]="150" class="text-center">
+        </kendo-grid-column>
+        <kendo-grid-column field="nombreCliente" title="Nombre Cliente">
+        </kendo-grid-column>
+        <kendo-grid-column field="total" title="Total Venta" [width]="100" [filterable]="false" format="{0:c}"
+            class="text-right">
+        </kendo-grid-column>
+        <kendo-grid-column field="estado" title="Estado" [width]="100" class="text-center" [filterable]="false">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <app-state-badge [estado]="dataItem.estado"></app-state-badge>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="despachada" title="Orden despacho" width="110" class="text-center" filter="boolean">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <span class="badge badge-pill"
+                    [ngClass]=" dataItem.refacturacion ?'' :dataItem.despachada != null ? dataItem.despachada? 'badge-success':'badge-danger' : ''">
+                    {{ dataItem.refacturacion ?'-' : dataItem.despachada != null ? dataItem.despachada ? 'Si' : 'No' : ''}}
+                </span>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="tieneGuiaRemision" title="Despachada" width="110" class="text-center"
+            filter="boolean">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <span class="badge badge-pill"
+                    [ngClass]=" dataItem.refacturacion ?'' :dataItem.tieneGuiaRemision != null ? dataItem.tieneGuiaRemision? 'badge-success':'badge-danger' : ''">
+                    {{dataItem.refacturacion ?'-' : dataItem.tieneGuiaRemision != null ? dataItem.tieneGuiaRemision ? 'Si' : 'No' : ''}}
+                </span>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="refacturacion" title="Refactura" width="110" class="text-center" filter="boolean">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <span class="badge badge-pill"
+                    [ngClass]="dataItem.refacturacion != null ? dataItem.refacturacion? 'badge-success':'badge-danger' : ''">
+                    {{dataItem.refacturacion != null ? dataItem.refacturacion ? 'Si' : 'No' : ''}}
+                </span>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column [width]="90" [filterable]="false" class="text-center">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <button kendoButton [primary]="true" [look]="'outline'" [icon]="'plus'"
+                    [title]="'Registrar devoluci&#243;n'" (click)="nuevaDevolucion(dataItem)"></button>
+            </ng-template>
+        </kendo-grid-column>
+    </kendo-grid>
+
+    <!--    <kendo-dialog title="Registrar Devoluci&#243;n" *ngIf="abrirNueva" (close)="cerrarDetalle()" [minWidth]="400"-->
+    <!--                  [width]="'90%'">-->
+    <!--        <div class="row">-->
+    <!--            <div class="col-12 col-lg-3 form-group">-->
+    <!--                <kendo-label text="Tipo Devoluci&#243;n">-->
+    <!--                    <input kendoTextBox disabled value="ARTICULO"/>-->
+    <!--                </kendo-label>-->
+    <!--            </div>-->
+    <!--            <div class="col-12 col-lg-3 form-group">-->
+    <!--                <kendo-label text="N° Factura">-->
+    <!--                    <input kendoTextBox disabled [(ngModel)]="documentoSeleccionado.numero"/>-->
+    <!--                </kendo-label>-->
+    <!--            </div>-->
+    <!--            <div class="col-12 col-lg-3 form-group">-->
+    <!--                <kendo-label text="Valor Factura">-->
+    <!--                    <input kendoTextBox disabled value="{{formatearValor(documentoSeleccionado.total)}}"/>-->
+    <!--                </kendo-label>-->
+    <!--            </div>-->
+    <!--            <div class="col-12 col-lg-3 form-group">-->
+    <!--                <kendo-label text="Id. Cliente">-->
+    <!--                    <input kendoTextBox disabled [(ngModel)]="documentoSeleccionado.cotizacion.codigoCliente"/>-->
+    <!--                </kendo-label>-->
+    <!--            </div>-->
+    <!--            <div class="col-12 col-lg-3 form-group">-->
+    <!--                <kendo-label text="Nombre Cliente">-->
+    <!--                    <input kendoTextBox disabled [(ngModel)]="documentoSeleccionado.cotizacion.nombreCliente"/>-->
+    <!--                </kendo-label>-->
+    <!--            </div>-->
+    <!--            <div class="col-12 col-lg-6 form-group">-->
+    <!--                <kendo-label text="Motivo">-->
+    <!--                    <input kendoTextBox value="{{motivo}}"/>-->
+    <!--                </kendo-label>-->
+    <!--            </div>-->
+    <!--            <div class="col-12 col-lg-3 form-group">-->
+    <!--                <kendo-label text="Valor Total N.C.">-->
+    <!--                    <input kendoTextBox disabled value="{{formatearValor(totalValorNC)}}"/>-->
+    <!--                </kendo-label>-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--        <div clas="row">-->
+    <!--            <div class="form-group">-->
+    <!--                <kendo-grid [data]="gridDetallesView">-->
+    <!--                    <kendo-grid-column field="cotizacionDetalle.codigoArticulo" title="Código Artículo"-->
+    <!--                                       [width]="150"></kendo-grid-column>-->
+    <!--                    <kendo-grid-column field="cotizacionDetalle.descripcionArticulo"-->
+    <!--                                       title="Descripción Artículo"></kendo-grid-column>-->
+    <!--                    <kendo-grid-column field="cotizacionDetalle.cantidad" title="Cant. Facturada"-->
+    <!--                                       [width]="130" class="text-center"></kendo-grid-column>-->
+    <!--                    <kendo-grid-column field="cotizacionDetalle.precio" title="Precio Venta" format="{0:c}"-->
+    <!--                                       [width]="120" class="text-right">-->
+    <!--                        <ng-template-->
+    <!--                            kendoGridFooterTemplate-->
+    <!--                            let-column="column">Total-->
+    <!--                        </ng-template>-->
+    <!--                    </kendo-grid-column>-->
+    <!--                    <kendo-grid-column title="Cant. a Devolver" [width]="130">-->
+    <!--                        <ng-template kendoGridCellTemplate let-dataItem>-->
+    <!--                            <input kendoTextBox type="number" [min]="0" [max]="dataItem.cotizacionDetalle.cantidad"-->
+    <!--                                   [(ngModel)]="dataItem.cantidadDevolver"-->
+    <!--                                   (change)="actualizarCantidad(dataItem)"/>-->
+    <!--                        </ng-template>-->
+    <!--                        <ng-template-->
+    <!--                            kendoGridFooterTemplate-->
+    <!--                            let-column="column">{{totalCantidadNC}}</ng-template>-->
+    <!--                    </kendo-grid-column>-->
+    <!--                    <kendo-grid-column title="Valor N.C." class="text-center" [width]="130" field="valorNC"-->
+    <!--                                       format="{0:c}">-->
+    <!--                        <ng-template-->
+    <!--                            kendoGridFooterTemplate-->
+    <!--                            let-column="column"><span class="text-center">{{formatearValor(totalValorNC)}}</span>-->
+    <!--                        </ng-template>-->
+    <!--                    </kendo-grid-column>-->
+    <!--                    <ng-template kendoGridNoRecordsTemplate>-->
+    <!--                        No se han encontrado resultados.-->
+    <!--                    </ng-template>-->
+    <!--                </kendo-grid>-->
+    <!--            </div>-->
+
+    <!--            <div class="form-group">-->
+    <!--                <div class="btn-container">-->
+    <!--                    <button kendoButton [icon]="'close-outline'" [look]="'outline'"-->
+    <!--                            [primary]="true"-->
+    <!--                            (click)="limpiar()">LIMPIAR-->
+    <!--                    </button>-->
+    <!--                    <button style="margin-left: 10px" kendoButton [primary]="true" [icon]="'save'"-->
+    <!--                            (click)="guardar()">GUARDAR-->
+    <!--                    </button>-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--    </kendo-dialog>-->
+</div>

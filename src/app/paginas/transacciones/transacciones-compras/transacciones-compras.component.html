@@ -1,0 +1,23 @@
+<div class=" container-fluid container mt-5">
+    <div class="card titulo-configuracion">
+        <h5>TRANSACCIONES COMPRAS</h5>
+    </div>
+    <kendo-grid [data]="compras" [navigable]="true">
+
+        <kendo-grid-column field="numero" title="Número"></kendo-grid-column>
+        <kendo-grid-column field="numeroRecepcion" title="Número Recepción"></kendo-grid-column>
+        <kendo-grid-column field="estado" title="Estado"></kendo-grid-column>
+        <kendo-grid-column title="Opciones">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <button class="button-opciones" kendoButton primary="true"  [look]="'outline'" icon="reset" (click)="procesarCompra(dataItem)">Reintentar</button>
+                <button style="margin-left: 5px;" class="button-opciones" kendoButton primary="true" [look]="'outline'" icon="search" (click)="verMensajeError(dataItem,mensajeErrorTemplate)">Causa</button>
+            </ng-template>
+        </kendo-grid-column>
+    </kendo-grid>
+</div>
+
+<ng-container #containerDialog></ng-container>
+
+<ng-template #mensajeErrorTemplate>
+    <div style="margin-top: 5px; margin-bottom: 5px;" class="alert alert-danger"><b>{{compraSeleccionada.mensajeError}}</b></div>
+</ng-template>

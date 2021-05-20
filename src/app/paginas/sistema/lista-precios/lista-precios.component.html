@@ -1,0 +1,201 @@
+<div class="container-fluid container mt-5">
+    <div class="row">
+        <div class="card titulo-configuracion col-12">
+            <div>
+                <h5 style="display: inline;">Lista de Precios</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top: 10px;">
+        <div class="col-lg-12">
+            <div class="card col-12 col-lg-12" style="padding-bottom: 15px;">
+                <div class="row">
+                    <div class="col-12 col-lg-4">
+                        <kendo-label text="Código Artículo">
+                            <input kendoTextBox [(ngModel)]="codigoArticulo" />
+                        </kendo-label>
+                    </div>
+                    <div class="col-12 col-lg-4">
+                        <kendo-label text="Código Alterno">
+                            <input kendoTextBox [(ngModel)]="codigoAlterno" />
+                        </kendo-label>
+                    </div>
+                    <div class="col-12 col-lg-4">
+                        <kendo-label text="Clase Artículo">
+                            <kendo-combobox style="width: 100%;" [data]="clasesArticulo" [(ngModel)]="claseArticulo" [allowCustom]="false">
+                            </kendo-combobox>
+                        </kendo-label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="row" style="margin-top:10px">
+        <div class="col-lg-6">
+            <button style="width: 100%;" kendoButton [icon]="'search'" [primary]="true"
+                (click)='consultarArticulos()'>Consultar</button>
+        </div>
+
+        <div class="col-lg-6">
+            <button style="width: 100%;" kendoButton [icon]="'close-outline'" [look]="'outline'" [primary]="true"
+                (click)='limpiarConsulta()'>Limpiar Consulta</button>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top: 10px">
+        <div class="col-12 col-lg-3">
+            <kendo-label text="Margen precio venta mínimo">
+                <kendo-numerictextbox [min]="0" [max]="100" [autoCorrect]="true" [(ngModel)]="margenVentaMinimo">
+                </kendo-numerictextbox>
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-3">
+            <button style="margin-top: 24px;" kendoButton [look]="'outline'" [primary]="true"
+                (click)='abrirDialogoConfimacionMargen()'>Aplicar todo</button>
+        </div>
+        <div class="col-12 col-lg-3">
+            <kendo-label text="Descuento">
+                <kendo-numerictextbox [min]="0" [max]="100" [autoCorrect]="true" [(ngModel)]="descuento">
+                </kendo-numerictextbox>
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-3">
+            <button style="margin-top:24px" kendoButton [look]="'outline'" [primary]="true"
+                (click)='abrirDialogoConfimacionDescuento()'>Aplicar todo</button>
+        </div>
+    </div>
+    <div class="row" style="margin-top:10px">
+        <div class="col-12">
+            <button kendoButton [primary]="true" (click)='abrirDialogoConfimacionGuardarLista()'>Guardar Lista de Precios</button>
+        </div>
+    </div>
+
+</div>
+
+<div class="col-12 col-lg-12" style="margin-top:20px">
+    <kendo-grid [data]="view | async" style="height:500px" (dataStateChange)="onStateChange($event)"
+        (cellClick)="cellClickHandler($event)" (cellClose)="cellCloseHandler($event)" [navigable]="true"
+        [filter]="gridState.filter" [filterable]="true"
+        [pageable]="true" [skip]="gridState.skip" [pageSize]="gridState.take">
+        <kendo-grid-column [width]="70" >
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <button kendoButton [look]="'outline'" primary="true" icon="delete" (click)="eliminar(dataItem)"></button>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column [width]="70" >
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <button kendoButton [look]="'outline'" (click)="abrirDialogoDetallearticulo(dataItem)" primary="true" icon="search"></button>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="codigo" title="Código" [width]="200"></kendo-grid-column>
+        <kendo-grid-column field="codigoAlterno" title="Código Alterno" [width]="130"></kendo-grid-column>
+        <kendo-grid-column field="descripcion" title="Descripción" [width]="250" estaEsClase></kendo-grid-column>
+        <kendo-grid-column field="unidadMedida" title="Unidad Medida" [width]="150"></kendo-grid-column>
+        <kendo-grid-column field="pesoKg" title="Peso (kg)" format="{0:n2}" [width]="150">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <span *ngIf="dataItem.pesoKg === 0" style="color:red; font-weight: bold;" >{{dataItem.pesoKg}} *</span>
+                <span *ngIf="dataItem.pesoKg !== 0">{{_intl.formatNumber(dataItem.pesoKg, "n2")}}</span>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="stock" title="Existencia" format="{0:n2}" [width]="150"></kendo-grid-column>
+        <kendo-grid-column field="costoPromedio" title="Costo Promedio" format="{0:c2}" [width]="150">
+        </kendo-grid-column>
+        <kendo-grid-column field="costoUnitario" title="Costo Unitario" format="{0:c2}" [width]="150">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <span *ngIf="dataItem.costoUnitario === 0" style="color:red; font-weight: bold;" >{{dataItem.costoUnitario}} *</span>
+                <span *ngIf="dataItem.costoUnitario !== 0">{{_intl.formatNumber(dataItem.costoUnitario, "c2")}}</span>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="precioVentaActual" title="Precio Vta. Actual" format="{0:c2}" [width]="150">
+        </kendo-grid-column>
+        <kendo-grid-column field="margenPrecioVtaMin" title="MPVM" editor="numeric" format="{0:n2}" [width]="150">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <span>{{_intl.formatNumber(dataItem.margenPrecioVtaMin, "n2")}}%</span>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="deshabilitarPrecioVenta" editor="boolean" title="Deshabilitar Cálculo PVA" format="{0:c2}" [width]="150">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <app-active-badge [active] = "dataItem.deshabilitarPrecioVenta"></app-active-badge>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="precioVenta" title="Precio Vta" format="{0:c2}" editor="numeric" [width]="150"></kendo-grid-column>
+        <kendo-grid-column field="descuento" title="Descuento" editor="numeric" format="{0:n2}" [width]="150">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <span>{{_intl.formatNumber(dataItem.descuento, "n2")}}%</span>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="precioVtaDescuento" title="Precio Vta. Desc." format="{0:c2}" [width]="150">
+        </kendo-grid-column>
+        <kendo-grid-column field="precioVentaRealKilIva" title="Pre Vta Real kil+IVA" format="{0:c2}" [width]="150">
+        </kendo-grid-column>
+        <kendo-grid-column field="margenPrecioVtaReal" title="Margen Prec Vta Real" format="{0:p2}" [width]="160">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <span>{{_intl.formatNumber(dataItem.margenPrecioVtaReal, "p2")}}</span>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="factorCosto" title="Factor Costo" format="{0:n2}" [width]="120"></kendo-grid-column>
+        <kendo-grid-column field="precioVentaFactor" title="Precio Vta Factor" format="{0:c2}" [width]="140">
+        </kendo-grid-column>
+        <kendo-grid-column field="margenFactor" title="Margen Factor" format="{0:p2}" [width]="140"></kendo-grid-column>
+    </kendo-grid>
+</div>
+
+<ng-container #containerDialog ></ng-container>
+<ng-template #templateDetalle>
+
+    <div class="card articulo-header">
+        <div class="row">
+            <div class="col-12 col-lg-12">
+                <kendo-label text="Artículo">
+                    <div class="row articulo-item">
+                        <strong>{{articuloSeleccionado.codigo}}</strong>
+                    </div>
+                    <div class="row articulo-item">
+                        {{articuloSeleccionado.descripcion}}
+                    </div>
+                </kendo-label>
+            </div>
+        </div>
+    </div>
+
+    <kendo-tabstrip>
+        <kendo-tabstrip-tab [title]="'Órdenes de Compra recibidas'" [selected]="true">
+            <ng-template kendoTabContent>
+                <kendo-grid [data]="ordenesRecibidas" [height]="410">
+                    <kendo-grid-column field="PONUMBER" title="Orden de Compra" width="'30%'">
+                    </kendo-grid-column>
+                    <kendo-grid-column field="DATE" title="Fecha" width="'30%'">
+                    </kendo-grid-column>
+                    <kendo-grid-column field="UNITCOST" title="Costo Unitario" format="{0:c2}" width="'40%'">
+                    </kendo-grid-column>
+                </kendo-grid>
+            </ng-template>
+        </kendo-tabstrip-tab>
+        <kendo-tabstrip-tab [title]="'Órdenes de Compra en tránsito'">
+            <ng-template kendoTabContent>
+                <kendo-grid [data]="ordenesTransito" [height]="410">
+                    <kendo-grid-column field="PONUMBER" title="Orden de Compra" width="'30%'">
+                    </kendo-grid-column>
+                    <kendo-grid-column field="DATE" title="Fecha" width="'30%'">
+                    </kendo-grid-column>
+                    <kendo-grid-column field="UNITCOST" title="Costo Unitario" format="{0:c2}" width="'20%'">
+                    </kendo-grid-column>
+                    <kendo-grid-column field="margen" title="Margen" format="{0:p2}" width="'20%'">
+                    </kendo-grid-column>
+                </kendo-grid>
+            </ng-template>
+        </kendo-tabstrip-tab>
+    </kendo-tabstrip>
+
+</ng-template>
+
+<ng-template #templateNovedades>
+    <ul class="list-group">
+        <li class="list-group-item" *ngFor="let item of novedadesProceso">
+            {{item}}
+        </li>
+    </ul>
+</ng-template>

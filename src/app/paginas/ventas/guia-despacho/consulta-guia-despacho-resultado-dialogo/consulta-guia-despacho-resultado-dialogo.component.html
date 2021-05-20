@@ -1,0 +1,5 @@
+<div *ngFor="let item of guias">
+    <span>{{item.numeroGuiaDespacho}} - {{item.estadoGuiaRemision}}</span>
+    <button style="margin-left: 5px;" kendoButton [primary]="true" [look]="'flat'" [icon]="'download'"
+        (click)="descargar(item)"></button>
+</div>

@@ -1,0 +1,37 @@
+<div class=" container-fluid container mt-5">
+    <div class="card titulo-configuracion">
+        <h5>ARTÍCULOS</h5>
+    </div>
+
+    <div class="row seccion-buscar">
+        <div class="col-12 col-lg-1">
+            <label [for]="'codigo'">Criterio </label>
+        </div>
+        <div class="col-12 col-lg-8  wraper-col">
+            <kendo-textbox class="buscar-texbox" id="codigo" placeholder="Código, Descripción "
+                [(ngModel)]="criterioBusqueda" ></kendo-textbox>
+            <button kendoButton [icon]="'search'" [primary]="true" [look]="'outline'"
+                (click)="buscarArticuloPorCriterio()"> Buscar
+            </button>
+        </div>
+    </div>
+
+    <kendo-grid [data]="gridArticulosView" [navigable]="true" [height]="500"
+        [pageSize]="state.take" [skip]="state.skip" [pageable]="true" [sortable]="true" [sort]="state.sort"
+        [filter]="state.filter" [filterable]="true" (dataStateChange)="dataStateChange($event)">
+        <ng-template kendoGridToolbarTemplate>
+            <button kendoGridAddCommand icon='plus' [primary]="true" routerLink="nuevo"></button>
+        </ng-template>
+        <kendo-grid-messages pagerPage="Página" pagerOf="de" pagerItems="ítems" pagerItemsPerPage="ítems por página"
+            noRecords="No existen registros.">
+        </kendo-grid-messages>
+        <kendo-grid-column field="ITEMNMBR" title="Código" [width]="200"></kendo-grid-column>
+        <kendo-grid-column field="ITMSHNAM" title="Código Alterno" [width]="200"></kendo-grid-column>
+        <kendo-grid-column field="ITEMDESC" title="Descripción"></kendo-grid-column>
+        <kendo-grid-column width="60">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <button kendoButton [primary]="true" [look]="'outline'" icon="edit"
+                (click)="verDetalles(dataItem)"></button>
+            </ng-template>
+        </kendo-grid-column>
+    </kendo-grid>

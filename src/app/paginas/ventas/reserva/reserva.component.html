@@ -1,0 +1,46 @@
+<div class=" container-fluid container mt-5">
+    <div class="card titulo-configuracion">
+        <h5>Reserva</h5>
+    </div>
+    <div class="row">
+        <div class="col-12 col-lg-9" *ngIf="cotizacion !== undefined">
+            <app-cabecera [documento]="cotizacion"></app-cabecera>
+        </div>
+        <div class="col-12 col-lg-3">
+            <kendo-label text="Abono Porcentaje">
+                <!-- <input kendoTextBox [(ngModel)]="abono" /> -->
+                <kendo-numerictextbox [format]="{maximumFractionDigits: 0}" [value]="abono" [min]="abono" [max]="100" [autoCorrect]="true" >
+                </kendo-numerictextbox>
+            </kendo-label>
+            <kendo-label text="Fecha Máxima Reserva">
+                <input kendoTextBox [(ngModel)]="fechaMaximaReserva" [disabled]="true" />
+            </kendo-label>
+            <kendo-label text="Tiempo Máximo Abono">
+                <input kendoTextBox [(ngModel)]="tiempoMaximoAbono" [disabled]="true" />
+            </kendo-label>
+        </div>
+    </div>
+
+    <kendo-grid [data]="detalle">
+        <kendo-grid-column field="cotizacionDetalle.codigoArticulo" title="Código" [width]="150"></kendo-grid-column>
+        <kendo-grid-column field="cotizacionDetalle.descripcionArticulo" title="Descripción"></kendo-grid-column>
+        <kendo-grid-column field="cotizacionDetalle.cantidad" title="Cantidad Cotizada" [width]="150">
+        </kendo-grid-column>
+        <kendo-grid-column field="cantidadReservada" title="Total Reservar" [width]="150"></kendo-grid-column>
+        <kendo-grid-column [width]="120">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <button kendoButton [primary]="true" [look]="'outline'" [icon]="'hyperlink-open'"
+                    (click)="abrirPickingDialogo(dataItem)" *ngIf="dataItem.cantidadReservada===0">Reservar</button>
+                <app-state-badge [estado]="'RESERVADO'" *ngIf="dataItem.cotizacionDetalle.cantidad === dataItem.cantidadReservada" ></app-state-badge>
+            </ng-template>
+        </kendo-grid-column>
+    </kendo-grid>
+    <ng-container #containerPicking></ng-container>
+    <br/>
+    <div class="row">
+        <div class="col-12 col-lg-12 button-action-footer">
+            <button kendoButton primary="true" [icon]="'redo'" (click)="enviarAprobar()">ENVIAR APROBACIÓN</button>
+            <button kendoButton primary="true" [icon]="'delete'" (click)="anular()">ANULAR</button>
+        </div>
+    </div>
+</div>

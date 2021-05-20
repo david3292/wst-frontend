@@ -1,0 +1,108 @@
+<div class=" container-fluid container mt-5">
+    <div class="row">
+        <div class="card titulo-configuracion col-12">
+            <div>
+                <h5 style="display: inline;">RECEPCIÓN ÓRDEN DE COMPRA</h5>
+                <app-state-badge style="float: right;" [estado]="recepcionCompra.estado"></app-state-badge>
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-top: 5px;" class="alert alert-danger" *ngIf="mensajeError !== undefined"><b>Error Recepción:</b> {{mensajeError}}</div>
+
+    <div class="row">
+        <h5>Información de Recepción</h5>
+    </div>
+    <div class="row">
+        <div class="col-12 col-lg-3">
+            <kendo-label text="Número Recepción">
+                <input kendoTextBox [(ngModel)]="recepcionCompra.numeroRecepcion" readonly />
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-3">
+            <kendo-label text="Número Orden Compra">
+                <input kendoTextBox [(ngModel)]="ordenCompra.numero" readonly />
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-3">
+            <kendo-label text="Número Cotización">
+                <input kendoTextBox [(ngModel)]="ordenCompra.cotizacion.numero" readonly />
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-3">
+            <kendo-label text="Fecha Emisión">
+                <input kendoTextBox [(ngModel)]="ordenCompra.fechaEmision" readonly />
+            </kendo-label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-lg-6">
+            <kendo-label text="Código Proveedor">
+                <input kendoTextBox [(ngModel)]="ordenCompra.codigoProveedor" readonly />
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-6">
+            <kendo-label text="Nombre Proveedor">
+                <input kendoTextBox [(ngModel)]="ordenCompra.nombreProveedor" readonly />
+            </kendo-label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-lg-6">
+            <kendo-label text="Código Cliente">
+                <input kendoTextBox [(ngModel)]="ordenCompra.cotizacion.codigoCliente" readonly />
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-6">
+            <kendo-label text="Nombre Cliente">
+                <input kendoTextBox [(ngModel)]="ordenCompra.cotizacion.nombreCliente" readonly />
+            </kendo-label>
+        </div>
+    </div>
+    <div class="row">
+        <h5>Detalle de artículos</h5>
+    </div>
+    <div *ngIf="habilitarIntegracion">
+        <kendo-grid [data]="view | async" (dataStateChange)="onStateChange($event)"
+            (cellClick)="cellClickHandler($event)" (cellClose)="cellCloseHandler($event)"
+            [navigable]="true">
+            <kendo-grid-column field="codigoArticulo" title="Código"></kendo-grid-column>
+            <kendo-grid-column field="codigoArticuloAlterno" title="Código Alterno"></kendo-grid-column>
+            <kendo-grid-column field="descripcionArticulo" title="Descripción"></kendo-grid-column>
+            <kendo-grid-column field="saldo" title="Saldo Compra"></kendo-grid-column>
+            <kendo-grid-column field="cantidadRecepcion" format='n2' editor="numeric" title="Cantidad Recepción"></kendo-grid-column>
+        </kendo-grid>
+    </div>
+
+    <div *ngIf="!habilitarIntegracion">
+        <kendo-grid [data]="detalleArticulos">
+            <kendo-grid-column field="codigoArticulo" title="Código"></kendo-grid-column>
+            <kendo-grid-column field="codigoArticuloAlterno" title="Código Alterno"></kendo-grid-column>
+            <kendo-grid-column field="descripcionArticulo" title="Descripción"></kendo-grid-column>
+            <kendo-grid-column field="cantidadCompra" title="Cantidad Compra"></kendo-grid-column>
+            <kendo-grid-column field="cantidadRecepcion" title="Cantidad Recepción"></kendo-grid-column>
+        </kendo-grid>
+    </div>
+</div>
+
+<div *ngIf="habilitarIntegracion" class="container-fluid container mt-5">
+    <div class="row">
+        <div class="col-12 col-lg-12">
+            <button style="margin-right: 10px;" kendoButton [primary]="true" [icon]="'redo'"
+                (click)="abrirDialogoConfimacion()">PROCESAR RECEPCIÓN</button>
+            <button style="margin-left: 10px;" kendoButton [primary]="true" [look]="'outline'" [icon]="'close'"
+                (click)="abrirDialogoConfimacionCerrarProceso()">CERRAR</button>
+        </div>
+    </div>
+</div>
+
+<ng-template #resumenRecepcion>
+    <div>
+        <p> Recepción de Compra No. <b>{{numeroRecepcion}}</b></p>
+        <div *ngIf="mensajeError === undefined" class="col-12"><button kendoButton icon='download' primary="true" (click)="descargarDocumento()">Descargar Recepción de Compra</button></div>
+        <p *ngIf="mensajeError !== undefined" class="mensaje-error">{{mensajeError}}</p>
+    </div>
+</ng-template>
+
+
+<ng-container #containerDialogRef></ng-container>

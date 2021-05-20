@@ -1,0 +1,93 @@
+<div class=" container-fluid container mt-5">
+    <div class="card titulo-configuracion">
+        <h5>TRANSACCIONES VENTAS</h5>
+    </div>
+    <kendo-grid [data]="facturasError" [sortable]="true" [navigable]="true">
+
+        <kendo-grid-column field="numero" title="Número"></kendo-grid-column>
+        <kendo-grid-column field="tipo" title="Tipo"></kendo-grid-column>
+        <kendo-grid-column field="estado" title="Estado"></kendo-grid-column>
+        <kendo-grid-column title="Opciones">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <button class="button-opciones" kendoButton primary="true"  [look]="'outline'" icon="reset" (click)="reintentarFacturaIntegrar(dataItem)">Reintentar</button>
+                <button class="button-opciones" kendoButton primary="true" [look]="'outline'" icon="search" (click)="verCausaDialogo(dataItem.mensajeError)">Causa</button>
+            </ng-template>
+        </kendo-grid-column>
+    </kendo-grid>
+
+    <div class="card titulo-configuracion">
+        <h5>TRANSACCIONES NOTAS DE CRÉDITO</h5>
+    </div>
+    <kendo-grid [data]="notasCreditoError" [sortable]="true" [navigable]="true">
+        <kendo-grid-column field="numero" title="Número"></kendo-grid-column>
+        <kendo-grid-column field="tipo" title="Tipo"></kendo-grid-column>
+        <kendo-grid-column field="estado" title="Estado"></kendo-grid-column>
+        <kendo-grid-column title="Opciones">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <button class="button-opciones" kendoButton primary="true"  [look]="'outline'" icon="reset" (click)="reintentarNotaCreditoIntegrar(dataItem)">Reintentar</button>
+                <button class="button-opciones" kendoButton primary="true" [look]="'outline'" icon="search" (click)="verCausaDialogo(dataItem.mensajeError)">Causa</button>
+            </ng-template>
+        </kendo-grid-column>
+    </kendo-grid>
+
+    <ng-container #containerCausa></ng-container>
+</div>
+
+<div class=" container-fluid container mt-5">
+    <div class="card titulo-configuracion">
+        <h5>TRANSACCIONES COMPRAS</h5>
+    </div>
+    <kendo-grid [data]="compras" [navigable]="true">
+        <kendo-grid-column field="numero" title="Número"></kendo-grid-column>
+        <kendo-grid-column field="numeroRecepcion" title="Número Recepción"></kendo-grid-column>
+        <kendo-grid-column field="estado" title="Estado"></kendo-grid-column>
+        <kendo-grid-column title="Opciones">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <button class="button-opciones" kendoButton primary="true"  [look]="'outline'" icon="reset" (click)="procesarCompra(dataItem)">Reintentar</button>
+                <button style="margin-left: 5px;" class="button-opciones" kendoButton primary="true" [look]="'outline'" icon="search" (click)="verMensajeError(dataItem,mensajeErrorTemplate)">Causa</button>
+            </ng-template>
+        </kendo-grid-column>
+    </kendo-grid>
+</div>
+
+<div class=" container-fluid container mt-5">
+    <div class="card titulo-configuracion">
+        <h5>TRANSACCIONES RECEPCIÓN COMPRAS</h5>
+    </div>
+    <kendo-grid [data]="recepciones" [navigable]="true">
+        <kendo-grid-column field="numeroRecepcion" title="Número"></kendo-grid-column>
+        <kendo-grid-column field="ordenCompraNumero" title="Referencia"></kendo-grid-column>
+        <kendo-grid-column field="estado" title="Estado"></kendo-grid-column>
+        <kendo-grid-column title="Opciones">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <button class="button-opciones" kendoButton primary="true"  [look]="'outline'" icon="reset" (click)="procesarRecepcion(dataItem)">Reintentar</button>
+                <button style="margin-left: 5px;" class="button-opciones" kendoButton primary="true" [look]="'outline'" icon="search" (click)="verMensajeError(dataItem,mensajeErrorTemplate)">Causa</button>
+            </ng-template>
+        </kendo-grid-column>
+    </kendo-grid>
+</div>
+
+<div class=" container-fluid container mt-5">
+    <div class="card titulo-configuracion">
+        <h5>TRANSACCIONES COBROS</h5>
+    </div>
+    <kendo-grid [data]="cobrosPendientes" [navigable]="true" [height]='300'>
+        <kendo-grid-column field="numero" title="Número" [width]='150'></kendo-grid-column>
+        <kendo-grid-column field="codigoCliente" title="Cód. Cliente" [width]='150'></kendo-grid-column>
+        <kendo-grid-column field="nombreCliente" title="Nombre Cliente"></kendo-grid-column>
+        <kendo-grid-column title="Opciones" [width]='250'>
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <button class="button-opciones" kendoButton primary="true"  [look]="'outline'" icon="reset" (click)="reintegrarCobro(dataItem)">Reintentar</button>
+                <button class="button-opciones" kendoButton primary="true" [look]="'outline'" icon="search" (click)="verCausaDialogoCobro(dataItem)">Causa</button>
+            </ng-template>
+        </kendo-grid-column>
+    </kendo-grid>
+</div>
+
+<ng-container #containerDialog></ng-container>
+<ng-container #containerCausaCobro></ng-container>
+<ng-container #containerCobroResultado></ng-container>
+<ng-template #mensajeErrorTemplate>
+    <div style="margin-top: 5px; margin-bottom: 5px;" class="alert alert-danger"><b>{{mensajeError}}</b></div>
+</ng-template>
+<br/>

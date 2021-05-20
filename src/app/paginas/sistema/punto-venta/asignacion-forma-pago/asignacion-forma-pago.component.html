@@ -1,0 +1,51 @@
+<div class="row header">
+    <div class="col-12 col-lg-12">
+        <strong>Punto Venta: </strong>
+        {{puntoVenta.nombre}}
+    </div>
+</div>
+<div class="row header">
+    <div class="col-12 col-lg-4">
+        <kendo-label text="Forma de Pago">
+            <kendo-dropdownlist [data]="catalogoFormasPago" textField="nombre" valueField="id"
+                [(ngModel)]="formaPagoSeleccionado">
+            </kendo-dropdownlist>
+        </kendo-label>
+    </div>
+    <div class="col-12 col-lg-5">
+        <kendo-label text="Chequera">
+            <kendo-dropdownlist [data]="catalogoChequera" textField="DSCRIPTN" valueField="CHEKBKID"
+                [(ngModel)]="chequeraSeleccionada">
+            </kendo-dropdownlist>
+        </kendo-label>
+    </div>
+    <div class="col-12 col-lg-3">
+        <button class="buttonAgregar" kendoButton [primary]="true" [icon]="'save'"
+            [disabled]="formaPagoSeleccionado === undefined" (click)="agregarFormaPago()">Agregar</button>
+    </div>
+</div>
+
+<kendo-grid style="margin-bottom: 10px;" [data]="formasPagoAsignados" [sortable]="true" (edit)="editHandler($event)"
+    (cancel)="cancelHandler($event)" (save)="saveHandler($event)" [navigable]="true">
+    <kendo-grid-column field="formaPago.nombre" title="Forma de Pago"></kendo-grid-column>
+    <kendo-grid-column field="chequera" title="Chequera">
+        <ng-template kendoGridEditTemplate let-dataItem="dataItem" let-column="column" let-formGroup="formGroup"
+            let-isNew="isNew">
+            <kendo-dropdownlist [data]="catalogoChequera" textField="DSCRIPTN"
+                valueField="CHEKBKID" [valuePrimitive]="true" [formControl]="formGroup.get('chequera')">
+            </kendo-dropdownlist>
+        </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="activo" editor="boolean" title="Activo" width="80">
+        <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+            <app-active-badge [active]="dataItem.activo"></app-active-badge>
+        </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-command-column width="100">
+        <ng-template kendoGridCellTemplate let-dataItem let-isNew="isNew">
+            <button kendoGridEditCommand [primary]="true" [look]="'outline'" icon="edit"></button>
+            <button kendoGridSaveCommand [disabled]="formGroup?.invalid" [look]="'outline'" icon="check"></button>
+            <button kendoGridCancelCommand [look]="'outline'" icon="close"></button>
+        </ng-template>
+    </kendo-grid-command-column>
+</kendo-grid>

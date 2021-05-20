@@ -1,0 +1,8 @@
+<div *ngFor="let item of facturas">
+    <div>
+        <span>{{visualizarNumero(item)}} - {{item.estado}}</span>
+        <button kendoButton [primary]="true" [look]="'outline'" icon="pdf"
+        (click)="descargarReporteTransferencia(item)"></button>
+    </div>
+
+</div>

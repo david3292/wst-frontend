@@ -1,0 +1,12 @@
+<p>Se han generado los siguientes documentos:</p>
+<p *ngIf="resultado.numeroFactura">Factura No. <strong>{{resultado.numeroFactura}}</strong> con estado <strong>{{resultado.estado}}</strong></p>
+<p *ngIf="resultado.numeroTransferencias.length>0">Transferencias: <span *ngFor="let item of resultado.numeroTransferencias">
+        <strong class="transferencia">{{item}}</strong></span> </p>
+<div class="row" *ngIf="resultado.facturaDespachada">
+    <div class="col-12 col-lg-4">
+        <span>Guía de Despacho</span>
+    </div>
+    <div class="col-12  col-lg-8">
+        <button kendoButton icon='download' primary="true" (click)="descargarDocumento()">Descargar</button>
+    </div>
+</div>

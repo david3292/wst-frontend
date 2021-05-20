@@ -1,0 +1,102 @@
+<div class="card col-12 col-lg-12">
+    <div style="justify-content: center;">
+        <div class="wraper-col">
+            <label [for]="'codigo'">Documento Aplica </label>
+            <kendo-combobox class="input-search" [data]="documentosCatalogo" [textField]="'valorDescripcion'"
+                [itemDisabled]="itemDisabled" [disabled]='desactivarSeleccionDocumento' [valueField]="'idDocumento'"
+                [placeholder]="'Seleccione'" [(ngModel)]="documentoSeleccionado">
+            </kendo-combobox>
+            <button kendoButton icon='search' primary="true" [disabled]='desactivarSeleccionDocumento'
+                (click)="seleccionarDocumentoAPagar()">Seleccionar</button>
+        </div>
+    </div>
+</div>
+
+<div class="row" style="margin-top: 5px;">
+    <div class="col-lg col-lg-4" *ngIf="detalleCobro">
+        <kendo-label text="Tipo Crédito">
+            <input kendoTextBox disabled [(ngModel)]="detalleCobro.tipoCredito" />
+        </kendo-label>
+    </div>
+
+    <div class="col-lg col-lg-4" *ngIf="detalleCobro">
+        <kendo-label text="Condición de Pago">
+            <input kendoTextBox disabled [(ngModel)]="detalleCobro.condicionPago" />
+        </kendo-label>
+    </div>
+
+    <div class="col-lg col-lg-4" *ngIf="detalleCobro">
+        <kendo-label text="Saldo Forma de Pago">
+            <kendo-numerictextbox [(ngModel)]="formaPago.saldo" #valor required [disabled]="true"
+                [format]="{ style: 'currency',currency: 'USD',maximumFractionDigits: 2}">
+            </kendo-numerictextbox>
+        </kendo-label>
+    </div>
+</div>
+
+<div class="alert alert-danger" style="margin-top: 5px;" *ngIf="mensajeError !== undefined">{{mensajeError}}</div>
+
+<div class="row" style="margin-top: 5px;">
+    <div class="col-lg col-lg-12">
+        <kendo-listview [data]="detalleCobro? detalleCobro.cuotas:[]"
+            [containerClass]="'k-d-flex k-flex-col k-flex-nowrap'">
+            <ng-template kendoListViewHeaderTemplate>
+                <div class="header">
+                    <div class="row">
+                        <div class="col-12 col-lg-1">
+                            Cuota
+                        </div>
+                        <div class="col-12 col-lg-2">
+                            Estado
+                        </div>
+                        <div class="col-12 col-lg-2">
+                            Saldo
+                        </div>
+                        <div class="col-12 col-lg-3">
+                            Valor
+                        </div>
+                        <div class="col-12 col-lg-2">
+                            Fecha Pago
+                        </div>
+                        <div class="col-12 col-lg-2">
+                            Seleccionado
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template kendoListViewItemTemplate let-dataItem="dataItem" let-isLast="isLast">
+                <div class="detail" [class.border-bottom]="!isLast">
+                    <div class="col-12 col-lg-12">
+                        <div class="row">
+                            <div class="col-12 col-lg-1">
+                                {{dataItem.numero}}
+                            </div>
+                            <div class="col-12 col-lg-2">
+                                {{dataItem.estado}}
+                            </div>
+                            <div class="col-12 col-lg-2">
+                                $ {{_finanzasService.financial(dataItem.saldo)}}
+                            </div>
+                            <div class="col-12 col-lg-3">
+                                <kendo-numerictextbox [(ngModel)]="dataItem.valor" #valor required
+                                    [disabled]="desactivarEdicionValor(dataItem)"
+                                    [format]="{ style: 'currency',currency: 'USD',maximumFractionDigits: 2}"
+                                    [min]="0.01" [max]="dataItem.saldo" [autoCorrect]="true"
+                                    (valueChange)="onChangeSaldo($event)">
+                                </kendo-numerictextbox>
+                            </div>
+                            <div class="col-12 col-lg-2">
+                                {{dataItem.fechaPago}}
+                            </div>
+                            <div class="col-12 col-lg-2" style="text-align: center;">
+                                <input type="checkbox" id="terms" kendoCheckBox [checked]="dataItem.seleccionado"
+                                    (change)="eventCheck($event.target, dataItem)"
+                                    [disabled]="desactivarSeleccionCuota(dataItem)" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+        </kendo-listview>
+    </div>
+</div>

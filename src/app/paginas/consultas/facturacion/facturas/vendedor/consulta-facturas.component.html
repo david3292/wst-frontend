@@ -1,0 +1,136 @@
+<div class=" container-fluid container mt-5">
+    <div class="row">
+        <div class="card titulo-configuracion col-12">
+            <div>
+                <h5 style="display: inline;">Consultas Documentos</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <h5>Parámetros de consulta</h5>
+    </div>
+    <div class="row">
+        <div class="col-12 col-lg-3">
+            <kendo-label text="Número documento">
+                <input kendoTextBox [(ngModel)]="consulta.numeroFactura"/>
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-3">
+            <kendo-label text="Identificación cliente">
+                <input kendoTextBox [(ngModel)]="consulta.identificacionCliente"/>
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-3">
+            <kendo-label text="Nombre cliente">
+                <input kendoTextBox [(ngModel)]="consulta.nombreCliente"/>
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-3">
+            <kendo-label text="Estado">
+                <kendo-combobox [data]="listaEstados" [valuePrimitive]="true" [(ngModel)]="consulta.estado">
+                    <ng-template kendoComboBoxItemTemplate let-dataItem>
+                        <app-state-badge [estado]="dataItem"></app-state-badge>
+                    </ng-template>
+                </kendo-combobox>
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-3">
+            <kendo-label text="Punto venta">
+                <kendo-combobox [data]="puntosVenta" [valuePrimitive]="true" [textField]="'nombre'"
+                                [valueField]="'id'"
+                                [(ngModel)]="consulta.idPuntoVenta"></kendo-combobox>
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-3">
+            <kendo-label text="Tipo documento">
+                <kendo-combobox [data]="tipos" [valuePrimitive]="true"
+                                [(ngModel)]="consulta.tipo"></kendo-combobox>
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-3">
+            <kendo-label text="Fecha emisión inicio">
+                <kendo-datepicker [format]="'dd/MM/yyyy'" [(ngModel)]="fechaInicio"></kendo-datepicker>
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-3">
+            <kendo-label text="Fecha emisión fin">
+                <kendo-datepicker [format]="'dd/MM/yyyy'" [(ngModel)]="fechaFin"></kendo-datepicker>
+            </kendo-label>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-12 col-lg-12" style="text-align: center;">
+            <button style="margin-top: 10px;" kendoButton [icon]="'close-outline'" [look]="'outline'" [primary]="true"
+                    (click)="limpiar()">LIMPIAR CONSULTA
+            </button>
+
+            <button style="margin-top: 10px;margin-left: 10px;" kendoButton [primary]="true" [icon]="'search'"
+                    (click)="consultar()">CONSULTAR
+            </button>
+        </div>
+    </div>
+
+    <div class="row">
+        <h5>Documentos</h5>
+    </div>
+
+    <kendo-grid [data]="gridView" style="width: 1108px;height: 600px;" [pageSize]="pageSize"
+                [skip]="skip"
+                [pageable]="true"
+                (pageChange)="pageChange($event)">
+        <kendo-grid-column field="numero" title="Número documento" width="190"></kendo-grid-column>
+        <kendo-grid-column field="identificacionCliente" title="Id cliente" width="150"></kendo-grid-column>
+        <kendo-grid-column field="nombreCliente" title="Nombre cliente" width="150"></kendo-grid-column>
+        <kendo-grid-column field="valor" title="Valor" width="130" class="text-right">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <span>
+                    {{'$ ' + dataItem.valor}}
+                </span>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="estado" title="Estado" width="160"></kendo-grid-column>
+        <kendo-grid-column field="fechaEmision" title="Fecha emisión" width="160"></kendo-grid-column>
+        <kendo-grid-column field="puntoVenta" title="Punto venta" width="160"></kendo-grid-column>
+        <kendo-grid-column field="tipo" title="Tipo documento" width="160" class="text-center"></kendo-grid-column>
+        <kendo-grid-column field="facturaIntegrada" title="Doc. integrado" width="150" class="text-center">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <span class="badge badge-pill"
+                      [ngClass]="dataItem.facturaIntegrada != null ? dataItem.facturaIntegrada? 'badge-success':'badge-danger' : ''">
+                    {{dataItem.facturaIntegrada != null ? dataItem.facturaIntegrada ? 'Si' : 'No' : ''}}
+                </span>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="facturaDespachada" title="Orden despacho" width="160" class="text-center">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <span class="badge badge-pill"
+                      [ngClass]="dataItem.refacturacion ?'' :dataItem.facturaDespachada != null ? dataItem.facturaDespachada? 'badge-success':'badge-danger' : ''">
+                    {{dataItem.refacturacion ?'-' : dataItem.facturaDespachada != null ? dataItem.facturaDespachada ? 'Si' : 'No' : ''}}
+                </span>
+            </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-column field="tieneGuiaRemision" title="Despachada" width="110" class="text-center"
+            filter="boolean">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <span class="badge badge-pill"
+                    [ngClass]=" dataItem.refacturacion ?'' :dataItem.tieneGuiaRemision != null ? dataItem.tieneGuiaRemision? 'badge-success':'badge-danger' : ''">
+                    {{dataItem.refacturacion ?'-' : dataItem.tieneGuiaRemision != null ? dataItem.tieneGuiaRemision ? 'Si' : 'No' : ''}}
+                </span>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="refacturacion" title="Refactura" width="160" class="text-center">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <span class="badge badge-pill"
+                      [ngClass]="dataItem.refacturacion != null ? dataItem.refacturacion? 'badge-success':'badge-danger' : ''">
+                    {{dataItem.refacturacion != null ? dataItem.refacturacion ? 'Si' : 'No' : ''}}
+                </span>
+            </ng-template>
+        </kendo-grid-column>
+        <ng-template kendoGridNoRecordsTemplate>
+            No se han encontrado resultados.
+        </ng-template>
+    </kendo-grid>
+</div>

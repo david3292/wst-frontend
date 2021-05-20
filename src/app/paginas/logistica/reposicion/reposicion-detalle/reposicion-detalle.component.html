@@ -1,0 +1,80 @@
+<div class="card articulo-header">
+    <div class="row">
+        <div class="col-12 col-lg-12">
+            <kendo-label text="Artículo">
+                <div class="row">
+                    <div class="col-12 col-lg-4">
+                        <strong>{{itemReposicion.codigoArticulo}}</strong>
+                    </div>
+                    <div class="col-12 col-lg-4">
+                        <strong>Cód. Alterno:</strong> {{itemReposicion.codigoAlternoArticulo}}
+                    </div>
+                    <div class="col-12 col-lg-4">
+                        <strong>Peso:</strong> {{itemReposicion.peso}}
+                    </div>
+                </div>
+                <div class="row articulo-item">
+                    {{itemReposicion.descripcionArticulo}}
+                </div>
+            </kendo-label>
+        </div>
+    </div>
+</div>
+
+<kendo-buttongroup style="width: 100%; margin-top: 5px; margin-bottom: 5px;" selection="single">
+    <button style="width: 100%;" kendoButton [toggleable]="true" icon="arrow-up"
+        (selectedChange)="selectedChange($event,'origen')" [selected]="true">Bodega Origen</button>
+    <button style="width: 100%;" kendoButton [toggleable]="true" icon="arrow-down"
+        (selectedChange)="selectedChange($event, 'destino')">Bodega Destino</button>
+</kendo-buttongroup>
+
+<div class="row">
+    <div class="col-12 col-lg-6">
+        <div class="row" style="margin-left: 5px;">
+            <div class="col-12 col-lg-8 linea-cantidades">
+                <strong>Cant. Mínima</strong>
+            </div>
+            <div class="col-12 col-lg-4 text-right linea-cantidades">
+                {{articuloReposicion ? articuloReposicion.cantidadMinima : articuloReposicion}}
+            </div>
+
+            <div class="col-12 col-lg-8 linea-cantidades">
+                <strong>Cant. Proceso</strong>
+            </div>
+            <div class="col-12 col-lg-4 text-right linea-cantidades">
+                {{articuloReposicion ? articuloReposicion.cantidadProceso : articuloReposicion}}
+            </div>
+
+            <div class="col-12 col-lg-8 linea-cantidades">
+                <strong>Cant. Disponible</strong>
+            </div>
+            <div class="col-12 col-lg-4 text-right linea-cantidades">
+                {{articuloReposicion ? articuloReposicion.cantidadDisponible : articuloReposicion}}
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-6">
+        <div class="row" style="margin-right: 5px;">
+            <div class="col-12 col-lg-8 linea-cantidades">
+                <strong>Cant. Máxima</strong>
+            </div>
+            <div class="col-12 col-lg-4 text-right linea-cantidades">
+                {{articuloReposicion ? articuloReposicion.cantidadMaxima : articuloReposicion}}
+            </div>
+
+            <div class="col-12 col-lg-8 linea-cantidades">
+                <strong>Cant. Reserva</strong>
+            </div>
+            <div class="col-12 col-lg-4 text-right linea-cantidades">
+                {{articuloReposicion ? articuloReposicion.cantidadReserva : articuloReposicion}}
+            </div>
+
+            <div class="col-12 col-lg-8 linea-cantidades">
+                <strong>Cant. Total</strong>
+            </div>
+            <div class="col-12 col-lg-4 text-right linea-cantidades">
+                {{articuloReposicion ? articuloReposicion.cantidadTotal : articuloReposicion}}
+            </div>
+        </div>
+    </div>
+</div>

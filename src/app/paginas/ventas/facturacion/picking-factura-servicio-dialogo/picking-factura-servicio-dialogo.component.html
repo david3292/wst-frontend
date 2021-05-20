@@ -1,0 +1,57 @@
+<div class="card articulo-header">
+    <div class="row">
+        <div class="col-12 col-lg-8">
+            <kendo-label text="Servicio">
+                <div class="row articulo-item">
+                    <strong>{{item.codigoArticulo}}</strong>
+                </div>
+                <div class="row articulo-item">
+                    {{item.descripcionArticulo}}
+                </div>
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-2">
+            <kendo-label text="Saldo">
+                <input kendoTextBox [(ngModel)]="item.saldo" [disabled]="true" />
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-2">
+            <kendo-label text="Cantidad">
+                <input kendoTextBox [(ngModel)]="cantidadTotal" [disabled]="true" />
+            </kendo-label>
+        </div>
+    </div>
+</div>
+<div class="label-tabla-bodegas">* Asigne las cantidades del servicio</div>
+
+<div class="card articulo-header">
+    <div class="row">
+        <div class="col-12 col-lg-4">
+            <span>Bodega</span><br/>
+            <span>{{bodegaPrincipal}}</span>
+        </div>
+        <div class="col-12 col-lg-8">
+            <kendo-label text="Facturar">
+                <kendo-numerictextbox [format]="{maximumFractionDigits: 2}" (valueChange)="onChange($event)"
+                    (blur)="onBlur()" [min]="1" [max]="item.saldo" [autoCorrect]="true">
+                </kendo-numerictextbox>
+            </kendo-label>
+        </div>
+    </div>
+</div>
+
+<div class="alert alert-danger" *ngIf="mensajeError !== undefined">{{mensajeError}}</div>
+
+<div class="row footer-button ">
+    <div class="col-12 col-lg-12">
+        <button class="buttons" kendoButton [primary]="true" [look]="'outline'" [icon]="'save'"
+            (click)="guardarReserva()" [disabled]="activarAceptar === false">
+            Aceptar
+        </button>
+        <button class="buttons" kendoButton [primary]="true" [look]="'outline'" [icon]="'close'"
+            (click)="cerrarDialogo()">
+            Cancelar
+        </button>
+    </div>
+
+</div>

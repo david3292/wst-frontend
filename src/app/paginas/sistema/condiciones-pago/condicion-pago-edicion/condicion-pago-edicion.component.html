@@ -1,0 +1,109 @@
+<div class=" container-fluid container mt-5">
+    <kendo-card [width]="'100%'">
+        <kendo-card-header class="k-hbox">
+            <h5 kendoCardTitle>Configuración Condición de Pago</h5>
+        </kendo-card-header>
+    </kendo-card>
+    <div class="u-info">
+        <form [formGroup]="formCondicion">
+            <fieldset class="k-form-fieldset">
+                <div class='row'>
+                    <div class='col-12 col-lg-4'>
+                        <kendo-formfield>
+                            <kendo-label text="Tipo Pago">
+                                <kendo-combobox [data]="catalogoTipoPago" [textField]="'texto'" [valueField]="'valor'"
+                                    [placeholder]="'Seleccione'" required formControlName="tipoPago" [disabled]="edicion">
+                                </kendo-combobox>
+                            </kendo-label>
+                            <kendo-formerror>Tipo Pago requerido</kendo-formerror>
+                        </kendo-formfield>
+                    </div>
+                    <div class='col-12 col-lg-4'>
+                        <kendo-formfield>
+                            <kendo-label text="Término">
+                                <input kendoTextBox required formControlName="termino" [disabled]="'edicion'" />
+                            </kendo-label>
+                            <kendo-formerror>Término es requerido</kendo-formerror>
+                        </kendo-formfield>
+                    </div>
+                    <div class='col-12 col-lg-4'>
+                        <kendo-formfield>
+                            <kendo-label text="Total Días">
+                                <input kendoTextBox required disabled formControlName="totalDias" />
+                            </kendo-label>
+                            <kendo-formerror>Total Días requerido</kendo-formerror>
+                        </kendo-formfield>
+                    </div>
+                </div>
+                <div class='row'>
+                    <div class='col-12 col-lg-4'>
+                        <kendo-formfield>
+                            <kendo-label text="Cuotas">
+                                <kendo-numerictextbox [format]="{maximumFractionDigits: 0}" (blur)="onBlurCuota($event)"
+                                    [min]="1" [autoCorrect]="'autoCorrect'" formControlName="cuotas">
+                                </kendo-numerictextbox>
+                                <!-- <input kendoTextBox required formControlName="cuotas" /> -->
+                            </kendo-label>
+                            <kendo-formerror>Número de Cuotas es requerido</kendo-formerror>
+                        </kendo-formfield>
+                    </div>
+                    <div class='col-12 col-lg-4'>
+                        <kendo-formfield>
+                            <label class="k-checkbox-label" for="ds">Documento Soporte</label>
+                            <input id="ds" type="checkbox" kendoCheckBox formControlName="documentoSoporte" />
+                        </kendo-formfield>
+                    </div>
+                    <div class='col-12 col-lg-4'>
+                        <kendo-formfield>
+                            <label class="k-checkbox-label" for="activo">Activo</label>
+                            <input id="activo" type="checkbox" kendoCheckBox formControlName="activo" />
+                        </kendo-formfield>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class='col-12 col-lg-12 titulo-configuracion'>
+                        <h5>Detalle</h5>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class='col-12 col-lg-12'>
+                        <kendo-grid style="margin-bottom: 10px; width: 60%;" [data]="condicionPagoDetalle"
+                            [sortable]="true" (edit)="editHandler($event)" (remove)="removeHandler($event)"
+                            (cancel)="cancelHandler($event)" (save)="saveHandler($event)" (add)="addHandler($event)"
+                            [navigable]="true">
+                            <ng-template kendoGridToolbarTemplate>
+                                <button kendoGridAddCommand primary=true icon='plus'></button>
+                            </ng-template>
+                            <kendo-grid-column field="numeroCuota" title="Cuota"></kendo-grid-column>
+                            <kendo-grid-column field="porcentaje" editor="numeric" title="Porcentaje">
+                            </kendo-grid-column>
+                            <kendo-grid-column field="numeroDias" editor="numeric" title="Días"></kendo-grid-column>
+                            <kendo-grid-command-column width="100">
+                                <ng-template kendoGridCellTemplate let-dataItem let-isNew="isNew">
+                                    <button kendoGridEditCommand [primary]="true" [look]="'outline'"
+                                        icon="edit"></button>
+                                    <button kendoGridRemoveCommand [primary]="true" [look]="'outline'"
+                                        icon="delete"></button>
+                                    <button kendoGridSaveCommand [disabled]="formGroup?.invalid" [look]="'outline'"
+                                        icon="check"></button>
+                                    <button kendoGridCancelCommand [look]="'outline'" icon="close"></button>
+                                </ng-template>
+                            </kendo-grid-command-column>
+                        </kendo-grid>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class='col-12 col-lg-12'>
+                        <div class="k-form-buttons">
+                            <button kendoButton [primary]="true" [icon]="'save'" type="button"
+                                (click)="operarCondicion()">{{edicion ? 'Actualizar': 'Guardar'}}</button>
+                            <button kendoButton [icon]="'close'" (click)="cancelar()">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>

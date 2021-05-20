@@ -1,0 +1,21 @@
+<p>¿Está seguro de <strong>{{accion}}</strong> los siguientes documentos?</p>
+<span>Seleccionados: <strong>{{chequesAprocesar.length}}</strong></span>
+<kendo-grid [data]="chequesAprocesar" [height]="250">
+    <kendo-grid-column field="numeroCheque" title="Número Cheque" [width]="130">
+    </kendo-grid-column>
+    <kendo-grid-column field="banco" title="Banco" [width]="150">
+    </kendo-grid-column>
+    <kendo-grid-column field="codigoCliente" title="Cód. Cliente" [width]="130">
+    </kendo-grid-column>
+    <kendo-grid-column field="nombreCliente" title="Cliente">
+    </kendo-grid-column>
+</kendo-grid>
+
+<form class="k-form" [formGroup]="editForm">
+    <kendo-formfield>
+        <kendo-label [for]="'observacion'" text="Observación"></kendo-label>
+        <textarea class="comments" kendoTextArea rows="3" [autoSize]="true" formControlName="observaciones"></textarea>
+
+        <kendo-formerror>Campo requerido</kendo-formerror>
+    </kendo-formfield>
+</form>

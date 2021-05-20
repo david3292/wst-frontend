@@ -1,0 +1,24 @@
+<form class="k-form" [formGroup]="editForm">
+    <kendo-formfield>
+        <kendo-label [for]="'codigo'" text="Código"></kendo-label>
+        <kendo-textbox formControlName="ADRSCODE" #codigo required [disabled]='true'></kendo-textbox>
+        <kendo-formerror>Código dirección inválido</kendo-formerror>
+    </kendo-formfield>
+
+    <kendo-formfield>
+        <kendo-label [for]="'direccion'" text="Dirección"></kendo-label>
+        <input kendoTextBox formControlName="ADDRESS1" #direccion required />
+        <kendo-formerror>Dirección inválida</kendo-formerror>
+    </kendo-formfield>
+
+    <kendo-formfield>
+        <input kendoTextBox formControlName="ADDRESS2" #direccion />
+        <kendo-formerror>Dirección inválida</kendo-formerror>
+    </kendo-formfield>
+
+    <kendo-formfield>
+        <input kendoTextBox formControlName="ADDRESS3" #direccion />
+        <kendo-formerror>Dirección inválida</kendo-formerror>
+    </kendo-formfield>
+
+</form>

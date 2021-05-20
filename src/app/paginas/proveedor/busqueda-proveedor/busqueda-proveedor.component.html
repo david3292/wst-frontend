@@ -1,0 +1,20 @@
+<div class="row">
+    <div class="col-12 col-lg-12 wraper-col">
+        <label [for]="'codigo'">Criterio </label>
+        <kendo-textbox #searchText class="buscar-texbox" id="codigo" placeholder="Nombre, Cédula, Ruc"
+            [(ngModel)]="criterioBuscar"></kendo-textbox>
+        <button kendoButton [icon]="'search'" [primary]="true" [look]="'outline'" (click)="buscarProveedor()"></button>
+    </div>
+</div>
+
+<kendo-grid [data]="gridProveedoresView" [selectable]="selectableSettings" [navigable]="true" [height]="300"
+    [pageSize]="state.take" [skip]="state.skip" [pageable]="true" [kendoGridSelectBy]="eventoSeleccion"
+    [selectedKeys]="proveedorSeleccionado" [filter]="state.filter" [filterable]="true"
+    (dataStateChange)="dataStateChange($event)">
+    <kendo-grid-messages pagerPage="Página" pagerOf="de" pagerItems="ítems" pagerItemsPerPage="ítems por página"
+        noRecords="No existen registros.">
+    </kendo-grid-messages>
+    <kendo-grid-checkbox-column [width]="45"></kendo-grid-checkbox-column>
+    <kendo-grid-column field="VENDORID" title="Código Proveedor" [width]="150"></kendo-grid-column>
+    <kendo-grid-column field="VENDNAME" title="Nombre Proveedor"></kendo-grid-column>
+</kendo-grid>

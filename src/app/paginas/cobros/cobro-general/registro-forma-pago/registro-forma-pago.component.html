@@ -1,0 +1,95 @@
+<form class="k-form" [formGroup]="editForm">
+    <kendo-formfield>
+        <kendo-label [for]="'ProductName'" text="Forma de Pago"></kendo-label>
+        <kendo-combobox [data]="formaPagoCatalogo" [valuePrimitive]="true" [placeholder]="'Seleccione'"
+            formControlName="formaPago" (valueChange)="changeValueFormaPago($event)">
+        </kendo-combobox>
+
+        <kendo-formerror>Forma de Pago es requerido</kendo-formerror>
+    </kendo-formfield>
+
+    <kendo-formfield *ngIf="mostrarNotasCredito">
+        <kendo-label [for]="'ncs'" text="Notas Crédito"></kendo-label>
+        <kendo-combobox [data]="notasCreditoCatalogo" [textField]="'DOCNUMBR'" [valueField]="'DOCNUMBR'"
+            [valuePrimitive]="false" [placeholder]="'Seleccione'" formControlName="numeroDocumento"
+            (valueChange)="changeValueNotaCredito($event)">
+            <ng-template kendoComboBoxItemTemplate let-dataItem>
+                <span class="template">{{ dataItem.DOCNUMBR }}</span> - ${{ dataItem.CURTRXAM }}
+            </ng-template>
+        </kendo-combobox>
+
+        <kendo-formerror>No. Documento inválido</kendo-formerror>
+    </kendo-formfield>
+
+    <kendo-formfield *ngIf="mostrarAnticipos">
+        <kendo-label [for]="'anti'" text="Anticipos"></kendo-label>
+        <kendo-combobox [data]="anticiposCatalogo" [textField]="'DOCNUMBR'" [valueField]="'DOCNUMBR'"
+            [valuePrimitive]="false" [placeholder]="'Seleccione'" formControlName="numeroDocumento"
+            (valueChange)="changeValueAnticipo($event)">
+            <ng-template kendoComboBoxItemTemplate let-dataItem>
+                <span class="template">{{ dataItem.DOCNUMBR }}</span> - ${{ dataItem.CURTRXAM }}
+            </ng-template>
+        </kendo-combobox>
+
+        <kendo-formerror>No. Documento inválido. {{mensajeErrorAnticipo}}</kendo-formerror>
+    </kendo-formfield>
+
+
+    <kendo-formfield>
+        <kendo-label [for]="'valor'" text="Valor"></kendo-label>
+        <kendo-numerictextbox formControlName="valor" #valor required
+            [format]="{ style: 'currency',currency: 'USD',maximumFractionDigits: 2}" [min]="0" [autoCorrect]="true"
+            (blur)="inputBlurValor()">
+        </kendo-numerictextbox>
+        <kendo-formerror>Valor inválido. {{mensajeErrorValor}}</kendo-formerror>
+    </kendo-formfield>
+
+    <kendo-formfield *ngIf="mostrarTarjeta">
+        <kendo-label [for]="'tarjetaCredito'" text="Tarjeta Crédito"></kendo-label>
+        <kendo-combobox [data]="tarjetasCreditoCatalogo" [textField]="'CARDNAME'" [valueField]="'CARDNAME'"
+            [valuePrimitive]="true" [placeholder]="'Seleccione'" formControlName="nombreTarjeta">
+        </kendo-combobox>
+
+        <kendo-formerror>Tarjeta es requerido</kendo-formerror>
+    </kendo-formfield>
+
+    <kendo-formfield *ngIf="mostrarNumeroDocumento">
+        <kendo-label [for]="'NoDocummento'" text="No. Documento"></kendo-label>
+        <kendo-textbox formControlName="numeroDocumento" #NoDocummento required
+            (inputBlur)="inputBlurNumeroDocumento()">
+        </kendo-textbox>
+        <kendo-formerror>No. Documento inválido. {{mensajeErrorCheque}}</kendo-formerror>
+    </kendo-formfield>
+
+    <kendo-formfield *ngIf="mostrarNumeroAutorizacion">
+        <kendo-label [for]="'NoAutorizacion'" text="No. Autorización"></kendo-label>
+        <input kendoTextBox formControlName="numeroAutorizacion" #NoAutorizacion required />
+        <kendo-formerror>No. Autorización inválido</kendo-formerror>
+    </kendo-formfield>
+
+    <kendo-formfield *ngIf="mostrarBanco">
+        <kendo-label [for]="'banco'" text="Banco"></kendo-label>
+        <kendo-combobox [data]="bancosCatalogo" [textField]="'BANKNAME'" [valueField]="'BANKNAME'"
+            [valuePrimitive]="true" [placeholder]="'Seleccione'" formControlName="banco">
+        </kendo-combobox>
+
+        <kendo-formerror>Banco es requerido</kendo-formerror>
+    </kendo-formfield>
+
+    <kendo-formfield *ngIf="mostrarChequera">
+        <kendo-label [for]="'chequera'" text="Id. Chequera"></kendo-label>
+        <kendo-combobox [data]="chequerasCatalogo" [textField]="'DSCRIPTN'" [valueField]="'CHEKBKID'"
+            [valuePrimitive]="true" [placeholder]="'Seleccione'" formControlName="chequera" [disabled]="desactivarEditarChequera()">
+        </kendo-combobox>
+
+        <kendo-formerror>Chequera es requerido</kendo-formerror>
+    </kendo-formfield>
+
+    <kendo-formfield *ngIf="mostrarFechaEfectivizacion">
+        <kendo-label [for]="'fechaEfectivizacion'" text="Fecha Efectivización"></kendo-label>
+        <kendo-datepicker [min]="minFecha" formControlName="fechaEfectivizacion">
+            <kendo-datepicker-messages today="Hoy" toggle="Cambiar calendario"></kendo-datepicker-messages>
+        </kendo-datepicker>
+        <kendo-formerror>Fecha Efectivización inválida</kendo-formerror>
+    </kendo-formfield>
+</form>

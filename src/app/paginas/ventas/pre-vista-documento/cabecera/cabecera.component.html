@@ -1,0 +1,96 @@
+<div class="row">
+    <div class='col-12 col-lg-6'>
+        <kendo-label text="No. Cotización">
+            <input kendoTextBox disabled [(ngModel)]="documento.numero" />
+        </kendo-label>
+    </div>
+
+    <div class='col-12 col-lg-6'>
+        <kendo-label text="Fecha Emisión">
+            <input kendoTextBox disabled [(ngModel)]="documento.fechaEmision" />
+        </kendo-label>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class='col-12 col-lg-6'>
+        <kendo-label text="Código Cliente">
+            <input kendoTextBox disabled [(ngModel)]="documento.codigoCliente" />
+        </kendo-label>
+    </div>
+    <div class='col-12 col-lg-6'>
+        <kendo-label text="Cliente">
+            <input kendoTextBox disabled [(ngModel)]="documento.nombreCliente" />
+        </kendo-label>
+    </div>
+</div>
+
+<div class="row">
+    <div class='col-12 col-lg-6'>
+        <kendo-label text="Forma de Pago">
+            <input kendoTextBox disabled [(ngModel)]="documento.formaPago" />
+        </kendo-label>
+    </div>
+    <div class='col-12 col-lg-6'>
+        <kendo-label text="Condición de Pago">
+            <input kendoTextBox disabled [(ngModel)]="documento.condicionPago" />
+        </kendo-label>
+    </div>
+</div>
+
+<div class="row">
+    <div class='col-12 col-lg-6'>
+        <kendo-label text="Crédito Disponible">
+            <kendo-numerictextbox [(ngModel)]="creditoDisponible" [disabled]="true" [spinners]="false" [format]="'c0'">
+            </kendo-numerictextbox>
+        </kendo-label>
+    </div>
+    <div class='col-12 col-lg-6'>
+        <span>Condición de Pago</span><span class="predeterminado">Predeterminada</span>
+        <input kendoTextBox disabled [(ngModel)]="condicionPagoPredeterminado" />
+    </div>
+</div>
+
+<div *ngIf="solicitadoPorAprobaciones()">
+    <div class="row">
+        <div class='col-12 col-lg-6'>
+            <span>Cupo Asignado</span><span class="predeterminado">Predeterminado</span>
+            <kendo-numerictextbox [(ngModel)]="creditoDisponibleGP" [disabled]="true" [spinners]="false"
+                *ngIf="!creditoDisponibleGPCadena" [format]="'c0'">
+            </kendo-numerictextbox>
+            <input kendoTextBox disabled [(ngModel)]="creditoDisponibleGPCadena" *ngIf="creditoDisponibleGPCadena" />
+        </div>
+        <div class='col-12 col-lg-6'>
+            <kendo-label text="O.C">
+                <input kendoTextBox disabled [(ngModel)]="documento.ordenCliente" />
+            </kendo-label>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class='col-12 col-lg-6'>
+            <kendo-label text="Total Kilos">
+                <input kendoTextBox disabled [(ngModel)]="documento.totalKilos" />
+            </kendo-label>
+        </div>
+    </div>
+</div>
+<div *ngIf="solicitadoPorAprobaciones() === false">
+    <div class="row">
+        <div class='col-12 col-lg-6'>
+            <kendo-label text="O.C">
+               <!--  <input kendoTextBox (valueChange)="changeValueOC($event)" (blur)="editarValorOC()"
+                    [(ngModel)]="documento.ordenCliente" /> -->
+            </kendo-label>
+
+            <kendo-textbox (blur)="editarValorOC()" [disabled]="desactivarOC()"
+            [(ngModel)]="ordenCliente"></kendo-textbox>
+        </div>
+        <div class='col-12 col-lg-6'>
+            <kendo-label text="Total Kilos">
+                <input kendoTextBox disabled [(ngModel)]="documento.totalKilos" />
+            </kendo-label>
+        </div>
+    </div>
+</div>

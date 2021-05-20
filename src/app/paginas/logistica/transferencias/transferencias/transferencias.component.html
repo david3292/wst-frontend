@@ -1,0 +1,250 @@
+<div class=" container-fluid container mt-5">
+    <div class="row">
+        <div class="card titulo-configuracion col-12">
+            <div>
+                <h5 style="display: inline;">{{tituloTransferencia}}</h5>
+                <app-state-badge style="float: right;"
+                    [estado]="transferenciaPivot?transferenciaPivot.estado:transferenciaPivot"></app-state-badge>
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-top: 5px;" class="alert alert-danger"
+        *ngIf="transferenciaPivot.estado === 'ERROR' && transferenciaPivot.mensajeError !== ''"><b>Error
+            Transferencia:</b> {{transferenciaPivot.mensajeError}}</div>
+    <div style="margin-top: 5px;" class="alert alert-danger" *ngIf="documentoGuiaRemision.estado === 'ERROR'"><b>Error
+            Guia Remisión:</b> {{documentoGuiaRemision.mensajeError}}</div>
+
+    <div class="row">
+        <h5>Información de Transferencia</h5>
+    </div>
+    <div *ngIf="tipo==='salida'" class="row">
+        <div class="col-12 col-lg-4">
+            <kendo-label text="Transferencia Salida">
+                <input kendoTextBox [(ngModel)]="transferenciaPivot.numero" readonly />
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-4">
+            <kendo-label text="Transferencia">
+                <input kendoTextBox [(ngModel)]="transferenciaPivot.referencia" readonly />
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-4">
+            <kendo-label text="Cotización">
+                <input kendoTextBox
+                    [(ngModel)]="transferenciaPivot.cotizacion ?transferenciaPivot.cotizacion.numero: transferenciaPivot.cotizacion"
+                    readonly />
+            </kendo-label>
+            <app-state-badge
+                [estado]="transferenciaPivot.cotizacion?transferenciaPivot.cotizacion.estado: transferenciaPivot.cotizacion">
+            </app-state-badge>
+        </div>
+    </div>
+
+    <div *ngIf="tipo==='entrada'" class="row">
+        <div class="col-12 col-lg-4">
+            <kendo-label text="Transferencia">
+                <input kendoTextBox [(ngModel)]="transferenciaPivot.numero" readonly />
+            </kendo-label>
+        </div>
+
+        <div class="col-12 col-lg-4">
+            <kendo-label text="Cotización">
+                <input kendoTextBox
+                    [(ngModel)]="transferenciaPivot.cotizacion?transferenciaPivot.cotizacion.numero: transferenciaPivot.cotizacion"
+                    readonly />
+            </kendo-label>
+        </div>
+
+        <div class="col-12 col-lg-4">
+            <kendo-label text="Guía de Remisión">
+                <input kendoTextBox [(ngModel)]="transferenciaPivot.guiaRemision" readonly />
+            </kendo-label>
+        </div>
+    </div>
+
+    <div class="row">
+        <h5>Información Guía de Remisión</h5>
+    </div>
+
+    <div>
+        <form [formGroup]="formularioGuiaRemision" style="width: 100%; position: relative;">
+            <div class="row">
+                <div class="col-12 col-lg-6">
+                    <kendo-formfield>
+                        <kendo-label text="Conductor">
+                            <kendo-combobox [data]="conductoresLista" [textField]="'ConNombre'"
+                                [valueField]="'ConCedula'" [placeholder]="'Seleccione'" required
+                                formControlName="conductor" [readonly]="!(controlRender)">
+                            </kendo-combobox>
+                        </kendo-label>
+                        <kendo-formerror *ngIf="formularioGuiaRemision.controls.conductor.errors?.required">Requerido
+                        </kendo-formerror>
+                    </kendo-formfield>
+                </div>
+                <div class="col-12 col-lg-3">
+                    <kendo-formfield>
+                        <kendo-label text="Inicio Traslado">
+                            <kendo-datepicker [format]="'dd/MM/yyyy'" required
+                                [disabledDates]="deshabilitarFechasInicioTraslado" formControlName="fechaInicioTraslado"
+                                [readonly]="!(controlRender)">
+                            </kendo-datepicker>
+                        </kendo-label>
+                        <kendo-formerror *ngIf="formularioGuiaRemision.controls.fechaInicioTraslado.errors?.required">
+                            Requerido</kendo-formerror>
+                    </kendo-formfield>
+                </div>
+
+                <div class="col-12 col-lg-3">
+                    <kendo-formfield>
+                        <kendo-label text="Fin Traslado">
+                            <kendo-datepicker [format]="'dd/MM/yyyy'" required
+                                [disabledDates]="deshabilitarFechasFinTraslado" formControlName="fechaFinTraslado"
+                                [readonly]="!(controlRender)">
+                            </kendo-datepicker>
+                        </kendo-label>
+                        <kendo-formerror *ngIf="formularioGuiaRemision.controls.fechaFinTraslado.errors?.required">
+                            Requerido</kendo-formerror>
+                    </kendo-formfield>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-lg-6">
+                    <kendo-formfield>
+                        <kendo-label text="Ruta">
+                            <input kendoTextBox required formControlName="ruta" [readonly]="!(controlRender)" />
+                        </kendo-label>
+                        <kendo-formerror *ngIf="formularioGuiaRemision.controls.ruta.errors?.required">Requerido
+                        </kendo-formerror>
+                        <kendo-formerror *ngIf="formularioGuiaRemision.controls.ruta.errors?.maxlength">Maximo 100
+                        </kendo-formerror>
+                    </kendo-formfield>
+                </div>
+                <div class="col-12 col-lg-3">
+                    <kendo-formfield>
+                        <kendo-label text="Placa">
+                            <kendo-maskedtextbox [mask]="'LLL-000#'" required formControlName="placa"
+                                [readonly]="!(controlRender)"></kendo-maskedtextbox>
+                        </kendo-label>
+                        <kendo-formerror *ngIf="formularioGuiaRemision.controls.placa.errors?.required">Requerido
+                        </kendo-formerror>
+                        <kendo-formerror *ngIf="formularioGuiaRemision.controls.placa.errors?.maxlength">Maximo 7
+                        </kendo-formerror>
+                    </kendo-formfield>
+                </div>
+                <div class="col-12 col-lg-3">
+                    <kendo-formfield>
+                        <kendo-label text="Correo electrónico">
+                            <input kendoTextBox required formControlName="correo" [readonly]="!(controlRender)" />
+                        </kendo-label>
+                        <kendo-formerror *ngIf="formularioGuiaRemision.controls.correo.errors?.email">Email incorrcto
+                        </kendo-formerror>
+                        <kendo-formerror *ngIf="formularioGuiaRemision.controls.correo.errors?.required">
+                            Requerido</kendo-formerror>
+                    </kendo-formfield>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-lg-12">
+                    <kendo-formfield>
+                        <kendo-label text="Motivo Traslado">
+                            <input kendoTextBox required formControlName="motivo" [readonly]="!(controlRender)" />
+                        </kendo-label>
+                        <kendo-formerror *ngIf="formularioGuiaRemision.controls.motivo.errors?.required">Requerido
+                        </kendo-formerror>
+                    </kendo-formfield>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div>
+        <div class="row">
+            <div class="col-12 col-lg-6">
+                <kendo-label text="Bodega Origen">
+                    <input kendoTextBox [(ngModel)]="transferenciaPivot.descBodegaOrigen" readonly />
+                </kendo-label>
+            </div>
+
+            <div class="col-12 col-lg-6">
+                <kendo-label text="Bodega Destino">
+                    <input kendoTextBox [(ngModel)]="transferenciaPivot.descBodegaDestino" readonly />
+                </kendo-label>
+            </div>
+
+            <div class="col-12 col-lg-6">
+                <kendo-label text="Dirección Partida">
+                    <input kendoTextBox [(ngModel)]="transferenciaPivot.direccionBodegaOrigen" readonly />
+                </kendo-label>
+            </div>
+
+            <div class="col-12 col-lg-6">
+                <kendo-label text="Dirección Destino">
+                    <input kendoTextBox [(ngModel)]="transferenciaPivot.direccionBodegaDestino" readonly />
+                </kendo-label>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="row">
+            <div class="col-12"></div>
+            <h5>Detalle de Transferencia</h5>
+        </div>
+        <kendo-grid [data]="view | async" style="width: 1108px;" (dataStateChange)="onStateChange($event)"
+            (cellClick)="cellClickHandler($event)" (cellClose)="cellCloseHandler($event)" [navigable]="true">
+            <kendo-grid-column field="codigoArticulo" title="Código" width="12%"></kendo-grid-column>
+            <kendo-grid-column field="codigoArticuloAlterno" title="Código Alterno" width="10%"></kendo-grid-column>
+            <kendo-grid-column field="descripcionArticulo" title="Descripción" width="30%"></kendo-grid-column>
+            <kendo-grid-column *ngIf="verColumnas" field="total" title="Transferencia" format="{0:n2}" width="10%">
+            </kendo-grid-column>
+            <kendo-grid-column *ngIf="verColumnas" field="pesoTotal" title="Peso" width="9%"></kendo-grid-column>
+            <kendo-grid-column *ngIf="verColumnas" field="saldo" title="Pendiente" format="{0:n2}" width="10%">
+            </kendo-grid-column>
+            <kendo-grid-column field="cantidad" title="Seleccionada" editor="numeric" format="{0:n2}" width="10%">
+            </kendo-grid-column>
+            <kendo-grid-column field="pesoSeleccion" title="Peso" width="9%"></kendo-grid-column>
+            <kendo-grid-column *ngIf="tipo==='salida'" title="Compartimiento" [style]="{'text-align':'center'}"
+                width="10%">
+                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                    <button kendoButton [primary]="true" [look]="'outline'" icon="search"
+                        [disabled]='!habilitarBotonSearch' (click)="cargarInformacionBins(dataItem)"></button>
+                </ng-template>
+            </kendo-grid-column>
+        </kendo-grid>
+    </div>
+</div>
+
+<div class="container-fluid container mt-5">
+    <div class="row" *ngIf="tipo==='salida'">
+        <div class="col-12 col-lg-12">
+            <div class="row">
+                <div *ngIf="tipo==='salida'" style="margin-right: 10px;">
+                    <button *ngIf="controlRender" kendoButton primary="true" [look]="'outline'" [icon]="'save'"
+                        title="Guardar" (click)="guardarDatosGuiaRemision()">GUARDAR GUÍA</button>
+                </div>
+                <button kendoButton [primary]="true" [icon]="'redo'" (click)="abrirDialogoConfirmacion(resumenTemplate)"
+                    [disabled]='!habilitarTransferencia'>FINALIZAR
+                    TRANSFERENCIA</button>
+                <button style="margin-left: 10px;" kendoButton [primary]="true" [look]="'outline'" [icon]="'close'"
+                    [disabled]='!(controlRender)' (click)="abrirDialogoAnulacion()">ANULAR PROCESO</button>
+            </div>
+            <!-- <button style="margin-right: 10px;" kendoButton [primary]="true" [disabled]='controlRender' [icon]="'paste-plain-text'"
+                (click)="procesarGuiaRemision()">Generar Guía de remisión
+            </button> -->
+        </div>
+    </div>
+    <div class="row" *ngIf="tipo==='entrada'">
+        <div class="col-12 col-lg-12">
+            <button style="margin-right: 10px;" kendoButton [disabled]='!habilitarTransferencia' [primary]="true"
+                [icon]="'arrow-down'" (click)="abrirDialogoConfirmacion(resumenTemplate)">FINALIZAR INGRESO</button>
+        </div>
+    </div>
+</div>
+
+<ng-container #containerStockBin></ng-container>
+<ng-template #resumenTemplate>
+    <div style="margin-top: 5px; margin-bottom: 5px;" class="alert alert-warning" *ngIf="transferenciaIncompleta"><b>La
+            Transferencia de ingreso no se encuentra completa</b></div>
+    <p>¿Está seguro de finalizar la transferencia?</p>
+</ng-template>
+
+<br>

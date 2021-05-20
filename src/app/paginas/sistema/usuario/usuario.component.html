@@ -1,0 +1,35 @@
+<router-outlet></router-outlet>
+<div class=" container-fluid container mt-5" [hidden]="route.children.length !== 0">
+    <div class="card titulo-configuracion">
+        <h5>Usuarios</h5>
+    </div>
+
+    <kendo-grid [kendoGridBinding]="usuarios" [sortable]="{
+        allowUnsort: false,
+        mode: 'single'
+        }" [sort]="sort" [navigable]="true">
+        <ng-template kendoGridToolbarTemplate>
+            <button kendoGridAddCommand primary=true icon='plus' routerLink="nuevo">Agregar</button>
+        </ng-template>
+        <kendo-grid-column field="nombreCompleto" title="Nombre" width="150">
+        </kendo-grid-column>
+        <kendo-grid-column field="cargo" title="Cargo" width="300">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                {{dataItem.cargo ? dataItem.cargo.nombre: ''}}
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="correo" title="Correo" width="300">
+        </kendo-grid-column>
+        <kendo-grid-column field="activo" title="Activo" width="120" editor="boolean">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                {{dataItem.activo ? 'Si': 'No'}}
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column width="100" [style]="{'text-align':'center'}">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <button kendoButton [primary]="true" [look]="'outline'" icon="edit"
+                    [routerLink]="[ 'edicion', dataItem.id]"></button>
+            </ng-template>
+        </kendo-grid-column>
+    </kendo-grid>
+</div>

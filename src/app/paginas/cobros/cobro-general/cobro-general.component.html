@@ -1,0 +1,103 @@
+<router-outlet></router-outlet>
+<div class=" container-fluid container mt-5" [hidden]="_route.children.length !== 0">
+    <div class="card titulo-configuracion">
+        <h5>Cobros General </h5>
+    </div>
+    <div class="card header-search">
+        <div class="row">
+            <div class="col-lg col-lg-8">
+                <div class="row">
+                    <div class="col-lg col-lg-3">
+                        <kendo-label text="Código Cliente"></kendo-label>
+                    </div>
+                    <div class="col-lg col-lg-9">
+                        <div class="wraper-col">
+                            <input kendoTextBox placeholder="Nombre, Cédula, Ruc, Pasaporte"
+                                [(ngModel)]="codigoCliente" />
+                            <button kendoButton icon='search' primary="true" (click)="buscarCliente()"
+                                [disabled]='registrandoCobro'>Buscar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row name-client">
+                    <div class="col-lg col-lg-3">
+                        <kendo-label text="Nombre Cliente"></kendo-label>
+                    </div>
+                    <div class="col-lg col-lg-9">
+                        <input kendoTextBox [(ngModel)]="nombreCliente" [disabled]='true' />
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg col-lg-2">
+                <kendo-card class="k-text-center" [width]="'100%'">
+                    <kendo-card-header>
+                        <h2 kendoCardTitle>${{_finanzasService.financial(deudaTotalGeneral)}}</h2>
+                        <h6 kendoCardSubtitle>Deuda Total Cliente</h6>
+                    </kendo-card-header>
+                </kendo-card>
+            </div>
+            <div class="col-lg col-lg-2">
+                <kendo-card class="k-text-center" [width]="'100%'">
+                    <kendo-card-header>
+                        <h2 kendoCardTitle>${{cobro ? _finanzasService.financial(cobro.valor) :
+                            _finanzasService.financial(0.00)}}</h2>
+                        <h6 kendoCardSubtitle>Cobro Total Cliente</h6>
+                    </kendo-card-header>
+                </kendo-card>
+            </div>
+        </div>
+    </div>
+
+    <div class="alert alert-primary info-cobro" *ngIf="cobro">COBRO ASIGNADO <span
+            class="info-cobro-numero">{{cobro.numero}}</span></div>
+</div>
+<div class="col-lg col-lg-12" [hidden]="_route.children.length !== 0">
+    <kendo-grid [data]="view | async" style="height: 370px; width: 100%;" (add)="addHandler()"
+        (remove)="removeHandler($event)">
+        <ng-template kendoGridToolbarTemplate>
+            <button kendoGridAddCommand icon='plus' [primary]="true" [disabled]='registrandoCobro == false'></button>
+        </ng-template>
+        <kendo-grid-messages noRecords="Formas de Pago no encontradas.">
+        </kendo-grid-messages>
+        <kendo-grid-column width="100">
+            <ng-template kendoGridCellTemplate let-dataItem let-isNew="isNew">
+                <button kendoGridRemoveCommand [look]="'outline'" primary="true" icon="delete"
+                    style="margin-right: 5px;"></button>
+                <button kendoButton [look]="'outline'" primary="true" icon="edit"
+                    (click)="redirigirAplicaciones(dataItem)"></button>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="formaPago" title="Forma de Pago" width="180">
+        </kendo-grid-column>
+        <kendo-grid-column field="valor" title="Valor" format="{0:c}" width="150">
+        </kendo-grid-column>
+        <kendo-grid-column field="numeroDocumento" title="No. Documento" width="250">
+        </kendo-grid-column>
+        <kendo-grid-column field="banco" title="Banco" width="250">
+        </kendo-grid-column>
+        <kendo-grid-column field="chequera" title="Chequera" width="250">
+        </kendo-grid-column>
+        <kendo-grid-column field="numeroAutorizacion" title="No. Autorización" width="250">
+        </kendo-grid-column>
+        <kendo-grid-column field="fechaEfectivizacion" title="Fecha Efectivización" width="180">
+        </kendo-grid-column>
+        <div *kendoGridDetailTemplate="let dataItem">
+            <app-aplicacion-detalle [aplicaciones]="obtenerAplicaciones(dataItem)"></app-aplicacion-detalle>
+        </div>
+    </kendo-grid>
+</div>
+<div class=" container-fluid container mt-5" [hidden]="_route.children.length !== 0">
+    <div class="finalizar">
+        <button kendoButton icon='check' primary="true"
+            (click)="mostrarConfirmacion('finalizarCobro',null)">FINALIZAR</button>
+        <button class="buton-limpiar" kendoButton icon='rotate' primary="true"
+            (click)="blanquearDatos()">LIMPIAR</button>
+        <button class="buton-limpiar" kendoButton icon='calculator' primary="true" *ngIf="existeFormaPagoEfectivo()"
+            (click)="mostrarCalculadora()">CALCULADORA</button>
+    </div>
+</div>
+<ng-container #containerBuscarCliente></ng-container>
+<ng-container #containerRegistro></ng-container>
+<ng-container #cobroResultado></ng-container>
+<ng-container #containerConfirmacion></ng-container>
+<ng-container #containerCalculadora></ng-container>

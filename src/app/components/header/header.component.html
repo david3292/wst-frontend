@@ -1,0 +1,54 @@
+<div class='container-fluid' style="background-color:#e0e0e0;">
+    <div class="d-flex border-bottom py-2">
+        <div class="d-flex">
+            <div class='project-name d-flex'>
+
+                <!-- <kendo-avatar class="logo-toolbar" width='130px' imageSrc="assets/img/logo-header.PNG"></kendo-avatar> -->
+                <img class="logo-toolbar" [src]="logo" />
+
+            </div>
+        </div>
+        <div class='d-flex ml-auto nav'>
+            <kendo-menu [items]="menus" (select)="onSelect($event)">
+                <ng-template kendoMenuItemLinkTemplate let-item="item" let-index="index">
+                    <div *ngIf="item.url === ''">
+                        <a [kendoMenuItemLink]="index">
+                            <span [ngClass]="item.icono"></span>
+                            {{ item.nombre }}
+                        </a>
+                    </div>
+                    <div *ngIf="item.url !== '' && item.nombre !== 'Estado Cuenta Cliente'">
+                        <a [kendoMenuItemLink]="index" [routerLink]="'/' + (item.url=== ''? 'inicio':item.url) ">
+                            <span [ngClass]="item.icono"></span>
+                            {{ item.nombre }}
+                        </a>
+                    </div>
+                    <div *ngIf="item.nombre === 'Estado Cuenta Cliente'">
+                        <a [kendoMenuItemLink]="index">
+                            <span [ngClass]="item.icono"></span>
+                            {{ item.nombre }}
+                        </a>
+                    </div>
+
+                </ng-template>
+            </kendo-menu>
+        </div>
+
+        <div class='d-flex ml-auto nav'>
+            <div style="padding-right: 5px">
+                <div class="col-12 col-lg-12">
+                    {{usuarioNombreCompleto}}
+                    <div class="row info-pvta">
+                        <span class="pventa">{{puntoVenta}}</span>
+                        <app-reloj></app-reloj>
+                    </div>
+
+                </div>
+            </div>
+            <div kendoTooltip position="bottom">
+                <button kendoButton primary="true" [look]="'outline'" icon='login' (click)="loginService.cerrarSesion()"
+                    title="Salir"></button>
+            </div>
+        </div>
+    </div>
+</div>

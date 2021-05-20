@@ -1,0 +1,94 @@
+<div class=" container-fluid container mt-5">
+    <div class="row">
+        <div class="card titulo-configuracion col-12">
+            <div>
+                <h5 style="display: inline;">Consultas Cierre Caja</h5>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <h5>Parámetros de consulta</h5>
+    </div>
+    <form class="k-form" [formGroup]="editForm">
+        <div class="row">
+            <div class="col-12 col-lg-3">
+                <kendo-formfield>
+                    <kendo-label text="Fecha Caja Inicio"></kendo-label>
+                    <kendo-datepicker [format]="'dd/MM/yyyy'" formControlName="fechaInicio"></kendo-datepicker>
+
+                    <kendo-formerror>Seleccione Fecha Inicio</kendo-formerror>
+                </kendo-formfield>
+
+            </div>
+            <div class="col-12 col-lg-3">
+                <kendo-formfield>
+                    <kendo-label text="Fecha Caja Fin"></kendo-label>
+                    <kendo-datepicker [format]="'dd/MM/yyyy'" formControlName="fechaFin"></kendo-datepicker>
+
+                    <kendo-formerror>Seleccione Fecha Fin</kendo-formerror>
+                </kendo-formfield>
+
+            </div>
+            <div class="col-12 col-lg-3">
+                <kendo-formfield>
+                    <kendo-label text="Usuario"></kendo-label>
+                    <kendo-combobox [data]="usuariosCajeros" [valuePrimitive]="true" [textField]="'nombreCompleto'"
+                        [valueField]="'nombreUsuario'" formControlName="usuario" (valueChange)="changeValueUsuario($event)"></kendo-combobox>
+
+                    <kendo-formerror>Seleccione un usuario</kendo-formerror>
+                </kendo-formfield>
+
+            </div>
+            <div class="col-12 col-lg-3">
+                <kendo-formfield>
+                    <kendo-label text="Punto de Venta"></kendo-label>
+                    <kendo-combobox [data]="puntosVenta" [valuePrimitive]="true" [textField]="'nombre'"
+                        [valueField]="'id'" formControlName="puntoVenta"></kendo-combobox>
+
+                    <kendo-formerror>Seleccione Punto de Venta</kendo-formerror>
+                </kendo-formfield>
+
+            </div>
+        </div>
+    </form>
+
+    <div class="row">
+        <div class="col-12 col-lg-12" style="text-align: center;">
+            <button style="margin-top: 10px;" kendoButton [icon]="'close-outline'" [look]="'outline'" [primary]="true"
+                (click)="limpiar()">LIMPIAR CONSULTA
+            </button>
+
+            <button style="margin-top: 10px;margin-left: 10px;" kendoButton [primary]="true" [icon]="'search'"
+                (click)="consultar()" [disabled]="!editForm.valid">CONSULTAR
+            </button>
+        </div>
+    </div>
+
+    <div class="row">
+        <h5>Resultados</h5>
+    </div>
+
+    <kendo-grid [data]="gridView" style="width: 1108px;height: 600px;" [isDetailExpanded]="expandAll" [pageSize]="pageSize" [skip]="skip"
+        [pageable]="true" (pageChange)="pageChange($event)">
+        <kendo-grid-column field="caja.fechaCierre" title="Fecha Cierre" width="150"></kendo-grid-column>
+        <kendo-grid-column field="formaPago" title="Forma Pago" width="200"></kendo-grid-column>
+        <kendo-grid-column field="caja.puntoVenta.nombre" title="Punto venta" width="150" class="text-center"></kendo-grid-column>
+        <kendo-grid-column field="creadoPor" title="Usuario" width="160" class="text-center">
+        </kendo-grid-column>
+        <kendo-grid-column field="valorCobrado" title="Valor Cobrado" width="160" class="text-right" format="{0:c}">
+        </kendo-grid-column>
+        <kendo-grid-column width="70" class="text-center">
+            <ng-template kendoGridCellTemplate let-dataItem>
+                <button kendoButton [primary]="true" [icon]="'file-pdf'"
+                (click)="descargarReporte(dataItem.caja.id)"></button>
+            </ng-template>
+        </kendo-grid-column>
+        <ng-template kendoGridNoRecordsTemplate>
+            No se han encontrado resultados.
+        </ng-template>
+
+        <div *kendoGridDetailTemplate="let dataItem">
+            <app-consulta-caja-detalle [item]="dataItem" [perfil]="'JEFE_COBRANZAS'" [usuario]="dataItem.creadoPor"></app-consulta-caja-detalle>
+        </div>
+    </kendo-grid>
+</div>

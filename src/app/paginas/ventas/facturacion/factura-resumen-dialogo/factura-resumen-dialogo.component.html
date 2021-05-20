@@ -1,0 +1,67 @@
+<div>Punto de venta para facturar: <span class="pvta-facturar">{{puntoVenta}}</span></div>
+<kendo-tabstrip>
+    <kendo-tabstrip-tab [title]="'Factura'" [selected]="true">
+        <ng-template kendoTabContent>
+            <kendo-grid [data]="itemsFactura"  [height]="200">
+                <kendo-grid-column field="cotizacionDetalle.codigoArticulo" title="Código" [width]="150">
+                </kendo-grid-column>
+                <kendo-grid-column field="cotizacionDetalle.descripcionArticulo" title="Descripción">
+                </kendo-grid-column>
+                <kendo-grid-column field="cantidad" title="Cantidad" [width]="100">
+                </kendo-grid-column>
+                <kendo-grid-column field="cotizacionDetalle.total" title="Total" width="100" format="{0:c}">
+                    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                        ${{financial(calcularTotalItem(dataItem)) }}
+                    </ng-template>
+                </kendo-grid-column>
+            </kendo-grid>
+            <div class="text-right">
+                <div class="col-12 col-lg-12">
+                    <div class="row">
+                        <div class="col-12 col-lg-10 etiqueta-total"><strong>Subtotal 0%</strong></div>
+                        <div class="col-12 col-lg-2 valor-total">${{resumen==undefined?'': financial(resumen.subTotalNoIva)}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-lg-10 etiqueta-total"><strong>Subtotal 12%</strong></div>
+                        <div class="col-12 col-lg-2 valor-total">${{resumen==undefined?'': financial(resumen.subTotalIva)}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-lg-10 etiqueta-total"><strong>IVA 12%</strong></div>
+                        <div class="col-12 col-lg-2 valor-total">${{resumen==undefined?'':financial(resumen.iva)}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-lg-10 etiqueta-total"><strong>Total</strong></div>
+                        <div class="col-12 col-lg-2 valor-total">${{resumen==undefined?'':financial(resumen.total)}}</div>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+    </kendo-tabstrip-tab>
+    <kendo-tabstrip-tab [title]="'Transferencia'">
+        <ng-template kendoTabContent>
+            <kendo-grid [data]="itemsTransferencias" [height]="200">
+                <kendo-grid-column field="cotizacionDetalle.codigoArticulo" title="Código" [width]="150">
+                </kendo-grid-column>
+                <kendo-grid-column field="cotizacionDetalle.descripcionArticulo" title="Descripción">
+                </kendo-grid-column>
+                <kendo-grid-column field="cantidad" title="Cantidad" [width]="100">
+                </kendo-grid-column>
+                <kendo-grid-column field="codigoBodega" title="Bodega" [width]="150">
+                </kendo-grid-column>
+            </kendo-grid>
+        </ng-template>
+    </kendo-tabstrip-tab>
+</kendo-tabstrip>
+<div class="alert alert-info" *ngIf="itemsTransferencias.length > 0">
+    <span class="k-icon k-i-information k-i-info"></span> La factura se va a emitir cuando se complete el proceso de transferencia. </div>
+<div class="row">
+    <div class="col-12 col-lg-12">
+        <button class="buttons" kendoButton [primary]="true" [look]="'outline'" [icon]="'check'"
+            (click)="confirmar()">
+            Confirmar
+        </button>
+    </div>
+
+</div>
+
+<ng-container #containerConfirmacionFactura></ng-container>

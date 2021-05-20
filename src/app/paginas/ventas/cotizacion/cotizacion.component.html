@@ -1,0 +1,239 @@
+<div class=" container-fluid container mt-5">
+<!--     <div class=" row header">
+        <div class="col col-lg-3 containerButtons">
+            <div kendoTooltip position="bottom">
+                <button kendoButton primary="true" [look]="'outline'" title="Guardar" (click)="guardar()">
+                    <span class="k-icon k-i-save k-icon-32"></span>
+                </button>
+            </div>
+            <div kendoTooltip position="bottom">
+                <button class="button-rapid" kendoButton primary="true" [look]="'outline'" title="Eliminar" (click)="eliminar()">
+                    <span class="k-icon k-i-delete k-icon-32"></span>
+                </button>
+            </div>
+        </div>
+        <div class="col col-lg-9">
+            <h4>COTIZACIÓN</h4>
+        </div>
+    </div> -->
+    <div class="card titulo-configuracion">
+        <h5>COTIZACIÓN</h5>
+    </div>
+
+    <div class='row'>
+        <div class='col-12'>
+            <h5>General</h5>
+        </div>
+    </div>
+
+    <div class='row'>
+        <div class='col-12 col-lg-3'>
+            <kendo-label text="Empresa">
+                <input kendoTextBox [(ngModel)]="empresa" disabled="true" />
+            </kendo-label>
+        </div>
+        <div class='col-12 col-lg-3'>
+            <kendo-label text="No. Cotización">
+                <input kendoTextBox disabled [(ngModel)]="numero" />
+            </kendo-label>
+        </div>
+        <div class='col-12 col-lg-3'>
+            <kendo-label text="Fecha Emisión">
+                <input kendoTextBox disabled [(ngModel)]="fechaEmision" />
+            </kendo-label>
+        </div>
+        <div class='col-12 col-lg-3'>
+            <kendo-label text="Estado">
+                <input kendoTextBox disabled [(ngModel)]="estado" />
+            </kendo-label>
+        </div>
+    </div>
+    <div class="row">
+        <div class='col-12 col-lg-2 buscar-cliente'>
+            <label>Buscar Cliente</label>
+            <button kendoButton icon='search' primary="true" (click)="abrirBuscarClienteDialogo()" [disabled]="puedeCambiarCliente()"></button>
+        </div>
+    </div>
+    <div class='row'>
+        <div class='col-12 col-lg-4 '>
+            <kendo-label text="Código Cliente">
+                <input kendoTextBox disabled [(ngModel)]="cliente?cliente.CUSTNMBR:cliente" />
+            </kendo-label>
+        </div>
+        <div class='col-12 col-lg-4 '>
+            <kendo-label text="Nombre Cliente">
+                <input kendoTextBox disabled [(ngModel)]="cliente?cliente.CUSTNAME:cliente" />
+            </kendo-label>
+        </div>
+        <div class='col-12 col-lg-4 '>
+            <kendo-label text="Crédito Disponible">
+                <input kendoTextBox disabled [(ngModel)]="creditoDisponible" />
+            </kendo-label>
+        </div>
+        <div class='col-12 col-lg-4 '>
+            <kendo-label text="Dirección">
+                <input kendoTextBox disabled [(ngModel)]="cliente?cliente.ADDRESS1:cliente" />
+            </kendo-label>
+        </div>
+        <div class='col-12 col-lg-4 '>
+            <kendo-label text="O.C Cliente">
+                <input kendoTextBox [(ngModel)]="ordenCliente" />
+            </kendo-label>
+        </div>
+        <div class='col-12 col-lg-4 '>
+            <kendo-label text="Total Kgs.">
+                <input kendoTextBox [(ngModel)]="totalKilos" disabled />
+            </kendo-label>
+        </div>
+    </div>
+    <div class='row'>
+        <div class='col-12 col-lg-12'>
+            <h5>Formas de Pago</h5>
+        </div>
+        <div class="col-12 col-lg-4">
+            <div class="row">
+                <div class="col-12 col-lg-12 forma-pago">
+                    <div>
+                        <label class="k-label" [for]="female">Contado</label>
+                        <input type="radio" name="fp" value="CONTADO" #female [(ngModel)]="formaPago" (change)="onChangeFormaPago($event)"
+                            [disabled]="sessionService.puedeEditarCondicionPago() == false" kendoRadioButton />
+                    </div>
+                    <div>
+                        <label class="k-label" [for]="male">Crédito</label>
+                        <input type="radio" name="fp" value="CREDITO" #male [(ngModel)]="formaPago" kendoRadioButton (change)="onChangeFormaPago($event)"
+                            [disabled]="sessionService.puedeEditarCondicionPago() == false" />
+                    </div>
+                    <div>
+                        <label class="k-label" [for]="other">Crédito Soporte</label>
+                        <input type="radio" name="fp" value="CREDITO_SOPORTE" #other [(ngModel)]="formaPago" (change)="onChangeFormaPago($event)"
+                            [disabled]="sessionService.puedeEditarCondicionPago() == false" kendoRadioButton />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-4">
+            <div class="row">
+                <div class="col-12 col-lg-12 forma-pago">
+                    <label class="k-label label-condicionPago" [for]="other">Condición Pago</label>
+                    <kendo-combobox [data]="condicionesPago" required [textField]="'termino'" [valueField]="'id'"
+                        [placeholder]="'Seleccione'" [(ngModel)]="condicionPagoSeleccionado"
+                        [disabled]="sessionService.puedeEditarCondicionPago() == false">
+                    </kendo-combobox>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class='row'>
+        <div class='col-12 col-lg-12'>
+            <h5>Artículos</h5>
+        </div>
+        <div class='col-12 col-lg-4'>
+            <div class="forma-pago">
+                <label class="k-label" [for]="female">Criterio</label>
+                <input kendoTextBox placeholder="Código/Descripción" [(ngModel)]="criterioBusquedaArticulo" />
+                <button kendoButton primary=true icon='search' (click)="abrirBuscarArticuloDialogo()"
+                    [disabled]="criterioBusquedaArticulo==null"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <div class='col-12 col-lg-12'>
+        <kendo-grid [data]="view | async" [height]="330" (dataStateChange)="onStateChange($event)"
+            (cellClick)="cellClickHandler($event)" (cellClose)="cellCloseHandler($event)"
+            (remove)="removeHandler($event)" [navigable]="true">
+            <kendo-grid-messages noRecords="Agregue los artículos.">
+            </kendo-grid-messages>
+            <kendo-grid-column title="Stock" width="60">
+                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                    <button kendoButton primary=true icon='search' (click)="consultarStock(dataItem)"></button>
+                </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column field="codigoArticulo" title="Cód. Artículo" width="120"></kendo-grid-column>
+            <kendo-grid-column field="descripcionArticulo" title="Descripción Artículo">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                    {{dataItem.descripcionArticulo}}
+                    <span class="compra" *ngIf="dataItem.generaCompra">C</span>
+                </ng-template>
+
+            </kendo-grid-column>
+            <kendo-grid-column field="cantidad" title="Cantidad" editor="numeric" width="100"></kendo-grid-column>
+            <kendo-grid-column field="precio" title="P. Unitario" width="100" format="{0:c}"></kendo-grid-column>
+            <kendo-grid-column field="descuentoFijo" title="Desct. Fijo" width="100">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                    {{dataItem.descuentoFijo}}%
+                </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column field="subTotal" title="Subtotal" width="100" format="{0:c}">
+                <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+                    <div class="footer-detalle">Subtotal 0%</div>
+                    <div class="footer-detalle">Subtotal 12%</div>
+                    <div class="footer-detalle">IVA 12%</div>
+                    <div class="footer-detalle">Total</div>
+                </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column field="total" title="Total" width="100" format="{0:c}">
+                <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+                    <div class="footer-detalle-valor">${{financial(subTotal0)}}</div>
+                    <div class="footer-detalle-valor">${{financial(subTotal12)}}</div>
+                    <div class="footer-detalle-valor">${{financial(iva12)}}</div>
+                    <div class="footer-detalle-valor">${{financial(total)}}</div>
+                </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column field="precioIva" title="P.V.P Tot. IVA" editor="numeric" width="110" format="{0:c}" class="text-center"></kendo-grid-column>
+            <kendo-grid-command-column width="100">
+                <ng-template kendoGridCellTemplate let-dataItem let-isNew="isNew">
+                    <button kendoGridRemoveCommand [look]="'outline'" primary="true" icon="delete"></button>
+                    <button *ngIf="dataItem.claseArticulo === 'L'" kendoButton [look]="'outline'"
+                    icon="cart" (click)="abrirDialogoCompras(dataItem)"></button>
+                </ng-template>
+            </kendo-grid-command-column>
+        </kendo-grid>
+    </div>
+</div>
+<div class=" container-fluid container mt-5">
+    <div class='row'>
+        <div class="col-12 col-lg-1">
+            <kendo-label text="Comentario:">
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-11">
+            <textarea kendoTextArea [(ngModel)]="comentario"></textarea>
+        </div>
+
+    </div>
+
+    <div class='row'>
+        <div class="col-12 col-lg-1">
+            <kendo-label text="Notas:">
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-11">
+            <textarea kendoTextArea [(ngModel)]="comentario2"></textarea>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-lg-12 button-action-footer">
+            <button kendoButton primary="true" [icon]="'save'" (click)="guardar()">GUARDAR</button>
+            <button kendoButton primary="true" [icon]="'close'" (click)="eliminar()">ELIMINAR</button>
+            <button kendoButton primary="true" [icon]="'shopping-cart'" (click)="cotizarDocumento()">COTIZAR</button>
+            <button kendoButton primary="true" [icon]="'select-box'" (click)="facturarDocumento()">FACTURAR</button>
+            <button kendoButton primary="true" [icon]="'paste'">RESERVAR</button>
+            <button kendoButton primary="true" [icon]="'delete'" (click)="mostrarConfirmacionAnular()" [disabled]="numero == undefined">ANULAR</button>
+
+        </div>
+    </div>
+</div>
+<ng-container #containerCliente></ng-container>
+<ng-container #containerArticulo></ng-container>
+<ng-container #containerConfirmacion></ng-container>
+<ng-container #containerConfirmacionAnular></ng-container>
+<ng-container #containerCStock></ng-container>
+<ng-container #containerArticuloCompra></ng-container>
+
+<br><br>

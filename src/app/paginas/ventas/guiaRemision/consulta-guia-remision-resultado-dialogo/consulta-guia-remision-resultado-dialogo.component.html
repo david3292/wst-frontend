@@ -1,0 +1,4 @@
+<div *ngFor="let item of facturas">
+    <span>{{visualizarNumero(item)}} - {{item.estado}}</span> <button style="margin-left: 5px;" kendoButton [primary]="true" [look]="'outline'" icon="file-pdf"
+    (click)="generarReporte(item)" title="Guía de Remisión"></button>
+</div>

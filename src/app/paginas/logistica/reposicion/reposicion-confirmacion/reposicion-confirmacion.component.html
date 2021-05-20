@@ -1,0 +1,16 @@
+<div *ngIf="accion === 'ANULAR'">
+    <p style="text-align: center;">¿Está seguro de <strong>ANULAR</strong> la reposición <strong>{{reposicion.numero}}</strong>?</p>
+</div>
+
+<div *ngIf="accion ==='EMITIR'">
+    <p style="text-align: center;">¿Está seguro de <strong>PROCESAR</strong> la reposición <strong>{{reposicion.numero}}</strong>?</p>
+</div>
+
+<div *ngIf="accion ==='ELIMINAR_DETALLE'">
+    <p>¿Está seguro de <strong>ELIMINAR</strong> el siguiente artículo del detalle?</p>
+    <p>
+        <strong>Código: </strong>{{detalle.codigoArticulo}}<br/>
+        <strong>Descripción: </strong>{{detalle.descripcionArticulo}}
+    </p>
+</div>
+

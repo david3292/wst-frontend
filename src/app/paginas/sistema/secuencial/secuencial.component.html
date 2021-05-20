@@ -1,0 +1,36 @@
+<router-outlet></router-outlet>
+<div class=" container-fluid container mt-5" [hidden]="route.children.length !== 0">
+    <div class="card titulo-configuracion">
+        <h5>Secuenciales</h5>
+    </div>
+
+    <kendo-grid [kendoGridBinding]="secuenciales" [sortable]="{
+        allowUnsort: false,
+        mode: 'single'
+        }" [sort]="'sort'" [navigable]="true">
+        <ng-template kendoGridToolbarTemplate>
+            <button kendoGridAddCommand primary=true icon='plus' routerLink="nuevo">Agregar</button>
+        </ng-template>
+        <kendo-grid-column field="tipoDocumento" title="Tipo Documento" width="300">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                {{dataItem.tipoDocumento ? dataItem.tipoDocumento.descripcion: ''}}
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="puntoVenta" title="Punto Venta" width="300">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                {{dataItem.puntoVenta ? dataItem.puntoVenta.nombre: ''}}
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="docIdGP" title="Doc ID" width="150">
+        </kendo-grid-column>
+        <kendo-grid-column field="abreviatura" title="Abreviatura" width="150">
+        </kendo-grid-column>
+        <kendo-grid-column field="susecion" title="Sucesión" width="150">
+        </kendo-grid-column>
+        <kendo-grid-column field="activo" title="Activo" width="120" editor="boolean">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                {{dataItem.activo ? 'Sí': 'No'}}
+            </ng-template>
+        </kendo-grid-column>
+    </kendo-grid>
+</div>

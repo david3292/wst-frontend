@@ -1,0 +1,110 @@
+<div class=" container-fluid container mt-5">
+    <div class="row">
+        <div class="card titulo-configuracion col-12">
+            <div>
+                <h5 style="display: inline;">Consultas Transferencias</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <h5>Parámetros de consulta</h5>
+    </div>
+    <div class="row">
+        <div class="col-12 col-lg-3">
+            <kendo-label text="Tipo">
+                <kendo-dropdownlist [data]="listaTransferencias" [(ngModel)]="consulta.tipoTransferencia"
+                    (valueChange)="tipoChange($event)" [valuePrimitive]="true" ></kendo-dropdownlist>
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-3">
+            <kendo-label text="Número de Transferencia">
+                <input kendoTextBox [(ngModel)]="consulta.numeroDocumento"/>
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-3">
+            <kendo-label text="Número de Cotización">
+                <input kendoTextBox [(ngModel)]="consulta.numeroCotizacion"/>
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-3">
+            <kendo-label text="Número de Referencia">
+                <input kendoTextBox [(ngModel)]="consulta.numeroReferencia"/>
+            </kendo-label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-lg-3">
+            <kendo-label>{{transferenciaTransaccion}}
+                <kendo-combobox [data]="listaBodegas" [valuePrimitive]="true" [(ngModel)]="consulta.bodegaTransaccion"></kendo-combobox>
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-3">
+            <kendo-label text="Fecha de emisión inicio">
+                <kendo-datepicker [format]="'dd/MM/yyyy'" [(ngModel)]="fechaInicio"></kendo-datepicker>
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-3">
+            <kendo-label text="Fecha de emisión fin">
+                <kendo-datepicker [format]="'dd/MM/yyyy'" [(ngModel)]="fechaFin" [disabledDates]="deshabilitarFechasFinTraslado"></kendo-datepicker>
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-3">
+            <kendo-label text="Estado">
+                <kendo-combobox [data]="listaEstados" [valuePrimitive]="true" [(ngModel)]="consulta.estado">
+                    <ng-template kendoComboBoxItemTemplate let-dataItem>
+                        <app-state-badge [estado]="dataItem"></app-state-badge>
+                    </ng-template>
+                </kendo-combobox>
+            </kendo-label>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-lg-12" style="text-align: center;">
+            <button style="margin-top: 10px;" kendoButton [icon]="'close-outline'" [look]="'outline'" [primary]="true"
+            (click)="limpiar()">LIMPIAR CONSULTA</button>
+
+            <button style="margin-top: 10px;margin-left: 10px;" kendoButton [primary]="true" [icon]="'search'"
+                (click)="consultar()">CONSULTAR</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <h5>Transferencias</h5>
+    </div>
+</div>
+
+<div class="col-12 col-lg-12">
+    <kendo-grid [data]="gridView" style="height: 600px;" [pageSize]="pageSize"
+            [skip]="skip"
+            [pageable]="true"
+            (pageChange)="pageChange($event)">
+        <kendo-grid-column field="numeroTransferenciaPadre" title="Trf. Padre" width="150" *ngIf="consulta.tipoTransferencia !== 'TRANSFERENCIA'"></kendo-grid-column>
+        <kendo-grid-column field="tipoTransferencia" title="Tipo" width="110" class="text-center" *ngIf="consulta.tipoTransferencia !== 'TRANSFERENCIA'">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <app-tipo-transferencia-badge [tipo]="dataItem.tipoTransferencia"></app-tipo-transferencia-badge>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="numero" title="Número" width="150"></kendo-grid-column>
+        <kendo-grid-column field="cotizacionNumero" title="Número Cotización" width="200"></kendo-grid-column>
+        <kendo-grid-column field="fechaEmision" title="Fecha Emisión" width="100"></kendo-grid-column>
+        <kendo-grid-column field="bodegaOrigen" title="Bodega Origen" width="150"></kendo-grid-column>
+        <kendo-grid-column field="bodegaDestino" title="Bodega Destino" width="150"></kendo-grid-column>
+        <kendo-grid-column title="Estado" width="150">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <app-state-badge [estado]="dataItem.estado"></app-state-badge>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column [style]="{'text-align':'center'}" width="90">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <div kendoTooltip style="text-align: center; padding-top: 10px;">
+                    <button style="margin-left: 5px;" kendoButton [primary]="true" [look]="'outline'" icon="file-pdf"
+                    (click)="imprimirReporte(dataItem)" title="Guía de Transferencia"></button>
+                    <button *ngIf="mostrarBotonReporteGR(dataItem)" style="margin-left: 5px;" kendoButton [primary]="true" [look]="'outline'" icon="file-pdf"
+                    (click)="imprimirGuiaRemision(dataItem)" title="Guía de Remisión"></button>
+                </div>
+            </ng-template>
+        </kendo-grid-column>
+    </kendo-grid>
+</div>

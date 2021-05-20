@@ -1,0 +1,51 @@
+<div class=" container-fluid container mt-5">
+    <div class="card titulo-configuracion">
+        <h5>Cargos</h5>
+    </div>
+
+    <kendo-grid [kendoGridBinding]="cargos" (add)="addHandler($event)" (save)="saveHandler($event)"
+        (edit)="editHandler($event)" (cancel)="cancelHandler($event)" [navigable]="true">
+        <ng-template kendoGridToolbarTemplate>
+            <button kendoGridAddCommand primary=true icon='plus'>Agregar</button>
+        </ng-template>
+        <kendo-grid-column field="area.id" title="Área" width="250">
+            <ng-template kendoGridCellTemplate let-dataItem>
+                {{dataItem.area.areaFuncional}}
+            </ng-template>
+            <ng-template kendoGridEditTemplate let-column="column" let-formGroup="formGroup" let-isNew="isNew">
+                <kendo-dropdownlist #ddl="popupAnchor" popupAnchor [data]="areas" textField="areaFuncional"
+                    valueField="id" [valuePrimitive]="true" [formControl]="formGroup.get('area')">
+                </kendo-dropdownlist>
+                <kendo-popup [anchor]="ddl.element"
+                    *ngIf="formGroup.get('area').invalid && !(isNew && formGroup.get('area').untouched)"
+                    popupClass="k-widget k-tooltip k-tooltip-validation k-invalid-msg">
+                    <span class="k-icon k-i-warning"></span>
+                    campo requerido
+                </kendo-popup>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="nombre" title="Cargo" width="300">
+            <ng-template kendoGridEditTemplate let-column="column" let-formGroup="formGroup" let-isNew="isNew">
+                <input #input class="k-textbox" [formControl]="formGroup.get(column.field)">
+                <kendo-popup [anchor]="input"
+                    *ngIf="formGroup.get(column.field).invalid && !(isNew && formGroup.get(column.field).untouched)"
+                    popupClass="k-widget k-tooltip k-tooltip-validation k-invalid-msg">
+                    <span class="k-icon k-i-warning"></span>
+                    Campo requerido
+                </kendo-popup>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="activo" title="Activo" width="120" editor="boolean">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                {{dataItem.activo ? 'Sí': 'No'}}
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-command-column width="100">
+            <ng-template kendoGridCellTemplate let-isNew="isNew">
+                <button kendoGridEditCommand [primary]="true" [look]="'outline'" icon="edit"></button>
+                <button kendoGridSaveCommand [disabled]="formGroup?.invalid" [look]="'outline'" icon="check"></button>
+                <button kendoGridCancelCommand [look]="'outline'" icon="close"></button>
+            </ng-template>
+        </kendo-grid-command-column>
+    </kendo-grid>
+</div>

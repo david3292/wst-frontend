@@ -1,0 +1,102 @@
+<div class="container-fluid container mt-5">
+    <kendo-card [width]="'100%'">
+        <kendo-card-header class="k-hbox">
+            <h4 kendoCardTitle>CHEQUES POSFECHADOS</h4>
+        </kendo-card-header>
+    </kendo-card>
+</div>
+<div class="col-12 col-lg-12" style="margin-top: 3px;">
+    <kendo-card [width]="'100%'">
+        <kendo-card-header class="k-hbox">
+            <button kendoButton primary="true" [icon]="'arrow-60-right'"
+                (click)="abrirDialogoConfirmacion()">PROCESAR</button>
+            <div class="d-flex ml-auto nav filtro-fecha">
+                <kendo-daterange>
+                    <label>
+                        <span class="label">Inicio:</span>
+                        <kendo-dateinput kendoDateRangeStartInput [(value)]="range.start" [format]="'yyyy/MM/dd'">
+                        </kendo-dateinput>
+                    </label>
+                    <label>
+                        <span class="label">Fin:</span>
+                        <kendo-dateinput kendoDateRangeEndInput [(value)]="range.end" [format]="'yyyy/MM/dd'">
+                        </kendo-dateinput>
+                    </label>
+                    <kendo-daterange-popup [animate]="false"></kendo-daterange-popup>
+                </kendo-daterange>
+                <div kendoTooltip class="bottom" position="bottom">
+                    <button kendoButton primary="true" [look]="'outline'" [icon]="'filter'" title="Filtrar"
+                        (click)="filtrarPorFechas()"></button>
+                </div>
+                <div kendoTooltip class="bottom" position="bottom">
+                    <button kendoButton primary="true" [look]="'outline'" [icon]="'filter-clear'"
+                        *ngIf="mostrarQuitarFiltro" (click)="quitarFiltroFechas()" title="Quitar Filtro"></button>
+                </div>
+
+            </div>
+            <div class="d-flex ml-auto nav color-fecha">
+                <span class='k-icon k-i-kpi-status-open' style="color: #B2F699;"></span> <span
+                    class="colores">Hoy</span>
+                <span class='k-icon k-i-kpi-status-open' style="color: #809FFF;"></span> <span
+                    class="colores">Posterior</span>
+                <span class='k-icon k-i-kpi-status-open' style="color: #FFBA80;"></span> <span
+                    class="colores">Anterior</span>
+            </div>
+        </kendo-card-header>
+    </kendo-card>
+    <kendo-grid [data]="gridChequesView" [height]="500" [navigable]="true" [selectable]="true"
+        [kendoGridSelectBy]="mySelectionKey" [selectedKeys]="mySelection" [sortable]="true" [sort]="state.sort"
+        [pageSize]="state.take" [skip]="state.skip" [pageable]="true" [filter]="state.filter" [filterable]="true"
+        (dataStateChange)="dataStateChange($event)">
+        <kendo-grid-messages pagerPage="Página" pagerOf="de" pagerItems="ítems" pagerItemsPerPage="ítems por página"
+            noRecords="No existen registros.">
+        </kendo-grid-messages>
+        <kendo-grid-checkbox-column showSelectAll="true" width="50" class="text-center"></kendo-grid-checkbox-column>
+        <kendo-grid-column field="codigoCliente" title="Cód. Cliente" width="130"></kendo-grid-column>
+        <kendo-grid-column field="nombreCliente" title="Nombre Cliente" width="130"></kendo-grid-column>
+        <kendo-grid-column field="cobroFecha" title="Fecha Cobro" width="110" class="text-center"></kendo-grid-column>
+        <kendo-grid-column field="numeroCheque" title="Número Cheque" width="130"></kendo-grid-column>
+        <kendo-grid-column field="banco" title="Banco" width="130"></kendo-grid-column>
+        <kendo-grid-column field="monto" title="Monto" width="130" format="{0:c}" class="text-right">
+        </kendo-grid-column>
+        <kendo-grid-column field="fechaCheque" title="Fecha Cheque" width="130" class="no-padding" [filterable]="false">
+            <ng-template kendoGridCellTemplate let-dataItem>
+                <span class="whole-cell" [style.backgroundColor]="colorCode(dataItem.fechaCheque)">
+                    {{ dataItem.fechaCheque }}
+                </span>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="documentosAplicados" title="Documento Aplicado" width="150">
+            <ng-template kendoGridCellTemplate let-dataItem>
+                <div *ngIf="dataItem.documentosAplicados.length > 1">
+                    {{ dataItem.documentosAplicados[0] }} <button kendoButton
+                        (click)="verAplicaciones(dataItem.documentosAplicados)" icon="search" primary="true"></button>
+                </div>
+                <div *ngIf="dataItem.documentosAplicados.length === 1">
+                    {{ dataItem.documentosAplicados }}
+                </div>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="canje" title="Canje" width="100" [filterable]="false" class="text-center">
+            <ng-template kendoGridCellTemplate let-dataItem>
+                <input type="checkbox" id="canje" kendoCheckBox [(ngModel)]="dataItem.canje"
+                    [disabled]="inactivarCanje(dataItem)" />
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="diasProrroga" title="Días Prórroga" width="100" [filterable]="false">
+            <ng-template kendoGridCellTemplate let-dataItem>
+                <kendo-numerictextbox [min]="0" [format]="{maximumFractionDigits: 0}"
+                    [(ngModel)]="dataItem.diasProrroga" (valueChange)="onChangeProrroga($event, dataItem)"
+                    [disabled]="inactivarDiasProrroga(dataItem)">
+                </kendo-numerictextbox>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="nuevaFecha" title="Nueva Fecha" width="130" [filterable]="false">
+        </kendo-grid-column>
+
+    </kendo-grid>
+
+</div>
+<ng-container #containerConfirmacion></ng-container>
+<ng-container #containerAplicaciones></ng-container>
+<ng-container #containerResultado></ng-container>

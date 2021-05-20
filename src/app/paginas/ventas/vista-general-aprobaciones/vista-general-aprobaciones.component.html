@@ -1,0 +1,216 @@
+<!-- <div class="container-fluid container mt-5"> -->
+<br>
+<div class="col-12 col-lg-12">
+    <div class="card titulo-configuracion">
+        <h5>Aprobación Cotizaciones</h5>
+    </div>
+    <kendo-grid [data]="gridData"
+        [height]="500"
+        [navigable]="true"
+        [pageSize]="state.take"
+        [skip]="state.skip"
+        [sort]="state.sort"
+        [filter]="state.filter"
+        [sortable]="true"
+        [pageable]="true"
+        [filterable]="true"
+        (dataStateChange)="dataStateChange($event)">
+        <ng-template kendoGridToolbarTemplate>
+            <div kendoTooltip position="right">
+                <button kendoButton icon='refresh' [primary]="true" title="Actualizar registros" (click)="listarSolicitudes()"></button>
+            </div>
+        </ng-template>
+        <kendo-grid-messages pagerPage="Página" pagerOf="de" pagerItems="ítems" pagerItemsPerPage="ítems por página" noRecords="No existen solicitudes pendientes.">
+        </kendo-grid-messages>
+        <kendo-grid-column field="cotizacion.numero" title="Número Doc." [width]="170"></kendo-grid-column>
+        <kendo-grid-column field="cotizacion.puntoVenta.nombre" title="Punto de Venta" [width]="200"></kendo-grid-column>
+        <kendo-grid-column field="cotizacion.nombreCliente" title="Nombre Cliente">
+        </kendo-grid-column>
+        <kendo-grid-column field="cotizacion.fechaEmision" title="Fecha Emisión" [width]="170" >
+        </kendo-grid-column>
+        <kendo-grid-column field="cotizacion.total" title="Total" format="{0:c}" [width]="110" [filterable]="false"></kendo-grid-column>
+        <kendo-grid-column [width]="70">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <button kendoButton [primary]="true" [look]="'outline'" [icon]="'hyperlink-open'"
+                    (click)="abrirSolicitudDetalle(dataItem)"></button>
+            </ng-template>
+        </kendo-grid-column>
+    </kendo-grid>
+
+</div>
+
+<kendo-window title="Aprobar Cotización" [top]="30" [width]="1200" [height]="600" [draggable]="false"
+    *ngIf="abrirSolicitud" (close)="cerrarSolicitud()">
+    <div class="row">
+        <div class="col-12 col-lg-8">
+            <app-cabecera [documento]='documentoSeleccionado' [ventanaPadre]="'aprobaciones'"></app-cabecera>
+        </div>
+        <div class="col-12 col-lg-4">
+            <strong>Lista de Controles</strong>
+            <div class="row">
+                <div class="col-12 col-lg-12">
+                    <span [className]="solicitudSeleccionada.formaPago? 'k-icon k-i-checkbox-checked' :'k-icon k-i-checkbox'"></span>Cambio de Forma de Pago
+                </div>
+                <div class="col-12 col-lg-12">
+                    <span [className]="solicitudSeleccionada.precioProducto? 'k-icon k-i-checkbox-checked':'k-icon k-i-checkbox'"></span>Precio de Producto
+                </div>
+                <div class="col-12 col-lg-12">
+                    <span [className]="solicitudSeleccionada.descuentoFijo? 'k-icon k-i-checkbox-checked':'k-icon k-i-checkbox'"></span>Descuento Fijo
+                </div>
+                <div class="col-12 col-lg-12">
+                    <span [className]="solicitudSeleccionada.descripcionArticulo? 'k-icon k-i-checkbox-checked':'k-icon k-i-checkbox'"></span>Descripción Producto
+                </div>
+                <div class="col-12 col-lg-12">
+                    <span [className]="solicitudSeleccionada.documentoSoportePendiente? 'k-icon k-i-checkbox-checked':'k-icon k-i-checkbox'"></span>Documento soporte pendiente de entrega
+                </div>
+                <div class="col-12 col-lg-12">
+                    <span [className]="solicitudSeleccionada.documentosVencidos? 'k-icon k-i-checkbox-checked':'k-icon k-i-checkbox'"></span>Documentos Vencidos
+                </div>
+
+                <div class="col-12 col-lg-12">
+                    <span [className]="solicitudSeleccionada.creditoCerrado? 'k-icon k-i-checkbox-checked':'k-icon k-i-checkbox'"></span>Crédito Cerrado
+                </div>
+
+                <div class="col-12 col-lg-12">
+                    <span [className]="solicitudSeleccionada.excesoLimiteCredito? 'k-icon k-i-checkbox-checked':'k-icon k-i-checkbox'"></span>Exceso Límite de Crédito
+                </div>
+
+                <div class="col-12 col-lg-12">
+                    <span [className]="solicitudSeleccionada.reservaStock? 'k-icon k-i-checkbox-checked':'k-icon k-i-checkbox'"></span>Reserva de Stock
+                </div>
+
+                <div class="col-12 col-lg-12">
+                    <span [className]="solicitudSeleccionada.reservaTransito? 'k-icon k-i-checkbox-checked':'k-icon k-i-checkbox'"></span>Reserva en Tránsito
+                </div>
+
+                <div class="col-12 col-lg-12">
+                    <span [className]="solicitudSeleccionada.cambioCondicionPagoProveedor? 'k-icon k-i-checkbox-checked':'k-icon k-i-checkbox'"></span>Cambio en condición de pago a proveedores
+                </div>
+
+                <div class="col-12 col-lg-12">
+                    <span [className]="solicitudSeleccionada.cambioMargenUtilidad? 'k-icon k-i-checkbox-checked':'k-icon k-i-checkbox'"></span>Cambio en margen de utilidad
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="habilitarBotonDetalleCompras" class="row">
+        <div style="padding-top: 5px; padding-bottom: 5px;" class="col-lg-12 col-12">
+            <button style="float: right; margin-right: 20px;" kendoButton [primary]="true" [look]="'outline'" icon="cart"
+                    (click)="abrirDetalleCompras()">Detalles de Compras </button>
+        </div>
+    </div>
+
+    <app-detalle [documento]='documentoSeleccionado' [reservaFactura]='reservaFacturaSeleccionado'></app-detalle>
+
+    <div class="row comments-seller">
+        <div class="col-12 col-lg-12">
+            <kendo-label text="Comentarios">
+                <textarea class="comments" kendoTextArea rows="3" [autoSize]="true" [disabled]="true"
+                    [(ngModel)]="documentoSeleccionado.comentario"></textarea>
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-12">
+            <kendo-label text="Notas">
+                <textarea class="comments" kendoTextArea rows="3" [autoSize]="true" [disabled]="true"
+                    [(ngModel)]="documentoSeleccionado.comentario2"></textarea>
+            </kendo-label>
+        </div>
+    </div>
+
+    <form [formGroup]="formRespuesta">
+        <fieldset class="k-form-fieldset">
+            <div class="col-12 card">
+                <h5>Aprobación</h5>
+                <div class='row row-aprobar'>
+                    <div class="col-12 col-lg-4">
+                        <kendo-formfield [orientation]="'horizontal'">
+                           <!--  <span>Opción</span>
+                            <kendo-combobox [data]="catalogo" [textField]="'texto'" [valueField]="'valor'" required
+                                formControlName="estado" (valueChange)="changeValueAprobar($event)">
+                            </kendo-combobox> -->
+                            <ul class="k-radio-list k-list-horizontal" style="margin-top: 20px;">
+
+                                <li class="k-radio-item" style="margin-right: 30px;">
+                                    <input type="radio" name="estado" value="APROBAR" #male formControlName="estado" kendoRadioButton
+                                    (change)="changeValueAprobar($event.target)" />
+                                    <kendo-label class="k-radio-label" [for]="male" text="APROBAR"></kendo-label>
+                                </li>
+
+                                <li class="k-radio-item">
+                                    <input type="radio" name="estado" value="RECHAZAR" #female formControlName="estado" kendoRadioButton
+                                    (change)="changeValueAprobar($event.target)" />
+                                    <kendo-label class="k-radio-label" [for]="female" text="RECHAZAR"></kendo-label>
+                                </li>
+                            </ul>
+
+                            <kendo-formerror>Seleccione una Opción</kendo-formerror>
+                        </kendo-formfield>
+
+                    </div>
+                    <div class="col-12 col-lg-8">
+                        <kendo-formfield>
+                            <kendo-label text="Observaciones">
+                                <textarea class="comments" kendoTextArea rows="3" [autoSize]="true" [required]="observacionesRequerido"
+                                    formControlName="observaciones"></textarea>
+                            </kendo-label>
+                        </kendo-formfield>
+                    </div>
+
+                </div>
+            </div>
+
+            <br>
+            <div class="text-right">
+                <button kendoButton style="margin-right: 5px;" [primary]="true" [look]="'outline'" [icon]="'check'"
+                    [disabled]="formRespuesta?.invalid" (click)="enviarRespuesta()">Aceptar</button>
+                <button kendoButton [primary]="true" [look]="'outline'" [icon]="'cancel'"
+                    (click)="cerrarSolicitud()">Cancelar</button>
+            </div>
+        </fieldset>
+    </form>
+
+</kendo-window>
+
+<ng-container #containerDialogRef></ng-container>
+<ng-template #detalleComprasTemplate>
+    <div *ngIf="verOrdenesCompraAprobacion" class="row">
+        <div class="col-lg-12 col-12">
+            <b>Cambio en condiciones de pago a proveedores</b>
+            <kendo-grid [data]="ordenesCompraAprobacion" >
+                <kendo-grid-column field="codigoProveedor" title="Código proveedor">
+                </kendo-grid-column>
+                <kendo-grid-column field="nombreProveedor" title="Nombre Proveedor">
+                </kendo-grid-column>
+                <kendo-grid-column field="condicionPagoGp" title="Condición pago">
+                    <ng-template kendoGridCellTemplate let-dataItem>
+                        {{dataItem.condicionPago}}
+                        <span class="resaltar-naranja">| {{dataItem.condicionPagoGp}}</span>
+                    </ng-template>
+                </kendo-grid-column>
+            </kendo-grid>
+
+        </div>
+    </div>
+
+    <div *ngIf="verOrdenCompraDetallesAprobacion" class="row" style="margin-top: 10px;">
+        <div class="col-lg-12 col-12">
+            <b>Detalle de compras</b>
+            <kendo-grid [data]="ordenCompraDetallesAprobacion" >
+                <kendo-grid-column field="nombreProveedor" title="Proveedor">
+                </kendo-grid-column>
+                <kendo-grid-column field="codigoArticulo" title="Código Artículo">
+                </kendo-grid-column>
+                <kendo-grid-column field="descripcionArticulo" title="Descrición Artículo">
+                </kendo-grid-column>
+                <kendo-grid-column field="margenUtilidadOriginal" title="Margen utilidad">
+                    <ng-template kendoGridCellTemplate let-dataItem>
+                        {{dataItem.margenUtilidad}}
+                        <span class="resaltar-naranja">| {{dataItem.margenUtilidadOriginal}}</span>
+                    </ng-template>
+                </kendo-grid-column>
+            </kendo-grid>
+        </div>
+    </div>
+</ng-template>
+

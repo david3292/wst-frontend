@@ -1,0 +1,37 @@
+<div class="row header">
+    <div class="col-12 col-lg-4">
+        <strong>Punto Venta: </strong>
+        {{puntoVenta.nombre}}
+    </div>
+    <div class="col-12 col-lg-8">
+        <strong>Bodega: </strong>
+        <kendo-dropdownlist [data]="bodegasCatalogo" textField="descripcion" valueField="codigo"
+            [(ngModel)]="bodegaSeleccionada">
+        </kendo-dropdownlist>
+        <button style="margin-left: 10px;" kendoButton [primary]="true" [icon]="'save'"
+            [disabled]="bodegaSeleccionada === undefined" (click)="agregarBodega()">Agregar</button>
+    </div>
+</div>
+
+<kendo-grid style="margin-bottom: 10px;" [data]="bodegasAsociadas" [sortable]="true" (edit)="editHandler($event)"
+    (cancel)="cancelHandler($event)" (save)="saveHandler($event)" [navigable]="true">
+    <kendo-grid-column field="bodega.descripcion" title="Bodega"></kendo-grid-column>
+    <kendo-grid-column field="principal" editor="boolean" title="Principal" width="80">
+        <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+            <span *ngIf="dataItem.principal" class="k-icon k-i-checkbox-checked k-icon-32"></span>
+            <span *ngIf="dataItem.principal === false" class="k-icon k-i-checkbox k-icon-32"></span>
+        </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="activo" editor="boolean" title="Activo" width="80">
+        <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+            <app-active-badge [active]="dataItem.activo"></app-active-badge>
+        </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-command-column width="100">
+        <ng-template kendoGridCellTemplate let-dataItem let-isNew="isNew">
+            <button kendoGridEditCommand [primary]="true" [look]="'outline'" icon="edit"></button>
+            <button kendoGridSaveCommand [disabled]="formGroup?.invalid" [look]="'outline'" icon="check"></button>
+            <button kendoGridCancelCommand [look]="'outline'" icon="close"></button>
+        </ng-template>
+    </kendo-grid-command-column>
+</kendo-grid>

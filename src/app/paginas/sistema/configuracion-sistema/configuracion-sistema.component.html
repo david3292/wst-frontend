@@ -1,0 +1,70 @@
+<div class=" container-fluid container mt-5">
+    <div class="card titulo-configuracion">
+        <h5>Configuraciones Sistema</h5>
+    </div>
+
+    <kendo-grid
+        [kendoGridBinding]="configuraciones"
+        (add)="addHandler($event)"
+        (save)="saveHandler($event)"
+        (edit)="editHandler($event)"
+        (cancel)="cancelHandler($event)"
+        [navigable]="true">
+        <ng-template kendoGridToolbarTemplate>
+            <button kendoGridAddCommand primary=true icon='plus'>Agregar</button>
+        </ng-template>
+        <kendo-grid-column [headerStyle]="{'background-color': '#E66A15','color': '#fff','line-height': '1em'}"
+            field="nombre" title="Nombre" width="350">
+            <ng-template kendoGridEditTemplate let-dataItem="dataItem" let-column="column" let-formGroup="formGroup"
+                let-isNew="isNew">
+                <kendo-dropdownlist #ddl="popupAnchor" popupAnchor [data]="configuracionCatalogo" textField="texto"
+                    valueField="valor" [valuePrimitive]="true" [formControl]="formGroup.get('nombre')"
+                    [disabled]="isNew ? false : true">
+                </kendo-dropdownlist>
+                <kendo-popup [anchor]="ddl.element"
+                    *ngIf="formGroup.get('nombre').invalid && !(isNew && formGroup.get('nombre').untouched)"
+                    popupClass="k-widget k-tooltip k-tooltip-validation k-invalid-msg">
+                    <span class="k-icon k-i-warning"></span>
+                    campo requerido
+                </kendo-popup>
+            </ng-template>
+
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                {{obtenerNombre(dataItem.nombre)}}
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column [headerStyle]="{'background-color': '#E66A15','color': '#fff','line-height': '1em'}"
+            field="valor" title="Valor" width="120" editor="numeric">
+        </kendo-grid-column>
+        <kendo-grid-column [headerStyle]="{'background-color': '#E66A15','color': '#fff','line-height': '1em'}"
+            field="unidadMedida" title="Unidad Medida" width="120">
+            <ng-template kendoGridEditTemplate let-dataItem="dataItem" let-column="column" let-formGroup="formGroup"
+                let-isNew="isNew">
+                <kendo-dropdownlist  #ddl="popupAnchor" popupAnchor [data]="unidadMedidaCatalogo" textField="texto" valueField="valor"
+                    [valuePrimitive]="true" [formControl]="formGroup.get('unidadMedida')">
+                </kendo-dropdownlist>
+                <kendo-popup [anchor]="ddl.element"
+                *ngIf="formGroup.get('unidadMedida').invalid && !(isNew && formGroup.get('unidadMedida').untouched)"
+                popupClass="k-widget k-tooltip k-tooltip-validation k-invalid-msg">
+                <span class="k-icon k-i-warning"></span>
+                campo requerido
+            </kendo-popup>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column [headerStyle]="{'background-color': '#E66A15','color': '#fff','line-height': '1em'}"
+            field="activo" title="Activo" width="120" editor="boolean">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                {{dataItem.activo ? 'Si': 'No'}}
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-command-column [headerStyle]="{'background-color': '#E66A15','color': '#fff','line-height': '1em'}"
+            width="100" [style]="{'text-align':'center'}">
+            <ng-template kendoGridCellTemplate let-isNew="isNew">
+                <button kendoGridEditCommand [primary]="true" [look]="'outline'" icon="edit"></button>
+                <button kendoGridSaveCommand [disabled]="formGroup?.invalid" [look]="'outline'" icon="check"></button>
+                <button kendoGridCancelCommand [look]="'outline'" icon="close"></button>
+            </ng-template>
+        </kendo-grid-command-column>
+    </kendo-grid>
+
+</div>

@@ -1,0 +1,156 @@
+<div class=" container-fluid container mt-5">
+    <kendo-card [width]="'100%'">
+        <kendo-card-header class="k-hbox">
+            <h5 *ngIf="esNuevo" kendoCardTitle>Nuevo Artículo</h5>
+            <h5 *ngIf="!esNuevo" kendoCardTitle>Edición Artículo</h5>
+        </kendo-card-header>
+    </kendo-card>
+
+    <div style="margin-top: 5px;" class="alert alert-danger" *ngIf="mensajeError !== undefined"><b>Error:</b> {{mensajeError}}</div>
+
+    <form [formGroup]="formularioArticulo">
+        <div class="row">
+            <div class="col-sm-4 col-12">
+                <kendo-formfield>
+                    <kendo-label text="Código">
+                        <input kendoTextBox readonly formControlName="ITEMNMBR" />
+                    </kendo-label>
+                </kendo-formfield>
+            </div>
+            <div class="col-sm-4 col-12">
+                <kendo-formfield>
+                    <kendo-label text="Descripción">
+                        <kendo-textbox kendoTextBox required formControlName="ITEMDESC" [disabled]="!esNuevo"></kendo-textbox>
+                    </kendo-label>
+                    <kendo-formerror *ngIf="formularioArticulo.controls.ITEMDESC.errors?.required">Requerido
+                    </kendo-formerror>
+                </kendo-formfield>
+            </div>
+            <div class="col-sm-4 col-12">
+                <kendo-formfield>
+                    <kendo-label text="Código Alterno">
+                        <input kendoTextBox readonly formControlName="ITMSHNAM" />
+                    </kendo-label>
+                </kendo-formfield>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-4 col-12">
+                <kendo-formfield>
+                    <kendo-label text="Clase">
+                        <kendo-combobox style="width: 100%;" [data]="clases" required formControlName="ITMCLSCD"
+                            [allowCustom]="true" [disabled]="!esNuevo">
+                        </kendo-combobox>
+                    </kendo-label>
+                    <kendo-formerror *ngIf="formularioArticulo.controls.ITMCLSCD.errors?.required">Requerido
+                    </kendo-formerror>
+                </kendo-formfield>
+            </div>
+            <div class="col-sm-4 col-12">
+                <kendo-formfield>
+                    <kendo-label text="Unidad Medida Compra">
+                        <kendo-combobox style="width: 100%;" [data]="unidadesMedida" required formControlName="PRCHSUOM"
+                            [allowCustom]="true" [disabled]="!esNuevo">
+                        </kendo-combobox>
+                    </kendo-label>
+                    <kendo-formerror *ngIf="formularioArticulo.controls.PRCHSUOM.errors?.required">Requerido
+                    </kendo-formerror>
+                </kendo-formfield>
+            </div>
+            <div class="col-sm-4 col-12">
+                <kendo-formfield>
+                    <kendo-label text="Marca">
+                        <kendo-combobox style="width: 100%;" [data]="marcas" formControlName="USCATVAL"
+                            [allowCustom]="true" [disabled]="!esNuevo">
+                        </kendo-combobox>
+                    </kendo-label>
+                </kendo-formfield>
+            </div>
+            <!-- <div class="col-sm-4 col-12">
+                <kendo-formfield>
+                    <kendo-label text="Unidad Medida Venta">
+                        <kendo-combobox style="width: 100%;" [data]="unidadesMedida" required formControlName="UOMSCHDL"
+                            [allowCustom]="true" [disabled]="!esNuevo">
+                        </kendo-combobox>
+                    </kendo-label>
+                    <kendo-formerror *ngIf="formularioArticulo.controls.UOMSCHDL.errors?.required">Requerido
+                    </kendo-formerror>
+                </kendo-formfield>
+            </div> -->
+        </div>
+
+        <div class="row">
+            <div class="col-sm-4 col-12">
+                <kendo-formfield>
+                    <kendo-label text="Lista Precio">
+                        <kendo-combobox style="width: 100%;" [data]="listaPrecios" required formControlName="PRCLEVEL"
+                            [allowCustom]="true" [disabled]="!esNuevo">
+                        </kendo-combobox>
+                    </kendo-label>
+                    <kendo-formerror *ngIf="formularioArticulo.controls.PRCLEVEL.errors?.required">Requerido
+                    </kendo-formerror>
+                </kendo-formfield>
+            </div>
+            <div class="col-sm-4 col-12">
+                <kendo-formfield>
+                    <kendo-label text="Bodega Predeterminada">
+                        <kendo-combobox style="width: 100%;" [data]="bodegas" required formControlName="LOCNCODE"
+                            [allowCustom]="true" [disabled]="!esNuevo">
+                        </kendo-combobox>
+                    </kendo-label>
+                    <kendo-formerror *ngIf="formularioArticulo.controls.LOCNCODE.errors?.required">Requerido
+                    </kendo-formerror>
+                </kendo-formfield>
+            </div>
+            <div class="col-sm-4 col-12">
+                <kendo-formfield>
+                    <kendo-label text="Decimal de Cantidad">
+                        <kendo-numerictextbox [min]="0" [max]="5" formControlName="DECPLQTY">
+                        </kendo-numerictextbox>
+                    </kendo-label>
+                    <kendo-formerror *ngIf="formularioArticulo.controls.DECPLQTY.errors?.required">Requerido</kendo-formerror>
+                    <kendo-formerror *ngIf="formularioArticulo.controls.DECPLQTY.errors?.max">Valor máximo: 5</kendo-formerror>
+                </kendo-formfield>
+            </div>
+        </div>
+
+        <div class="row">
+
+
+            <div class="col-sm-4 col-12">
+                <kendo-formfield>
+                    <kendo-label text="Peso">
+                        <kendo-numerictextbox [min]="0" [format]="'n5'" formControlName="PESO" [disabled]="!esNuevo">
+                        </kendo-numerictextbox>
+                    </kendo-label>
+                    <kendo-formerror *ngIf="formularioArticulo.controls.PESO.errors?.required">Requerido</kendo-formerror>
+                    <kendo-formerror *ngIf="formularioArticulo.controls.PESO.errors?.min">Valor mínimo: 0.00001</kendo-formerror>
+                </kendo-formfield>
+            </div>
+            <!-- <div class="col-sm-4 col-12">
+                <kendo-formfield>
+                    <kendo-label text="Decimal Moneda">
+                        <kendo-numerictextbox [min]="0" [max]="5" formControlName="DECPLCUR" [disabled]="!esNuevo">
+                        </kendo-numerictextbox>
+                    </kendo-label>
+                    <kendo-formerror *ngIf="formularioArticulo.controls.DECPLCUR.errors?.required">Requerido</kendo-formerror>
+                    <kendo-formerror *ngIf="formularioArticulo.controls.DECPLCUR.errors?.max">Valor máximo: 5</kendo-formerror>
+                </kendo-formfield>
+            </div> -->
+
+        </div>
+    </form>
+
+    <div class="row" style="margin-top: 10px;">
+        <div class='col-12 col-lg-12'>
+            <div class="k-form-buttons">
+                <button kendoButton [primary]="true" [icon]="'save'" [disabled]="!habilitarBotonGuardar"
+                (click)="abrirDialogoConfimacion()">Guardar</button>
+                <button kendoButton [icon]="'close'" [routerLink]="['/articulos']">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-container #containerDialogRef ></ng-container>

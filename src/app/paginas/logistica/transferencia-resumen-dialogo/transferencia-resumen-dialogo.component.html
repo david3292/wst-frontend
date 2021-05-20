@@ -1,0 +1,20 @@
+<p>Transferencia No. <b>{{datosResumen.tranferenciaCreada}}</b></p>
+<p class="mensaje-error" *ngIf="datosResumen.tranferenciaCreada==='ERROR'">{{datosResumen.errorTransferencia}}</p>
+<div *ngIf="tipo==='salida'">
+    <p>Guía de Remisión No. <b>{{datosResumen.guiaRemisionCreada}}</b></p>
+    <p class="mensaje-error" *ngIf="datosResumen.guiaRemisionCreada==='ERROR'">{{datosResumen.errorGuiaRemision}}</p>
+
+    <div *ngIf="datosResumen.tranferenciaCreada!=='ERROR'">
+        <div class="col-12">
+            <button kendoButton icon='download' primary="true" (click)="descargarDocumento()">Descargar Guía de Transferencia</button>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="tipo === 'entrada'">
+    <div *ngIf="datosResumen.tranferenciaCreada!=='ERROR'">
+        <div class="col-12">
+            <button kendoButton icon='download' primary="true" (click)="descargarDocumentoEntrada()">Descargar Guía de Transferencia de Entrada</button>
+        </div>
+    </div>
+</div>

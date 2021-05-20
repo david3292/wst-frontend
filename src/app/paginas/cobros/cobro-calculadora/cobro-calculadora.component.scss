@@ -1,0 +1,22 @@
+@import "../../../../variables.scss";
+
+.seccion-cambio {
+    margin-top: 25px;
+    text-align: center;
+}
+
+.cambio {
+    color: $accent;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.buttons {
+    align-self: flex-end;
+}
+
+.signo {
+    align-self: flex-end;
+    margin-bottom: 5px;
+    color: $accent;
+}

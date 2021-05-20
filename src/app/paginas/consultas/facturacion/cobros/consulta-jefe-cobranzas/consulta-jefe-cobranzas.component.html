@@ -1,0 +1,110 @@
+<div class=" container-fluid container mt-5">
+    <div class="row">
+        <div class="card titulo-configuracion col-12">
+            <div>
+                <h5 style="display: inline;">Consultas Cobros</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <h5>Parámetros de consulta</h5>
+    </div>
+    <div class="row">
+        <div class="col-12 col-lg-3">
+            <kendo-label text="Identificación cliente">
+                <input kendoTextBox [(ngModel)]="consulta.identificacionCliente"/>
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-3">
+            <kendo-label text="Número cobro">
+                <input kendoTextBox [(ngModel)]="consulta.numeroCobro"/>
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-3">
+            <kendo-label text="Estado">
+                <kendo-combobox [data]="listaEstados" [valuePrimitive]="true" [(ngModel)]="consulta.estado">
+                    <ng-template kendoComboBoxItemTemplate let-dataItem>
+                        <app-state-badge [estado]="dataItem"></app-state-badge>
+                    </ng-template>
+                </kendo-combobox>
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-3">
+            <kendo-label text="Punto venta">
+                <kendo-combobox [data]="puntosVenta" [valuePrimitive]="true" [textField]="'nombre'"
+                                [valueField]="'id'"
+                                [(ngModel)]="consulta.idPuntoVenta"></kendo-combobox>
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-3">
+            <kendo-label text="Fecha cobro inicio">
+                <kendo-datepicker [format]="'dd/MM/yyyy'" [(ngModel)]="fechaInicio"></kendo-datepicker>
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-3">
+            <kendo-label text="Fecha cobro fin">
+                <kendo-datepicker [format]="'dd/MM/yyyy'" [(ngModel)]="fechaFin"></kendo-datepicker>
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-3">
+            <kendo-label text="Vendedor">
+                <kendo-combobox [data]="vendedores" [valuePrimitive]="true" [textField]="'nombreCompleto'"
+                                [valueField]="'nombreUsuario'"
+                                [(ngModel)]="consulta.usuario"></kendo-combobox>
+            </kendo-label>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-12 col-lg-12" style="text-align: center;">
+            <button style="margin-top: 10px;" kendoButton [icon]="'close-outline'" [look]="'outline'" [primary]="true"
+                    (click)="limpiar()">LIMPIAR CONSULTA
+            </button>
+
+            <button style="margin-top: 10px;margin-left: 10px;" kendoButton [primary]="true" [icon]="'search'"
+                    (click)="consultar()">CONSULTAR
+            </button>
+        </div>
+    </div>
+
+    <div class="row">
+        <h5>Cobros</h5>
+    </div>
+
+    <kendo-grid [data]="gridView" style="width: 1108px;height: 600px;" [pageSize]="pageSize"
+                [skip]="skip"
+                [pageable]="true"
+
+                (pageChange)="pageChange($event)">
+        <kendo-grid-column field="codigoCliente" title="Identificación" width="150"></kendo-grid-column>
+        <kendo-grid-column field="nombreCliente" title="Nombre cliente" width="200"></kendo-grid-column>
+        <kendo-grid-column field="numero" title="Número cobro" width="160"></kendo-grid-column>
+        <kendo-grid-column field="nombreVendedor" title="Vendedor" width="160" class="text-center"></kendo-grid-column>
+        <kendo-grid-column field="estado" title="Estado" width="160" class="text-center"></kendo-grid-column>
+        <kendo-grid-column field="valor" title="Valor" width="130" class="text-right">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <span>
+                    {{'$ ' + dataItem.valor}}
+                </span>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="fecha" title="Fecha" width="150"></kendo-grid-column>
+        <kendo-grid-column field="puntoVenta.nombre" title="Punto venta" width="150"></kendo-grid-column>
+        <kendo-grid-column [style]="{'text-align':'center'}" width="90">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <button kendoButton [primary]="true" [look]="'outline'" icon="search" title="Ver pagos"
+                        (click)="abrirCobroResultadoDialogo(dataItem.cobroFormaPagos)"></button>
+                <button *ngIf="dataItem.estado != 'NUEVO'" kendoButton [primary]="true" [look]="'outline'"
+                        icon="file-pdf" title="Descargar PDF"
+                        (click)="descargarReporte(dataItem.numero)"></button>
+            </ng-template>
+        </kendo-grid-column>
+        <ng-template kendoGridNoRecordsTemplate>
+            No se han encontrado resultados.
+        </ng-template>
+    </kendo-grid>
+
+    <ng-container #cobroPagos></ng-container>
+</div>

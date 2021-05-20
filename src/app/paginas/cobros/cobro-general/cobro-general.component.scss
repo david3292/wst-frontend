@@ -1,0 +1,44 @@
+.wraper-col {
+    display: flex;
+    justify-content: space-between;
+}
+
+.input-search{
+    padding-right: 5px;
+}
+
+.header-search{
+    padding: 8px 8px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.header-document{
+    padding: 8px 8px;
+}
+
+.name-client{
+    padding-top: 8px;
+}
+
+.header {
+    color: rgb(160, 160, 160);
+    font-size: 14px;
+    padding: 8px 32px;
+}
+
+.finalizar{
+    padding-bottom: 10px;
+}
+
+.buton-limpiar{
+    margin-left: 10px;
+}
+
+.info-cobro{
+    margin-bottom: 5px;
+}
+
+.info-cobro-numero{
+    font-weight: bold;
+}

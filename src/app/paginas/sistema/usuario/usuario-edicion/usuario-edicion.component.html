@@ -1,0 +1,106 @@
+<div class=" container-fluid container mt-5">
+    <kendo-card [width]="'100%'">
+        <kendo-card-header class="k-hbox">
+            <h5 kendoCardTitle>Configuración Usuario</h5>
+            <!-- <p kendoCardSubtitle>Configuración/Usuario/Nuevo</p> -->
+        </kendo-card-header>
+    </kendo-card>
+    <div class="u-info">
+        <form [formGroup]="formUsuario">
+            <fieldset class="k-form-fieldset">
+                <div class='row'>
+                    <div class='col-12 col-lg-4'>
+                        <kendo-formfield>
+                            <kendo-label text="Usuario Active Directory">
+                                <kendo-combobox [data]="usuariosLDAP" [textField]="'userIdYUserName'"
+                                    [valueField]="'userId'" [placeholder]="'Seleccione'" required
+                                    formControlName="nombreUsuario" [disabled]="edicion">
+                                </kendo-combobox>
+                            </kendo-label>
+                            <kendo-formerror>Usuario Active es requerido</kendo-formerror>
+                        </kendo-formfield>
+                    </div>
+                    <div class='col-12 col-lg-4'>
+                        <kendo-formfield>
+                            <kendo-label text="Nombre">
+                                <input kendoTextBox required formControlName="nombreCompleto" />
+                            </kendo-label>
+                            <kendo-formerror>Nombre completo es requerido</kendo-formerror>
+                        </kendo-formfield>
+                    </div>
+                    <div class='col-12 col-lg-4'>
+                        <kendo-formfield>
+                            <kendo-label text="Correo">
+                                <input kendoTextBox required formControlName="correo" />
+                            </kendo-label>
+                            <kendo-formerror>Correo es requerido</kendo-formerror>
+                        </kendo-formfield>
+                    </div>
+                </div>
+                <div class='row'>
+                    <div class='col-12 col-lg-4'>
+                        <kendo-formfield>
+                            <kendo-label text="Área">
+                                <kendo-combobox [data]="areasLista" [textField]="'areaFuncional'" [valueField]="'id'"
+                                    [placeholder]="'Seleccione'" (valueChange)="areaComboChange($event)"
+                                    formControlName="area">
+                                </kendo-combobox>
+                            </kendo-label>
+                        </kendo-formfield>
+                    </div>
+                    <div class='col-12 col-lg-4'>
+                        <kendo-formfield>
+                            <kendo-label text="Cargo">
+                                <kendo-combobox [data]="cargosPorArea" [textField]="'nombre'" [valueField]="'id'"
+                                    [placeholder]="'Seleccione'" required formControlName="cargo">
+                                </kendo-combobox>
+                            </kendo-label>
+                            <kendo-formerror>Seleccione un cargo</kendo-formerror>
+                        </kendo-formfield>
+                    </div>
+                    <div class='col-12 col-lg-4'>
+                        <kendo-formfield>
+                            <label class="k-checkbox-label" for="activo">Activo</label>
+                            <input id="activo" type="checkbox" kendoCheckBox formControlName="activo" />
+                        </kendo-formfield>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class='col-12 col-lg-12'>
+                        <div class="k-form-buttons">
+                            <button kendoButton [primary]="true" [icon]="'save'" type="button"
+                                (click)="operarUsuario()">{{edicion ? 'Actualizar': 'Guardar'}}</button>
+                            <button kendoButton [icon]="'close'" *ngIf="edicion == false"
+                                (click)="cancelar()">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+
+    <div *ngIf="id != null">
+        <kendo-card [width]="'100%'">
+            <kendo-card-header class="k-hbox">
+                <h5 kendoCardTitle>Configuración Perfil</h5>
+                <!-- <p kendoCardSubtitle>Configuración/Usuario/Nuevo</p> -->
+            </kendo-card-header>
+        </kendo-card>
+        <div class="u-info">
+            <kendo-tabstrip>
+                <kendo-tabstrip-tab [title]="'Agregar'" [selected]="true">
+                    <ng-template kendoTabContent>
+                        <app-usuario-agregar-perfil [idUsuario]="id"></app-usuario-agregar-perfil>
+                        <br>
+                    </ng-template>
+                </kendo-tabstrip-tab>
+                <kendo-tabstrip-tab [title]="'Asignación Punto Venta'">
+                    <ng-template kendoTabContent>
+                        <app-usuario-config-perfil [idUsuario]="id"></app-usuario-config-perfil>
+                        <br>
+                    </ng-template>
+                </kendo-tabstrip-tab>
+            </kendo-tabstrip>
+        </div>
+    </div>
+</div>

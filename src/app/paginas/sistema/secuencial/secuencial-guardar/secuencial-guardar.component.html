@@ -1,0 +1,60 @@
+<div class=" container-fluid container mt-5">
+    <kendo-card [width]="'100%'">
+        <kendo-card-header class="k-hbox">
+            <h5 kendoCardTitle>Configuración Secuencial</h5>
+        </kendo-card-header>
+    </kendo-card>
+    <div class="u-info">
+        <form [formGroup]="formSecuencial">
+            <fieldset class="k-form-fieldset">
+                <div class='row'>
+                    <div class='col-12 col-lg-4'>
+                        <kendo-label text="Tipo Documento">
+                            <kendo-combobox [data]="tiposDocumentos" [textField]="'descripcion'" [valueField]="'tipoDocumento'"
+                                [placeholder]="'Seleccione'" required formControlName="tipoDocumento">
+                            </kendo-combobox>
+                        </kendo-label>
+                        <kendo-formerror>Seleccione un Tipo Documento</kendo-formerror>
+                    </div>
+                    <div class='col-12 col-lg-4'>
+                        <kendo-label text="Punto Venta">
+                            <kendo-combobox [data]="puntosVentas" [textField]="'nombre'" [valueField]="'id'"
+                                [placeholder]="'Seleccione'" required formControlName="puntoVenta">
+                            </kendo-combobox>
+                        </kendo-label>
+                        <kendo-formerror>Seleccione un Punto Venta</kendo-formerror>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class='col-12 col-lg-4'>
+                        <kendo-formfield>
+                            <kendo-label text="Abreviatura">
+                                <input kendoTextBox required formControlName="abreviatura" />
+                            </kendo-label>
+                            <kendo-formerror>Abreviatura es requerido</kendo-formerror>
+                        </kendo-formfield>
+                    </div>
+                    <div class='col-12 col-lg-4'>
+                        <kendo-formfield>
+                            <kendo-label text="Doc. Id. GP">
+                                <input kendoTextBox required formControlName="docIdGP" />
+                            </kendo-label>
+                            <kendo-formerror>DocId GP es requerido</kendo-formerror>
+                        </kendo-formfield>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class='col-12 col-lg-12'>
+                        <div class="k-form-buttons">
+                            <button kendoButton [primary]="true" [icon]="'save'" type="button"
+                                (click)="guardar()">Guardar</button>
+                            <button kendoButton [icon]="'close'"
+                                (click)="cancelar()">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>

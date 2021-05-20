@@ -1,0 +1,23 @@
+<div *ngIf="mostrarOptionGenerarCompras" class="alert alert-primary" role="alert">
+    <b>Existen órdenes de compra pendiente por generar</b>
+</div>
+<div *ngIf="mostrarOptionGenerarCompras" style="margin-top:5px">
+    <button style="width:100%;" kendoButton [primary]="true"
+            [look]="'outline'" icon="cart" (click)="generarCompras()">Generar Compras</button>
+</div>
+
+<ul *ngIf="mostrarOptionGenerarCompras" class="list-group">
+    <li class="list-group-item" *ngFor="let item of ordenesCompra">
+        Compra - {{item.id}} - {{item.estado}} <button style="margin-right: 3px;" kendoButton [primary]="true"
+            [look]="'outline'" [icon]="'file-pdf'" (click)="generarReportePdf(item)"></button>
+    </li>
+</ul>
+
+<ul *ngIf="!mostrarOptionGenerarCompras" class="list-group">
+    <li class="list-group-item" *ngFor="let item of ordenesCompra">
+        {{item.numero}} - {{item.estado}} <button style="margin-right: 3px;" kendoButton [primary]="true"
+            [look]="'outline'" [icon]="'file-pdf'" (click)="generarReportePdf(item)"></button>
+    </li>
+</ul>
+
+

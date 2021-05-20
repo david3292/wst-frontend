@@ -1,0 +1,19 @@
+<kendo-grid [data]="gridView" [pageSize]="5"
+    [pageSize]="state.take"
+    [skip]="state.skip"
+    [pageable]="true"
+    (dataStateChange)="dataStateChange($event)"
+    scrollable="none"
+    [navigable]="true"
+    kendoGridFocusable>
+    <kendo-grid-column field="cotizacionDetalle.codigoArticulo" title="Código Artículo" width="150">
+    </kendo-grid-column>
+    <kendo-grid-column field="cotizacionDetalle.codigoArticuloAlterno" title="Cód. Alterno Artículo" width="180" class="text-center">
+    </kendo-grid-column>
+    <kendo-grid-column field="cotizacionDetalle.descripcionArticulo" title="Descripción Artículo">
+    </kendo-grid-column>
+    <kendo-grid-column field="codigoBodega" title="Bodega" width="170" class="text-center">
+    </kendo-grid-column>
+    <kendo-grid-column field="cantidad" title="Cantidad" width="160" class="text-center">
+    </kendo-grid-column>
+</kendo-grid>

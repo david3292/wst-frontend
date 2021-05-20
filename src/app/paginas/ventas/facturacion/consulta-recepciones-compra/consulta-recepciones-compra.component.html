@@ -1,0 +1,8 @@
+<ul class="list-group">
+    <li class="list-group-item" *ngFor="let item of recepcionesCompra">
+        {{item.numeroRecepcion}} - {{item.estado}} <button style="margin-right: 3px;" kendoButton [primary]="true"
+            [look]="'outline'" [icon]="'file-pdf'" (click)="generarReportePdf(item)"></button>
+    </li>
+</ul>
+
+

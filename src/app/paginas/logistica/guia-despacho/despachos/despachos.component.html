@@ -1,0 +1,217 @@
+<div class=" container-fluid container mt-5">
+    <div class="row">
+        <div class="card titulo-configuracion col-12">
+            <div>
+                <h5 style="display: inline;">DESPACHO</h5>
+                <app-state-badge style="float: right;" [estado]="guiaDespacho.estado"></app-state-badge>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <h5>Información de Despacho</h5>
+    </div>
+    <div class="row">
+        <div class="col-12 col-lg-3">
+            <kendo-label text="Guía de Despacho">
+                <input kendoTextBox [(ngModel)]="guiaDespacho.numero" readonly />
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-3">
+            <kendo-label text="Número Cotización">
+                <input kendoTextBox [(ngModel)]="guiaDespacho.numeroCotizacion" readonly />
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-3">
+            <kendo-label text="Número Factura">
+                <input kendoTextBox [(ngModel)]="guiaDespacho.numeroFactura" readonly />
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-3">
+            <kendo-label text="Bodega">
+                <input kendoTextBox [(ngModel)]="guiaDespacho.bodega" readonly />
+            </kendo-label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-lg-4">
+            <kendo-label text="Código Cliente">
+                <input kendoTextBox [(ngModel)]="guiaDespacho.cotizacion.codigoCliente" readonly />
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-4">
+            <kendo-label text="Nombre Cliente">
+                <input kendoTextBox [(ngModel)]="guiaDespacho.cotizacion.nombreCliente" readonly />
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-4">
+            <kendo-label text="Entrega Mercadería">
+                <kendo-dropdownlist [data]="catalogoEntregas" [(ngModel)]="guiaDespacho.entrega"
+                    (valueChange)="entregaChange($event)" [valuePrimitive]="true" [readonly]="soloLectura"></kendo-dropdownlist>
+            </kendo-label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-lg-12">
+            <form [formGroup]="formularioDireccion" style="width: 100%; position: relative;">
+                <kendo-formfield>
+                    <kendo-label text="Dirección Destino">
+                        <kendo-dropdownlist  [data]="catalogoDireccionCliente" formControlName="direccionDestino"
+                            [valueField]="'ADRSCODE'" [textField]="'ADDRESS1'" [readonly]="soloLectura"></kendo-dropdownlist>
+                    </kendo-label>
+                    <kendo-formerror *ngIf="formularioDireccion.controls.direccionDestino.errors?.required">Requerido
+                    </kendo-formerror>
+                </kendo-formfield>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-lg-12">
+            <kendo-label text="Cliente Retira">
+                <input kendoTextBox [(ngModel)]="guiaDespacho.retirarCliente" readonly />
+            </kendo-label>
+        </div>
+    </div>
+    <div class="row">
+
+    </div>
+    <div class="row">
+        <h5>Información de Guía de Remisión</h5>
+    </div>
+    <div>
+        <form [formGroup]="formularioGuiaRemision"
+            style="width: 100%; position: relative;">
+            <div class="row">
+                <div class="col-12 col-lg-6">
+                    <kendo-formfield>
+                        <kendo-label text="Conductor">
+                            <kendo-combobox [data]="conductoresLista" [textField]="'ConNombre'"
+                                [valueField]="'ConCedula'" [placeholder]="'Seleccione'"
+                                formControlName="conductor" [readonly]="soloLectura || !habilitarConductor">
+                            </kendo-combobox>
+                        </kendo-label>
+                        <kendo-formerror *ngIf="formularioGuiaRemision.controls.conductor.errors?.required">Requerido
+                        </kendo-formerror>
+                    </kendo-formfield>
+                </div>
+                <div class="col-12 col-lg-3">
+                    <kendo-formfield>
+                        <kendo-label text="Inicio Traslado">
+                            <kendo-datepicker [format]="'dd/MM/yyyy'" required
+                                [disabledDates]="deshabilitarFechasInicioTraslado" formControlName="fechaInicioTraslado"
+                                [readonly]="soloLectura">
+                            </kendo-datepicker>
+                        </kendo-label>
+                        <kendo-formerror *ngIf="formularioGuiaRemision.controls.fechaInicioTraslado.errors?.required">
+                            Requerido</kendo-formerror>
+                    </kendo-formfield>
+                </div>
+
+                <div class="col-12 col-lg-3">
+                    <kendo-formfield>
+                        <kendo-label text="Fin Traslado">
+                            <kendo-datepicker [format]="'dd/MM/yyyy'" required
+                                [disabledDates]="deshabilitarFechasFinTraslado" formControlName="fechaFinTraslado"
+                                [readonly]="soloLectura">
+                            </kendo-datepicker>
+                        </kendo-label>
+                        <kendo-formerror *ngIf="formularioGuiaRemision.controls.fechaFinTraslado.errors?.required">
+                            Requerido</kendo-formerror>
+                    </kendo-formfield>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-lg-6">
+                    <kendo-formfield>
+                        <kendo-label text="Ruta">
+                            <input kendoTextBox required formControlName="ruta" [readonly]="soloLectura" />
+                        </kendo-label>
+                        <kendo-formerror *ngIf="formularioGuiaRemision.controls.ruta.errors?.required">Requerido
+                        </kendo-formerror>
+                        <kendo-formerror *ngIf="formularioGuiaRemision.controls.ruta.errors?.maxlength">Maximo 100
+                        </kendo-formerror>
+                    </kendo-formfield>
+                </div>
+                <div class="col-12 col-lg-3">
+                    <kendo-formfield>
+                        <kendo-label text="Placa">
+                            <kendo-maskedtextbox [mask]="'LLL-0009'" required formControlName="placa"
+                                [readonly]="soloLectura"></kendo-maskedtextbox>
+                        </kendo-label>
+                        <kendo-formerror *ngIf="formularioGuiaRemision.controls.placa.errors?.required">Requerido
+                        </kendo-formerror>
+                        <kendo-formerror *ngIf="formularioGuiaRemision.controls.placa.errors?.maxlength">Maximo 7
+                        </kendo-formerror>
+                    </kendo-formfield>
+                </div>
+                <div class="col-12 col-lg-3">
+                    <kendo-formfield>
+                        <kendo-label text="Correo electrónico">
+                            <input kendoTextBox required formControlName="correo" [readonly]="soloLectura" />
+                        </kendo-label>
+                        <kendo-formerror *ngIf="formularioGuiaRemision.controls.correo.errors?.email">Email incorrcto
+                        </kendo-formerror>
+                        <kendo-formerror *ngIf="formularioGuiaRemision.controls.correo.errors?.required">
+                            Requerido</kendo-formerror>
+                    </kendo-formfield>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-lg-12">
+                    <kendo-formfield>
+                        <kendo-label text="Motivo Traslado">
+                            <input kendoTextBox required formControlName="motivo" [readonly]="soloLectura" />
+                        </kendo-label>
+                        <kendo-formerror *ngIf="formularioGuiaRemision.controls.motivo.errors?.required">Requerido
+                        </kendo-formerror>
+                    </kendo-formfield>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="row">
+        <div class="col-12"></div>
+        <h5>Detalle de artículos</h5>
+    </div>
+
+    <div *ngIf="!soloLectura">
+        <kendo-grid [data]="view | async" (dataStateChange)="onStateChange($event)"
+            (cellClick)="cellClickHandler($event)" (cellClose)="cellCloseHandler($event)"
+            (remove)="removeHandler($event)" [navigable]="true">
+            <kendo-grid-column field="codigoArticulo" title="Código" width="12%"></kendo-grid-column>
+            <kendo-grid-column field="codigoArticuloAlterno" title="Código Alterno" width="10%"></kendo-grid-column>
+            <kendo-grid-column field="descripcionArticulo" title="Descripción" width="30%"></kendo-grid-column>
+            <kendo-grid-column field="cantidad" title="Cantidad Facturada" format="{0:n2}" width="10%"></kendo-grid-column>
+            <kendo-grid-column field="pesoTotal" title="Peso" format="{0:n2}" width="9%"></kendo-grid-column>
+            <kendo-grid-column field="saldo" title="Pendiente" format="{0:n2}" width="10%"></kendo-grid-column>
+            <kendo-grid-column field="seleccionado" title="Seleccionada" editor="numeric" format="{0:n2}" width="10%"></kendo-grid-column>
+            <kendo-grid-column field="pesoSeleccion" title="Peso" format="{0:n2}" width="9%"></kendo-grid-column>
+            <kendo-grid-column title="Compartimiento" [style]="{'text-align':'center'}" width="10%">
+                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                    <button kendoButton [primary]="true" [look]="'outline'" icon="search"
+                        (click)="cargarInformacionBins(dataItem)"></button>
+                </ng-template>
+            </kendo-grid-column>
+        </kendo-grid>
+    </div>
+
+    <div *ngIf="soloLectura">
+        <kendo-grid [data]="detalleArticulos" [navigable]="true">
+            <kendo-grid-column field="codigoArticulo" title="Código" width="30%"></kendo-grid-column>
+            <kendo-grid-column field="descripcionArticulo" title="Descripción" width="50%"></kendo-grid-column>
+            <kendo-grid-column field="cantidad" title="Cantidad Facturada" format="{0:n2}" width="20%">
+            </kendo-grid-column>
+        </kendo-grid>
+    </div>
+</div>
+
+<div class="container-fluid container mt-5">
+    <div class="row">
+        <div class="col-12 col-lg-12">
+            <button style="margin-right: 10px;" kendoButton [primary]="true" [icon]="'redo'"
+                (click)="abrirDialogoConfimacion()" [disabled]="soloLectura">DESPACHAR</button>
+        </div>
+    </div>
+</div>
+
+<ng-container #containerDialogRef></ng-container>
+<br>

@@ -1,0 +1,26 @@
+<div class="row">
+    <div class="col-12 col-lg-5">
+        <kendo-label text="Cantidad Recibida">
+            <kendo-numerictextbox kendoTextBox [format]="{ style: 'currency',currency: 'USD',maximumFractionDigits: 2}" [min]="0"
+                [(ngModel)]="cantidadRecibida" (blur)="onBlur()" ></kendo-numerictextbox>
+        </kendo-label>
+    </div>
+    <div class="col-12 col-lg-1 signo">
+        <span class=" k-icon  k-i-minus k-i-kpi-trend-equal"></span>
+    </div>
+    <div class="col-12 col-lg-4">
+        <kendo-label text="Total Cobro Efectivo">
+            <kendo-numerictextbox [format]="{ style: 'currency',currency: 'USD',maximumFractionDigits: 2}" [min]="0"
+                [(ngModel)]="totalCobroEfectivo" [disabled]="true"></kendo-numerictextbox>
+        </kendo-label>
+    </div>
+    <div class="col-12 col-lg-2 buttons">
+        <div kendoTooltip position="bottom">
+            <button kendoButton icon='equal' primary="true" (click)="calcular()" title="Calcular"></button>
+        </div>
+    </div>
+
+    <div class="col-12 col-lg-12 seccion-cambio">
+        <span class="cambio">Cambio: ${{financial(resultado)}}</span>
+    </div>
+</div>

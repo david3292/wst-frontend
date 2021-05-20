@@ -1,0 +1,87 @@
+<div class="card articulo-header">
+    <div class="row">
+        <div class="col-12 col-lg-8">
+            <kendo-label text="Artículo">
+                <div class="row articulo-item">
+                    <strong>{{item.codigoArticulo}}</strong>
+                </div>
+                <div class="row articulo-item">
+                    {{item.descripcionArticulo}}
+                </div>
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-2">
+            <kendo-label text="Saldo">
+                <input kendoTextBox [(ngModel)]="item.saldo" [disabled]="true" />
+            </kendo-label>
+        </div>
+        <div class="col-12 col-lg-2">
+            <kendo-label text="Cantidad">
+                <input kendoTextBox [(ngModel)]="cantidadTotal" [disabled]="true" />
+            </kendo-label>
+        </div>
+    </div>
+</div>
+
+<div class="label-tabla-bodegas">* Asigne las cantidades a tomar de cada bodega</div>
+<kendo-listview height="200" [data]="stock" [containerClass]="'k-d-flex k-flex-col k-flex-nowrap'">
+    <ng-template kendoListViewHeaderTemplate>
+        <div class="header">
+            <div class="row">
+                <div class="col-12 col-lg-3">
+                    Bodega
+                </div>
+                <div class="col-12 col-lg-3">
+                    Disponible
+                </div>
+                <div class="col-12 col-lg-3">
+                    Compra L
+                </div>
+                <div class="col-12 col-lg-3">
+                    Facturar
+                </div>
+            </div>
+        </div>
+    </ng-template>
+    <ng-template kendoListViewItemTemplate let-dataItem="dataItem" let-isLast="isLast">
+        <div class="detail" [class.border-bottom]="!isLast">
+            <div class="col-12 col-lg-12">
+                <div class="row">
+                    <div class="col-12 col-lg-3">
+                        {{dataItem.bodega.codigo}}<div class="bodega-principal">
+                            {{dataItem.bodegaPrincipal?"Principal":"" }}</div>
+                    </div>
+                    <div class="col-12 col-lg-3">
+                        {{dataItem.cantidadTotal}}
+                    </div>
+                    <div class="col-12 col-lg-3">
+                        {{dataItem.bodegaPrincipal? cantidadCompraDisponible() : 0}}
+                    </div>
+                    <div class="col-12 col-lg-3">
+                        <kendo-numerictextbox [format]="{maximumFractionDigits: 2}"
+                            (valueChange)="onChange($event, dataItem)" (blur)="onBlur()" [min]="0"
+                            [max]="maximaCantidad(dataItem.cantidadTotal)" [autoCorrect]="true"
+                            [disabled]="bloquearSeleccionCantidad(dataItem)">
+                        </kendo-numerictextbox>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</kendo-listview>
+
+<div class="alert alert-danger" *ngIf="mensajeError !== undefined">{{mensajeError}}</div>
+
+<div class="row footer-button ">
+    <div class="col-12 col-lg-12">
+        <button class="buttons" kendoButton [primary]="true" [look]="'outline'" [icon]="'save'"
+            (click)="guardarReserva()" [disabled]="activarAceptar === false">
+            Aceptar
+        </button>
+        <button class="buttons" kendoButton [primary]="true" [look]="'outline'" [icon]="'close'"
+            (click)="cerrarDialogo()">
+            Cancelar
+        </button>
+    </div>
+
+</div>
